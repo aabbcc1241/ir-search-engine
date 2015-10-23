@@ -1,3 +1,27 @@
+# Search Engine
+###### Polyu IR 2015 group project
+##### Group C
+
+## Todo-List
+ - [X] Hello World
+ - [ ] UI
+    - [ ] Read query
+    - [ ] Load data set
+    - [ ] call retrieval model
+    - [ ] show result
+       - [ ] basic
+       - [ ] chart
+       - [ ] compare
+ - [ ] Function
+    - [ ] Dummy Search
+    - [ ] Boolean Retrieval Model
+    - [ ] Fuzzy Boolean Retrieval Model
+    - [ ] Vector Space Retrieval Model
+    
+## project timeline 
+https://app.smartsheet.com/b/home?lx=HUWsKQO29OGkBjAgkVrWKA
+this link is accessible by shared user only, please send your email to Beeno
+
 Teaching Objective:
 ===================
 1. Gain hands-on experience in developing a search engine (objective ii and v);
