@@ -1,7 +1,5 @@
 package hk.edu.polyu.ir.groupc.searchengine
 
-import scala.collection.mutable
-
 /**
  * Created by beenotung on 10/23/15.
  */
