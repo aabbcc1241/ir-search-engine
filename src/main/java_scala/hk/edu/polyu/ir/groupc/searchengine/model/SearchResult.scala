@@ -15,21 +15,17 @@ object SearchResultFactory {
     queryId = newQueryId
   }
 
-  def create(simpleSearchResults: Iterator[SimpleSearchResult]): Iterator[SearchResult] =
-    simpleSearchResults.zipWithIndex.map[SearchResult](simple=>
-      create(simple._1.docId, simple._2 +1, simple._1.similarityScore)
-    )
-
-  def create(docId: String, rankNumber: Int, similarityScore: Double): SearchResult = {
-    new SearchResult(docId, queryId, rankNumber, similarityScore, runId)
-  }
-
+  def create(retrievalDocuments: Array[RetrievalDocument]): SearchResult =
+    new SearchResult(runId, queryId, retrievalDocuments)
 }
 
-class SimpleSearchResult(val docId: String, val similarityScore: Double)
 
-class SearchResult(val docId: String, val queryId: String, val rankNumber: Int, val similarityScore: Double, val runId: String) {
-  override def toString: String = {
-    s"$queryId Q0 $docId $rankNumber $similarityScore $runId"
+class SearchResult(val runId: String, val queryId: String, val retrievalDocuments: Array[RetrievalDocument]) {
+  def toStrings: Array[String] = {
+    Array.tabulate(retrievalDocuments.length)(i => {
+      val doc = retrievalDocuments(i)
+      val a = s"${retrievalDocuments.length}"
+      queryId + " " + doc.documentId + " " + (i + 1) + " " + doc.similarityScore + " " + runId
+    })
   }
 }
