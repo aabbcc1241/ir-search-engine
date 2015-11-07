@@ -1,6 +1,6 @@
 package hk.edu.polyu.ir.groupc.searchengine.model
 
-import java.io.File
+import java.io._
 import java.util.function.Consumer
 
 import hk.edu.polyu.ir.groupc.Utils
@@ -58,7 +58,25 @@ class TermIndex extends Index {
   }
 
   def toFile(filename: String) = {
-    FileU
+    org.apache.commons.io.FileUtils.deleteQuietly(new File(filename))
+    val file = new File(filename)
+    val out = new BufferedWriter(new FileWriter(file))
+    out.write("# term number of files\n")
+    out.write("# fileId position...\n")
+    underlying.foreach(termFile => {
+      out.write(termFile._1 + " " + termFile._2.size)
+      termFile._2.foreach(filePositionMap => {
+        out.write("\n" + filePositionMap._1)
+        filePositionMap._2.foreach(p => out.write(" " + p))
+      }
+      )
+      out.write("\n")
+    }
+    )
+    out.close()
+    file
+    //    println(underlying.toString())
+    //    output.write(underlying.toString())
   }
 }
 
