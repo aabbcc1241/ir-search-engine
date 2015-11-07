@@ -1,8 +1,9 @@
 package hk.edu.polyu.ir.groupc.searchengine.model
 
 import java.io.File
+import java.util.function.Function
 
-import scala.io.Source
+import hk.edu.polyu.ir.groupc.Utils
 
 /**
   * Created by beenotung on 11/7/15.
@@ -11,20 +12,37 @@ class Post(val term: String, val fileId: Int, val logicalWordPosition: Int) {
 
 }
 
+class Index() {
+
+  def getDocumentLength(docId: Int) = ???
+
+  def getTermFrequent(term: String) = ???
+
+  def getTFIDF(term: String, docId: Int) = ???
+
+  def getDocId(fileId: Int) = ???
+
+  def getFileId(docId: Int) = ???
+}
+
 object PostFactory {
-  protected var posts: Iterator[Post] = null
+  protected var index: Index = null
+
+  def buildIndex(file: File) = {
+    //    posts = PostFactory_.loadFromFile(file)
+    val postStream = Utils.getLinesConverted[Post](file, new Function[String, Post] {
+      override def apply(rawString: String): Post = createFromString(rawString)
+    })
+    index = null
+  }
 
   @throws(classOf[IllegalStateException])
-  def getPosts = {
-    if (posts == null) throw new IllegalStateException("posts has not been loaded")
-    posts
+  def getIndex: Index = {
+    if (index == null) throw new IllegalStateException("index has not been loaded")
+    index
   }
 
-  def loadFromFile(file: File) {
-    posts = Source.fromFile(file).getLines().map(createFromString)
-  }
-
-  private def createFromString(rawString: String): Post = {
+  def createFromString(rawString: String): Post = {
     val xs = rawString.split(" ")
     new Post(xs(0), xs(1).toInt, xs(2).toInt)
   }
