@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 /**
  * Created by beenotung on 11/7/15.
  */
+@Deprecated
 public class PostTestJ {
     public static void main(String[] args) throws FileNotFoundException {
         String path = "/home/beenotung/Dropbox/_SyncShare/Documents/polyu/IR/group assignment/res/post1.txt";
@@ -20,7 +21,7 @@ public class PostTestJ {
 //                        post.fileId(),
 //                        post.logicalWordPosition())
 //        );
-        PostFactory.buildIndex(new File(path));
+        PostFactory.buildTermIndex(new File(path));
 //        System.out.println(PostFactory.getPostStream().count());
 //        PostFactory.getPostStream().forEach(post ->
 //                System.out.printf("%d %s %s %s\n",

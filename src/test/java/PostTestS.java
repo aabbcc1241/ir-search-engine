@@ -7,10 +7,11 @@ import java.io.FileNotFoundException;
 /**
  * Created by beenotung on 11/7/15.
  */
+@Deprecated
 public class PostTestS {
     public static void main(String[] args) throws FileNotFoundException {
         String path = "/home/beenotung/Dropbox/_SyncShare/Documents/polyu/IR/group assignment/res/post1.txt";
-        PostFactory.buildIndex(new File(path));
+        PostFactory.buildTermIndex(new File(path));
 //        System.out.printf("length=%d", PostFactory.getPostStream().count());
         final int[] l = {0};
 //        PostFactory.getPostStream().forEach(post ->

@@ -10,28 +10,31 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by beenotung on 11/7/15.
   */
-class DocFile(val fileId: Int,val docLen: Int,val docId: String,val path: String) {}
+class DocFile(val fileId: Int, val docLen: Int, val docId: String, val path: String) {}
 
 object DocFileFactory {
 
-  private var index: Array[DocFile] = null
+  private var docFiles: Array[DocFile] = null
+
+
 
   def getDocFile(fileId: Int): DocFile = {
-    if (index == null) throw new IllegalStateException("the index has not been loaded")
-    index(fileId)
+    if (docFiles == null) throw new IllegalStateException("the index has not been loaded")
+    docFiles(fileId)
   }
 
   def getDocN = {
-    if (index == null) throw new IllegalStateException("the index has not been loaded")
-    index.length
+    if (docFiles == null) throw new IllegalStateException("the index has not been loaded")
+    docFiles.length
   }
+
 
   def loadFromFile(file: File) = {
     val arrayBuffer = ArrayBuffer.empty[DocFile]
     Utils.processLines(file, new Consumer[String] {
       override def accept(t: String): Unit = arrayBuffer += createFromString(t)
     })
-    index = arrayBuffer.toArray
+    docFiles = arrayBuffer.toArray
   }
 
   protected def createFromString(rawString: String): DocFile = {
