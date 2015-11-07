@@ -16,7 +16,7 @@ object Launcher extends App {
   override def main(args: Array[String]) {
     log("Launcher start")
 
-    log("Start testing")
+    log("Start loading")
 
     log("Start GUI")
 

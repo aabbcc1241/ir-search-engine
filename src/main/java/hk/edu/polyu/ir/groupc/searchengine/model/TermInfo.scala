@@ -11,21 +11,9 @@ import scala.collection.mutable.ListBuffer
 /**
   * Created by beenotung on 11/7/15.
   */
-class Post(val term: String, val fileId: Int, val logicalWordPosition: Int) {
 
-}
+private class TermInfo(val term: String, val fileId: Int, val logicalWordPosition: Int) {
 
-abstract class Index() {
-
-  def getDocumentLength(docId: Int) = ???
-
-  def getTermFrequent(term: String) = ???
-
-  def getTFIDF(term: String, docId: Int) = ???
-
-  def getDocId(fileId: Int) = ???
-
-  def getFileId(docId: Int) = ???
 }
 
 /**
@@ -36,13 +24,13 @@ private class FilePositionMap extends mutable.HashMap[Int, ListBuffer[Int]] {}
 
 private class TermFileMap extends mutable.HashMap[String, FilePositionMap] {}
 
-class TermIndex extends Index {
+class TermIndex {
   private var underlying = new TermFileMap
 
-  def addPost(post: Post) = {
-    underlying.getOrElseUpdate(post.term, new FilePositionMap)
-      .getOrElseUpdate(post.fileId, new ListBuffer[Int])
-      .+=:(post.logicalWordPosition)
+  def addTerm(termInfo: TermInfo) = {
+    underlying.getOrElseUpdate(termInfo.term, new FilePositionMap)
+      .getOrElseUpdate(termInfo.fileId, new ListBuffer[Int])
+      .+=:(termInfo.logicalWordPosition)
   }
 
   def shrink() = {
@@ -58,7 +46,7 @@ class TermIndex extends Index {
   }
 
   def toFile(filename: String) = {
-    org.apache.commons.io.FileUtils.deleteQuietly(new File(filename))
+    //    org.apache.commons.io.FileUtils.deleteQuietly(new File(filename))
     val file = new File(filename)
     val out = new BufferedWriter(new FileWriter(file))
     out.write("# term number of files\n")
@@ -80,7 +68,7 @@ class TermIndex extends Index {
   }
 }
 
-object PostFactory {
+object TermInfoFactory {
   /* index by term
  * content : HastMap [file id -> List[position] ]
  * example : apple -> (d1->1,2,3),(d2->2,3,4)
@@ -95,16 +83,16 @@ object PostFactory {
     Utils.processLines(file, new Consumer[String] {
       override def accept(t: String): Unit = {
         val post = createFromString(t)
-        termIndex.addPost(post)
+        termIndex.addTerm(post)
       }
     })
     termIndex.shrink()
     cachedTermIndex = termIndex
   }
 
-  private def createFromString(rawString: String): Post = {
+  private def createFromString(rawString: String): TermInfo = {
     val xs = rawString.split(" ")
-    new Post(xs(0), xs(1).toInt, xs(2).toInt)
+    new TermInfo(xs(0), xs(1).toInt, xs(2).toInt)
   }
 
   def loadIndex(file: File) = ???

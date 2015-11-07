@@ -1,5 +1,5 @@
 
-import hk.edu.polyu.ir.groupc.searchengine.model.PostFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.TermInfoFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,7 +11,7 @@ import java.io.FileNotFoundException;
 public class PostTestS {
     public static void main(String[] args) throws FileNotFoundException {
         String path = "/home/beenotung/Dropbox/_SyncShare/Documents/polyu/IR/group assignment/res/post1.txt";
-        PostFactory.buildTermIndex(new File(path));
+        TermInfoFactory.buildTermIndex(new File(path));
 //        System.out.printf("length=%d", PostFactory.getPostStream().count());
         final int[] l = {0};
 //        PostFactory.getPostStream().forEach(post ->

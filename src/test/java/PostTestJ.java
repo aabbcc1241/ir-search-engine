@@ -1,5 +1,5 @@
 
-import hk.edu.polyu.ir.groupc.searchengine.model.PostFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.TermInfoFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,7 +21,7 @@ public class PostTestJ {
 //                        post.fileId(),
 //                        post.logicalWordPosition())
 //        );
-        PostFactory.buildTermIndex(new File(path));
+        TermInfoFactory.buildTermIndex(new File(path));
 //        System.out.println(PostFactory.getPostStream().count());
 //        PostFactory.getPostStream().forEach(post ->
 //                System.out.printf("%d %s %s %s\n",

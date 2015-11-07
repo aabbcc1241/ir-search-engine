@@ -16,8 +16,6 @@ object DocFileFactory {
 
   private var docFiles: Array[DocFile] = null
 
-
-
   def getDocFile(fileId: Int): DocFile = {
     if (docFiles == null) throw new IllegalStateException("the index has not been loaded")
     docFiles(fileId)
@@ -27,7 +25,6 @@ object DocFileFactory {
     if (docFiles == null) throw new IllegalStateException("the index has not been loaded")
     docFiles.length
   }
-
 
   def loadFromFile(file: File) = {
     val arrayBuffer = ArrayBuffer.empty[DocFile]
