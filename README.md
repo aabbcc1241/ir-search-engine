@@ -5,8 +5,8 @@
 ## Todo-List
  - [X] Hello World
  - [ ] UI
-    - [ ] Read query
-    - [ ] Load data set
+    - [X] Read query
+    - [X] Load data set
     - [ ] call retrieval model
     - [ ] show result
        - [ ] basic
