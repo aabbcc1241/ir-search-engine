@@ -13,10 +13,16 @@
        - [ ] chart
        - [ ] compare
  - [ ] Function
-    - [ ] Dummy Search
-    - [ ] Boolean Retrieval Model
-    - [ ] Fuzzy Boolean Retrieval Model
-    - [ ] Vector Space Retrieval Model
+    - [ ] Retrieval Model
+       - [ ] Dummy Search (for testing)
+       - [ ] Boolean Retrieval Model
+       - [ ] Fuzzy Boolean Retrieval Model ?
+       - [ ] Vector Space Retrieval Model
+       - [ ] Probability Model
+    - [ ] Query Support
+       - [ ] basic
+       - [ ] phrasal
+       - [ ] proximity
     
 ## project timeline 
 https://app.smartsheet.com/b/home?lx=HUWsKQO29OGkBjAgkVrWKA

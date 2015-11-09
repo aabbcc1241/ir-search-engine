@@ -11,10 +11,15 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainWindow extends Application {
-    static String title = "IR GroupC";
+    static String title = "IR 2015 GroupC";
 
-    public static void main(String[] args) {
-        launch(args);
+//    public static void main(String[] args) {
+//        launch(args);
+//    }
+
+    /* this method should be called once only */
+    public void startUI() {
+        launch();
     }
 
     @Override

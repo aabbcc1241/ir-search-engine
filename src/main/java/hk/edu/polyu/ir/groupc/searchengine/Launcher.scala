@@ -1,5 +1,7 @@
 package hk.edu.polyu.ir.groupc.searchengine
 
+import hk.edu.polyu.ir.groupc.searchengine.view.MainWindow
+
 /**
  * Created by beenotung on 10/23/15.
  */
@@ -16,9 +18,11 @@ object Launcher extends App {
   override def main(args: Array[String]) {
     log("Launcher start")
 
-    log("Start loading")
+    log("Start pre-loading")
 
     log("Start GUI")
+    val mainWindow=new MainWindow
+    mainWindow.startUI()
 
     log("Launcher end")
   }

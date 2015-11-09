@@ -10,7 +10,7 @@
 
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-    <MenuBar opacity="0.25" VBox.vgrow="NEVER">
+    <MenuBar VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
@@ -49,32 +49,63 @@
         </Menu>
       </menus>
     </MenuBar>
-      <Accordion VBox.vgrow="ALWAYS">
-        <panes>
-          <TitledPane animated="false" text="Settings">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Button layoutX="210.0" layoutY="14.0" mnemonicParsing="false" text="Import Post" />
-                        <Button layoutX="210.0" layoutY="53.0" mnemonicParsing="false" text="Import File" />
-                        <TextField layoutX="14.0" layoutY="14.0" />
-                        <TextField layoutX="14.0" layoutY="53.0" />
-                     </children>
-                  </AnchorPane>
-            </content>
-          </TitledPane>
-          <TitledPane animated="false" text="Query">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </TitledPane>
-          <TitledPane animated="false" text="Analysis">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </TitledPane>
-        </panes>
-      </Accordion>
+    <SplitPane dividerPositions="0.2505567928730512, 0.7505567928730512" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <items>
+            <BorderPane>
+               <top>
+            <Label alignment="CENTER" minWidth="60.0" prefWidth="-1.0" style="&#10;" text="Main Menu" textAlignment="CENTER" wrapText="false" BorderPane.alignment="CENTER">
+              <font>
+                <Font size="18.0" fx:id="x1" />
+              </font>
+              <textFill>
+                <Color blue="0.624" green="0.624" red="0.624" fx:id="x2" />
+              </textFill>
+                     <BorderPane.margin>
+                        <Insets bottom="14.0" left="14.0" right="14.0" top="14.0" />
+                     </BorderPane.margin>
+            </Label>
+               </top>
+               <center>
+                  <Accordion BorderPane.alignment="CENTER">
+                    <panes>
+                      <TitledPane animated="false" text="Settings">
+                           <content>
+                              <VBox />
+                           </content>
+                      </TitledPane>
+                      <TitledPane animated="false" text="Query">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        </content>
+                      </TitledPane>
+                      <TitledPane animated="false" text="Analysis">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        </content>
+                      </TitledPane>
+                    </panes>
+                     <BorderPane.margin>
+                        <Insets />
+                     </BorderPane.margin>
+                  </Accordion>
+               </center>
+            </BorderPane>
+        <ScrollPane prefHeight="-1.0" prefWidth="-1.0">
+          <content>
+            <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0" prefHeight="545.0" prefWidth="430.0">
+              <children>
+                <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="View" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+              </children>
+            </AnchorPane>
+          </content>
+        </ScrollPane>
+        <AnchorPane>
+          <children>
+            <Label alignment="CENTER" font="$x1" layoutX="14.0" layoutY="14.0" style="&#10;" text="Details" textAlignment="CENTER" textFill="$x2" wrapText="false" />
+          </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
     <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
       <children>
         <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
