@@ -3,7 +3,7 @@ package hk.edu.polyu.ir.groupc.searchengine.model
 import java.io.File
 import java.util.function.Consumer
 
-import hk.edu.polyu.ir.groupc.Utils
+import comm.Utils
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -26,7 +26,7 @@ object DocFileFactory {
     docFiles.length
   }
 
-  def loadFromFile(file: File) = {
+  def load(file: File) = {
     val arrayBuffer = ArrayBuffer.empty[DocFile]
     Utils.processLines(file, new Consumer[String] {
       override def accept(t: String): Unit = arrayBuffer += createFromString(t)

@@ -8,9 +8,9 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hk.edu.polyu.ir.groupc.searchengine.frontend.MainController">
   <children>
-    <MenuBar opacity="0.25" VBox.vgrow="NEVER">
+    <MenuBar disable="true" VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
@@ -55,10 +55,14 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="210.0" layoutY="14.0" mnemonicParsing="false" text="Import Post" />
-                        <Button layoutX="210.0" layoutY="53.0" mnemonicParsing="false" text="Import File" />
-                        <TextField layoutX="14.0" layoutY="14.0" />
-                        <TextField layoutX="14.0" layoutY="53.0" />
+                        <Button layoutX="208.0" layoutY="56.0" mnemonicParsing="false" onAction="#import_post" text="Import Post" />
+                        <Button layoutX="210.0" layoutY="14.0" mnemonicParsing="false" onAction="#import_file" text="Import File" />
+                        <TextField fx:id="text_post" layoutX="14.0" layoutY="56.0" />
+                        <TextField fx:id="text_file" layoutX="14.0" layoutY="14.0" />
+                        <Button layoutX="313.0" layoutY="98.0" mnemonicParsing="false" onAction="#import_index" text="Import Index" />
+                        <Button layoutX="209.0" layoutY="98.0" mnemonicParsing="false" onAction="#build_index" text="Build Index" />
+                        <TextField fx:id="text_index" layoutX="14.0" layoutY="98.0" />
+                        <Button layoutX="428.0" layoutY="98.0" mnemonicParsing="false" onAction="#export_index" text="Export Index" />
                      </children>
                   </AnchorPane>
             </content>

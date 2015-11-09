@@ -10,7 +10,7 @@ object PostTest extends App {
     println("PostTest")
     val path = "/home/beenotung/Documents/polyu/IR/group assignment/res/post1.txt"
     val path_out = "/home/beenotung/Documents/polyu/IR/group assignment/res/term_index.txt"
-    TermInfoFactory.buildTermIndex(new File(path))
+    TermInfoFactory.build(new File(path))
     TermInfoFactory.getTermIndex.toFile(path_out)
   }
 }

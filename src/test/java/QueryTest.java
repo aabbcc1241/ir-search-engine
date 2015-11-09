@@ -1,4 +1,4 @@
-import hk.edu.polyu.ir.groupc.Utils;
+import comm.Utils;
 import hk.edu.polyu.ir.groupc.searchengine.model.QueryFactory;
 
 import java.io.File;

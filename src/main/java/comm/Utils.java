@@ -1,4 +1,4 @@
-package hk.edu.polyu.ir.groupc;
+package comm;
 
 import scala.collection.Iterator;
 

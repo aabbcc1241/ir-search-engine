@@ -9,7 +9,7 @@ import java.io.File;
 public class DocFileTest {
     public static void main(String[] args) {
         String path = "/home/beenotung/Dropbox/_SyncShare/Documents/polyu/IR/group assignment/res/file.txt";
-        DocFileFactory.loadFromFile(new File(path));
+        DocFileFactory.load(new File(path));
         for (int i = 0; i < DocFileFactory.getDocN(); i++) {
             DocFile docFile = DocFileFactory.getDocFile(i);
             System.out.println(docFile.fileId()+" "+docFile.docLen()+" "+docFile.docId());

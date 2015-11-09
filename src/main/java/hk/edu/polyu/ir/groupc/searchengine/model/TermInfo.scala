@@ -3,7 +3,7 @@ package hk.edu.polyu.ir.groupc.searchengine.model
 import java.io._
 import java.util.function.Consumer
 
-import hk.edu.polyu.ir.groupc.Utils
+import comm.Utils
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -62,7 +62,6 @@ class TermIndex {
     }
     )
     out.close()
-    file
     //    println(underlying.toString())
     //    output.write(underlying.toString())
   }
@@ -78,7 +77,7 @@ object TermInfoFactory {
   /**
     * @param file : post file
     **/
-  def buildTermIndex(file: File) = {
+  def build(file: File) = {
     val termIndex = new TermIndex
     Utils.processLines(file, new Consumer[String] {
       override def accept(t: String): Unit = {
@@ -95,7 +94,7 @@ object TermInfoFactory {
     new TermInfo(xs(0), xs(1).toInt, xs(2).toInt)
   }
 
-  def loadIndex(file: File) = ???
+  def load(file: File) = ???
 
   @throws(classOf[IllegalStateException])
   def getTermIndex: TermIndex = {

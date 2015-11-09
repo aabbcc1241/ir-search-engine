@@ -21,7 +21,7 @@ public class PostTestJ {
 //                        post.fileId(),
 //                        post.logicalWordPosition())
 //        );
-        TermInfoFactory.buildTermIndex(new File(path));
+        TermInfoFactory.build(new File(path));
 //        System.out.println(PostFactory.getPostStream().count());
 //        PostFactory.getPostStream().forEach(post ->
 //                System.out.printf("%d %s %s %s\n",
