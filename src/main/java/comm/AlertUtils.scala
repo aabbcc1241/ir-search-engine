@@ -5,6 +5,7 @@ import javafx.scene.control.Alert.AlertType
 
 /**
   * Created by beenotung on 11/10/15.
+  * show alert in javafx dialog
   */
 object AlertUtils {
   def error_(text:String)=error(contentText = text)

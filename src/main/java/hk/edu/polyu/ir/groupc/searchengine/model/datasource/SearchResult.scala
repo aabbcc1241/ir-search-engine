@@ -1,4 +1,6 @@
-package hk.edu.polyu.ir.groupc.searchengine.model
+package hk.edu.polyu.ir.groupc.searchengine.model.datasource
+
+import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalDocument
 
 /**
  * Created by beenotung on 11/6/15.

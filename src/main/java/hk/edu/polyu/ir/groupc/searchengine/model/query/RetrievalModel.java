@@ -1,6 +1,6 @@
-package hk.edu.polyu.ir.groupc.searchengine.model;
+package hk.edu.polyu.ir.groupc.searchengine.model.query;
 
-import java.util.Vector;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
 
 /**
  * Created by beenotung on 10/23/15.

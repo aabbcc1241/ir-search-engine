@@ -1,4 +1,4 @@
-package hk.edu.polyu.ir.groupc.searchengine.model
+package hk.edu.polyu.ir.groupc.searchengine.model.datasource
 
 import java.io._
 import java.util.function.Consumer
@@ -12,22 +12,50 @@ import scala.collection.mutable.ListBuffer
   * Created by beenotung on 11/7/15.
   */
 
-private class TermInfo(val term: String, val fileId: Int, val logicalWordPosition: Int) {
-
-}
+/**
+  * @usecase ONLY TEMP data holder when parsing from file
+  **/
+private class RawTermInfo(val term: String, val fileId: Int, val logicalWordPosition: Int)
 
 /**
   * @define key : fileId
   * @define value : positionList
   **/
-private class FilePositionMap extends mutable.HashMap[Int, ListBuffer[Int]] {}
+private class FilePositionMap extends mutable.HashMap[Int, ListBuffer[Int]]
 
-private class TermFileMap extends mutable.HashMap[String, FilePositionMap] {}
+/**
+  * @define key : term
+  * @define value : FilePositionMap [fileId, positionList]
+  **/
+private class TermFileMap extends mutable.HashMap[String, FilePositionMap]
+
+class TermEntity(val termStem: String, val filePositionMap: FilePositionMap)
 
 class TermIndex {
   private var underlying = new TermFileMap
 
-  def addTerm(termInfo: TermInfo) = {
+  @deprecated("slow")
+  def getTF(term: String, fileId: Int): Int = underlying.get(term) match {
+    case None => 0
+    case Some(filePositionMap) => getTF(new TermEntity(term, filePositionMap), fileId)
+  }
+
+  /* get term frequency by in document (file) */
+  def getTF(termEntity: TermEntity, fileid: Int): Int = termEntity.filePositionMap.get(fileid) match {
+    case None => 0
+    case Some(positionList) => positionList.length
+  }
+
+  /* get document(file) frequency by term */
+  def getDF(termEntity: TermEntity,fileId:Int) = termEntity.filePositionMap.count(x => x._1.==(fileId))
+
+  @deprecated("slow")
+  def getDF(term: String,fileId:Int) = underlying.get(term) match {
+    case None => 0
+    case Some(filePositionMap) => filePositionMap.count(x => x._1 == fileId)
+  }
+
+  def addTerm(termInfo: RawTermInfo) = {
     underlying.getOrElseUpdate(termInfo.term, new FilePositionMap)
       .getOrElseUpdate(termInfo.fileId, new ListBuffer[Int])
       .+=:(termInfo.logicalWordPosition)
@@ -45,7 +73,7 @@ class TermIndex {
     underlying = newInstance
   }
 
-  def toFile(filename: String) = {
+  def writeToFile(filename: String) = {
     //    org.apache.commons.io.FileUtils.deleteQuietly(new File(filename))
     val file = new File(filename)
     val out = new BufferedWriter(new FileWriter(file))
@@ -89,9 +117,9 @@ object TermInfoFactory {
     cachedTermIndex = termIndex
   }
 
-  private def createFromString(rawString: String): TermInfo = {
+  private def createFromString(rawString: String): RawTermInfo = {
     val xs = rawString.split(" ")
-    new TermInfo(xs(0), xs(1).toInt, xs(2).toInt)
+    new RawTermInfo(xs(0), xs(1).toInt, xs(2).toInt)
   }
 
   def load(file: File) = ???

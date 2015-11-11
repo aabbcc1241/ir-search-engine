@@ -1,4 +1,4 @@
-package hk.edu.polyu.ir.groupc.searchengine.model
+package hk.edu.polyu.ir.groupc.searchengine.model.datasource
 
 import java.io.File
 import java.util.function.Consumer
@@ -21,7 +21,7 @@ object DocFileFactory {
     docFiles(fileId)
   }
 
-  def getDocN = {
+  def getDocumentCount = {
     if (docFiles == null) throw new IllegalStateException("the index has not been loaded")
     docFiles.length
   }

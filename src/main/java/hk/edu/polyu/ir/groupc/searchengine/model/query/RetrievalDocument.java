@@ -1,4 +1,4 @@
-package hk.edu.polyu.ir.groupc.searchengine.model;
+package hk.edu.polyu.ir.groupc.searchengine.model.query;
 
 /**
  * Created by beenotung on 10/30/15.

@@ -1,4 +1,4 @@
-package hk.edu.polyu.ir.groupc.searchengine.model
+package hk.edu.polyu.ir.groupc.searchengine.model.query
 
 import java.io.File
 
