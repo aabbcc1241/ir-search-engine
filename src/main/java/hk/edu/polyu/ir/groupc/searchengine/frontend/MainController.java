@@ -1,6 +1,7 @@
 package hk.edu.polyu.ir.groupc.searchengine.frontend;
 
 import comm.AlertUtils;
+import hk.MainControllerSkeleton;
 import hk.edu.polyu.ir.groupc.searchengine.Debug;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory;
@@ -50,7 +51,7 @@ public class MainController extends MainControllerSkeleton {
     }
 
     @Override
-    void import_file(ActionEvent event) {
+    public void import_file(ActionEvent event) {
         String action = "import file";
         statusMain(action);
         String filename = text_file.getText();
@@ -74,7 +75,7 @@ public class MainController extends MainControllerSkeleton {
     }
 
     @Override
-    void build_index(ActionEvent event) {
+    public void build_index(ActionEvent event) {
         String action = "build post";
         statusMain(action);
         String filename = text_post.getText();
@@ -88,7 +89,7 @@ public class MainController extends MainControllerSkeleton {
     }
 
     @Override
-    void import_post(ActionEvent event) {
+    public void import_post(ActionEvent event) {
         String action = "import post";
         statusMain(action);
         String filename = text_post.getText();
@@ -102,7 +103,7 @@ public class MainController extends MainControllerSkeleton {
     }
 
     @Override
-    void export_index(ActionEvent event) {
+    public void export_index(ActionEvent event) {
         String action = "export post";
         statusMain(action);
         String filename = text_post.getText();

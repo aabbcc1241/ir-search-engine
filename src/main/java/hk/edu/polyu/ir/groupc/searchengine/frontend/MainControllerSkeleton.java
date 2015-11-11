@@ -1,4 +1,4 @@
-package hk.edu.polyu.ir.groupc.searchengine.frontend;
+package hk;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -31,27 +31,42 @@ public class MainControllerSkeleton {
     protected Label label_right_status;
 
     @FXML
-    void build_index(ActionEvent event) {
+  public void build_index(ActionEvent event) {
 
     }
 
     @FXML
-    void export_index(ActionEvent event) {
+    public void drag_file(ActionEvent event) {
 
     }
 
     @FXML
-    void import_file(ActionEvent event) {
+    public void drag_index(ActionEvent event) {
 
     }
 
     @FXML
-    void import_index(ActionEvent event) {
+    public void drag_post(ActionEvent event) {
 
     }
 
     @FXML
-    void import_post(ActionEvent event) {
+    public void export_index(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void import_file(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void import_index(ActionEvent event) {
+
+    }
+
+    @FXML
+    public void import_post(ActionEvent event) {
 
     }
 
