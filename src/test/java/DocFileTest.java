@@ -1,5 +1,5 @@
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFile;
-import hk.edu.polyu.ir.groupc.searchengine.model.DocFileFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
 
 import java.io.File;
 import java.util.HashMap;

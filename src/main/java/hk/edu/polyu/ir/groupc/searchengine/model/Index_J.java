@@ -45,8 +45,8 @@ public class Index_J {
         return Index.getTFIDF(termEntity, fileId);
     }
 
-    public static double getIDF(String term) {
-        return Index.getIDF(term);
+    public static double getIDF(String term, int fileId) {
+        return Index.getIDF(term, fileId);
     }
 
     public static void getDocFile(int fileId) {

@@ -13,7 +13,7 @@ public abstract class RetrievalModel {
     }
 
     public SearchResult search(Query query) {
-        RetrievalDocument[] retrievalDocuments = null;
+        RetrievalDocument[] retrievalDocuments = new RetrievalDocument[0];
         return new SearchResult(runningId, query.queryId(), retrievalDocuments);
     }
 }

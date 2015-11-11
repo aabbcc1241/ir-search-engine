@@ -1,5 +1,5 @@
 import comm.Utils;
-import hk.edu.polyu.ir.groupc.searchengine.model.QueryFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
 
 import java.io.File;
 

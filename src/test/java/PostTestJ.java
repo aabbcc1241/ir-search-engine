@@ -1,5 +1,6 @@
 
-import hk.edu.polyu.ir.groupc.searchengine.model.TermInfoFactory;
+
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;

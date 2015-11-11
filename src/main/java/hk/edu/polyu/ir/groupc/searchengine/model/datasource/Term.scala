@@ -21,7 +21,7 @@ private class RawTermInfo(val term: String, val fileId: Int, val logicalWordPosi
   * @define key : fileId
   * @define value : positionList
   **/
-private class FilePositionMap extends mutable.HashMap[Int, ListBuffer[Int]]
+class FilePositionMap extends mutable.HashMap[Int, ListBuffer[Int]]
 
 /**
   * @define key : term

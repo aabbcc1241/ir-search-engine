@@ -2,8 +2,8 @@ package hk.edu.polyu.ir.groupc.searchengine.frontend;
 
 import comm.AlertUtils;
 import hk.edu.polyu.ir.groupc.searchengine.Debug;
-import hk.edu.polyu.ir.groupc.searchengine.model.DocFileFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.TermInfoFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory;
 import javafx.event.ActionEvent;
 
 import java.io.File;

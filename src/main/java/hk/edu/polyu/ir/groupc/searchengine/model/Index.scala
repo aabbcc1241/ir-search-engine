@@ -37,7 +37,7 @@ object Index {
 
   def getTFIDF(termEntity: TermEntity, fileId: Int) = IDFFactory.getTFIDF(termEntity, fileId)
 
-  def getIDF(term: String) = IDFFactory.getIDF(term)
+  def getIDF(term: String,fileId:Int) = IDFFactory.getIDF(term,fileId)
 
   def getDocFile(fileId: Int) = DocFileFactory.getDocFile(fileId)
 }
