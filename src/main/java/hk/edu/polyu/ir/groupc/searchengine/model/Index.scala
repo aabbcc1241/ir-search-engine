@@ -13,8 +13,8 @@ object Index {
 
   def getDocLen(fileId: Int) = DocFileFactory.getDocFile(fileId).docLen
 
-  /* get term frequency by in document (file) */
   @deprecated("slow")
+  /* get term frequency by in document (file) */
   def getTF(term: String, fileId: Int): Int = TermInfoFactory.getTermIndex.getTF(term, fileId)
 
   /* get term frequency by in document (file) */

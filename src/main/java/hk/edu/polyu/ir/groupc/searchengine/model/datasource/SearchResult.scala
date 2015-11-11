@@ -26,7 +26,6 @@ class SearchResult(val runId: String, val queryId: String, val retrievalDocument
   def toStrings: Array[String] = {
     Array.tabulate(retrievalDocuments.length)(i => {
       val doc = retrievalDocuments(i)
-      val a = s"${retrievalDocuments.length}"
       queryId + " " + doc.documentId + " " + (i + 1) + " " + doc.similarityScore + " " + runId
     })
   }

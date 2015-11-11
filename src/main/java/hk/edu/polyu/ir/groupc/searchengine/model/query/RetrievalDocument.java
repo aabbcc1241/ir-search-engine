@@ -1,5 +1,7 @@
 package hk.edu.polyu.ir.groupc.searchengine.model.query;
 
+import hk.edu.polyu.ir.groupc.searchengine.model.Index;
+
 /**
  * Created by beenotung on 10/30/15.
  */
@@ -8,8 +10,8 @@ public class RetrievalDocument{
     /*higher is better*/
     public double similarityScore;
 
-    public RetrievalDocument(String documentId, double similarityScore) {
-        this.documentId = documentId;
+    public RetrievalDocument(int fileId, double similarityScore) {
+        this.documentId = Index.getDocFile(fileId).docId();
         this.similarityScore = similarityScore;
     }
 }
