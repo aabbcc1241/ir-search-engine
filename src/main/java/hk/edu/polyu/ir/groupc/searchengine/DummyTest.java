@@ -1,8 +1,11 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
+
+import java.util.ArrayList;
 
 /**
  * Created by beenotung on 11/12/15.
@@ -43,7 +46,7 @@ public class DummyTest {
         }.start(new RetrievalModel() {
             @Override
             public SearchResult search(Query query) {
-                return super.search(query);
+                return SearchResultFactory.create(new ArrayList<>());
             }
         });
     }
