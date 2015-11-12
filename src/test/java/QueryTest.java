@@ -1,4 +1,5 @@
 import comm.Utils;
+import comm.exception.RichFileNotFoundException;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
 
 import java.io.File;
@@ -7,7 +8,7 @@ import java.io.File;
  * Created by beenotung on 11/6/15.
  */
 public class QueryTest {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RichFileNotFoundException {
         String pathT = "/home/beenotung/Dropbox/_SyncShare/Documents/polyu/IR/group assignment/res/Query/queryT";
         String pathTDN = "/home/beenotung/Dropbox/_SyncShare/Documents/polyu/IR/group assignment/res/Query/queryTDN";
         QueryFactory.loadFromFile(new File(pathT));
