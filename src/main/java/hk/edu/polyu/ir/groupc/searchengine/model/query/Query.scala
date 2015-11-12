@@ -1,6 +1,8 @@
 package hk.edu.polyu.ir.groupc.searchengine.model.query
 
-import java.io.File
+import java.io.{File, FileNotFoundException}
+
+import comm.exception.RichFileNotFoundException
 
 import scala.io.Source
 
@@ -9,12 +11,18 @@ import scala.io.Source
   */
 class Query(val queryId: String, val queryContent: String) {
   override def toString: String = s"$queryId $queryContent"
-  var expandedQuery:String=queryContent
+
+  var expandedQuery: String = queryContent
 }
 
 object QueryFactory {
-   def loadFromFile(file: File) = {
-    queries = Source.fromFile(file).getLines().map[Query](createFromString)
+  @throws(classOf[RichFileNotFoundException])
+  def loadFromFile(file: File) = {
+    try {
+      queries = Source.fromFile(file).getLines().map[Query](createFromString)
+    } catch {
+      case e: FileNotFoundException => throw new RichFileNotFoundException(file)
+    }
   }
 
   private def createFromString(rawString: String): Query = {

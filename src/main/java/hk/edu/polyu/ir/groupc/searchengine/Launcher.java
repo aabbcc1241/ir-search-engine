@@ -26,6 +26,7 @@ public abstract class Launcher {
     public abstract String STOP_PATH();
 
     public abstract String JUDGEROBUST();
+    public abstract String QUERY();
 
     public void start(RetrievalModel retrievalModel) {
         try {
@@ -54,6 +55,7 @@ public abstract class Launcher {
                 TermInfoFactory.getTermIndex().writeToFile(TERM_INDEX_PATH());
                 log("saved");
             }
+            QueryFactory.loadFromFile(new File(QUERY()));
         } catch (RichFileNotFoundException e) {
             throw new EssentialFileNotFoundException(e.path);
         }

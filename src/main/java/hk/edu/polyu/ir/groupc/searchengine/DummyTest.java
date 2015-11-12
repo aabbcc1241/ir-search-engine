@@ -16,6 +16,8 @@ public class DummyTest {
     public static final String POST_PATH = "res/psot1.txt";
     public static final String STOP_PATH = "res/estop.lst";
     public static final String JUDGEROBUST = "res/judgerobust";
+    public static final String QUERY_T="res/queryT";
+    public static final String QUERY_TDN="res/queryTDN";
 
     public static void main(String[] args) {
         new Launcher() {
@@ -42,6 +44,11 @@ public class DummyTest {
             @Override
             public String JUDGEROBUST() {
                 return JUDGEROBUST;
+            }
+
+            @Override
+            public String QUERY() {
+                return QUERY_T;
             }
         }.start(new RetrievalModel() {
             @Override
