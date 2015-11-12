@@ -393,3 +393,6 @@ pip-selfcheck.json
 *.fatbin
 
 # Created by .ignore support plugin (hsz.mobi)
+
+### custom
+res/

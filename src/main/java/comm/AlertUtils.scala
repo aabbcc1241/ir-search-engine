@@ -8,7 +8,8 @@ import javafx.scene.control.Alert.AlertType
   * show alert in javafx dialog
   */
 object AlertUtils {
-  def error_(text:String)=error(contentText = text)
+  def error_(text: String) = error(contentText = text)
+
   def error(title: String = "Error", headerText: String = null, contentText: String) = {
     show(title, headerText, contentText, AlertType.ERROR)
   }
