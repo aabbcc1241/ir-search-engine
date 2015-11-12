@@ -4,6 +4,7 @@ import java.io._
 import java.util.function.Consumer
 
 import comm.Utils
+import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -27,12 +28,12 @@ class FilePositionMap extends mutable.HashMap[Int, ListBuffer[Int]]
   * @define key : term
   * @define value : FilePositionMap [fileId, positionList]
   **/
-private class TermFileMap extends mutable.HashMap[String, FilePositionMap]
+class TermFileMap extends mutable.HashMap[String, FilePositionMap]
 
 class TermEntity(val termStem: String, val filePositionMap: FilePositionMap)
 
-class TermIndex {
-  private var underlying = new TermFileMap
+class TermIndex(initMap: TermFileMap = new TermFileMap) {
+  private var underlying = initMap
 
   @deprecated("slow")
   def getTF(term: String, fileId: Int): Int = underlying.get(term) match {
@@ -47,10 +48,10 @@ class TermIndex {
   }
 
   /* get document(file) frequency by term */
-  def getDF(termEntity: TermEntity,fileId:Int) = termEntity.filePositionMap.count(x => x._1.==(fileId))
+  def getDF(termEntity: TermEntity, fileId: Int) = termEntity.filePositionMap.count(x => x._1.==(fileId))
 
   @deprecated("slow")
-  def getDF(term: String,fileId:Int) = underlying.get(term) match {
+  def getDF(term: String, fileId: Int) = underlying.get(term) match {
     case None => 0
     case Some(filePositionMap) => filePositionMap.count(x => x._1 == fileId)
   }
@@ -77,8 +78,8 @@ class TermIndex {
     //    org.apache.commons.io.FileUtils.deleteQuietly(new File(filename))
     val file = new File(filename)
     val out = new BufferedWriter(new FileWriter(file))
-    out.write("# term number of files\n")
-    out.write("# fileId position...\n")
+    out.write("# term, number of files\n")
+    out.write("# fileId, position...\n")
     underlying.foreach(termFile => {
       out.write(termFile._1 + " " + termFile._2.size)
       termFile._2.foreach(filePositionMap => {
@@ -105,16 +106,21 @@ object TermInfoFactory {
   /**
     * @param file : post file
     **/
+  @throws(classOf[RichFileNotFoundException])
   def build(file: File) = {
-    val termIndex = new TermIndex
-    Utils.processLines(file, new Consumer[String] {
-      override def accept(t: String): Unit = {
-        val post = createFromString(t)
-        termIndex.addTerm(post)
-      }
-    })
-    termIndex.shrink()
-    cachedTermIndex = termIndex
+    try {
+      val termIndex = new TermIndex
+      Utils.processLines(file, new Consumer[String] {
+        override def accept(t: String): Unit = {
+          val post = createFromString(t)
+          termIndex.addTerm(post)
+        }
+      })
+      termIndex.shrink()
+      cachedTermIndex = termIndex
+    } catch {
+      case e: FileNotFoundException => throw new RichFileNotFoundException(file)
+    }
   }
 
   private def createFromString(rawString: String): RawTermInfo = {
@@ -122,7 +128,44 @@ object TermInfoFactory {
     new RawTermInfo(xs(0), xs(1).toInt, xs(2).toInt)
   }
 
-  def load(file: File) = ???
+  private val MODE_EMPTY = 0
+  private val MODE_COMMENT = -1
+  private val MODE_READING = 1
+
+  @throws(classOf[InvalidFileFormatException])
+  @throws(classOf[RichFileNotFoundException])
+  def load(file: File) = {
+    try {
+      val termFileMap = new TermFileMap
+      var lineLeft = -2
+      /* tmp vars */
+      var filePositionMap: FilePositionMap = null
+      Utils.processLines(file, new Consumer[String] {
+        override def accept(line: String): Unit = {
+          lineLeft match {
+            case -2 | -1 =>
+              lineLeft += 1
+            case 0 =>
+              val words = line.split(" ")
+              val term = words(0)
+              lineLeft = words(1).toInt
+              filePositionMap = new FilePositionMap
+              termFileMap.put(term, filePositionMap)
+            case _ =>
+              lineLeft -= 1
+              val words = line.split(" ")
+              val fileId = words(0).toInt
+              val positionList = ListBuffer.newBuilder[Int].++=(words.tail.map(s => s.toInt)).result()
+              filePositionMap.put(fileId, positionList)
+          }
+        }
+      })
+      cachedTermIndex = new TermIndex(termFileMap)
+    } catch {
+      case e: NumberFormatException => throw new InvalidFileFormatException(file)
+      case e: FileNotFoundException => throw new RichFileNotFoundException(file)
+    }
+  }
 
   @throws(classOf[IllegalStateException])
   def getTermIndex: TermIndex = {

@@ -1,3 +1,4 @@
+import comm.exception.RichFileNotFoundException;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFile;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
 
@@ -11,7 +12,7 @@ import java.util.Random;
 public class DocFileTest {
 
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws RichFileNotFoundException {
         String path = "/home/beenotung/Dropbox/_SyncShare/Documents/polyu/IR/group assignment/res/file.txt";
 //        String path = "/home/beenotung/Dropbox/_SyncShare/Documents/polyu/IR/group assignment/res/file.txt_";
         DocFileFactory.load(new File(path));

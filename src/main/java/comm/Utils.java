@@ -31,7 +31,7 @@ public class Utils {
 
     @Deprecated
     public static <T> ArrayList<T> streamToArray(Stream<T> stream) {
-        ArrayList<T> ts=new ArrayList<>();
+        ArrayList<T> ts = new ArrayList<>();
         stream.forEach(t -> ts.add(t));
         return ts;
     }

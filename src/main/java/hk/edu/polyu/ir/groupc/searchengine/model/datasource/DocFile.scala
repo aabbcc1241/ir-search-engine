@@ -1,9 +1,10 @@
 package hk.edu.polyu.ir.groupc.searchengine.model.datasource
 
-import java.io.File
+import java.io.{File, FileNotFoundException}
 import java.util.function.Consumer
 
 import comm.Utils
+import comm.exception.RichFileNotFoundException
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -26,12 +27,17 @@ object DocFileFactory {
     docFiles.length
   }
 
+  @throws(classOf[RichFileNotFoundException])
   def load(file: File) = {
-    val arrayBuffer = ArrayBuffer.empty[DocFile]
-    Utils.processLines(file, new Consumer[String] {
-      override def accept(t: String): Unit = arrayBuffer += createFromString(t)
-    })
-    docFiles = arrayBuffer.toArray
+    try {
+      val arrayBuffer = ArrayBuffer.empty[DocFile]
+      Utils.processLines(file, new Consumer[String] {
+        override def accept(t: String): Unit = arrayBuffer += createFromString(t)
+      })
+      docFiles = arrayBuffer.toArray
+    } catch {
+      case e: FileNotFoundException => throw new RichFileNotFoundException(file)
+    }
   }
 
   protected def createFromString(rawString: String): DocFile = {
