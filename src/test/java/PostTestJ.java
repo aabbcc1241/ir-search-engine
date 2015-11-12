@@ -1,6 +1,8 @@
 
 
+import hk.edu.polyu.ir.groupc.searchengine.model.Index;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory;
+import sun.security.x509.InvalidityDateExtension;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -23,6 +25,8 @@ public class PostTestJ {
 //                        post.logicalWordPosition())
 //        );
         TermInfoFactory.build(new File(path));
+        TermInfoFactory.getTermIndex().writeToFile("index");
+        TermInfoFactory.load(new File("index"));
 //        System.out.println(PostFactory.getPostStream().count());
 //        PostFactory.getPostStream().forEach(post ->
 //                System.out.printf("%d %s %s %s\n",

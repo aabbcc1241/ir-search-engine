@@ -1,5 +1,6 @@
 package hk.edu.polyu.ir.groupc.searchengine.model
 
+import hk.edu.polyu.ir.groupc.searchengine.Debug
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.{DocFileFactory, IDFFactory, TermEntity, TermInfoFactory}
 
 /**
@@ -37,7 +38,12 @@ object Index {
 
   def getTFIDF(termEntity: TermEntity, fileId: Int) = IDFFactory.getTFIDF(termEntity, fileId)
 
-  def getIDF(term: String,fileId:Int) = IDFFactory.getIDF(term,fileId)
+  def getIDF(term: String, fileId: Int) = IDFFactory.getIDF(term, fileId)
 
   def getDocFile(fileId: Int) = DocFileFactory.getDocFile(fileId)
+
+  def hello = {
+    Debug.log("Hello")
+    "World"
+  }
 }

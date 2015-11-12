@@ -9,6 +9,7 @@ import scala.io.Source
   */
 class Query(val queryId: String, val queryContent: String) {
   override def toString: String = s"$queryId $queryContent"
+  var expandedQuery:String=queryContent
 }
 
 object QueryFactory {
