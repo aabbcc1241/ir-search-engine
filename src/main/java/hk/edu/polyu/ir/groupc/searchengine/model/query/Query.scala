@@ -3,6 +3,7 @@ package hk.edu.polyu.ir.groupc.searchengine.model.query
 import java.io.{File, FileNotFoundException}
 
 import comm.exception.RichFileNotFoundException
+import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory.ExpandedQuery
 
 import scala.io.Source
 
@@ -12,10 +13,19 @@ import scala.io.Source
 class Query(val queryId: String, val queryContent: String) {
   override def toString: String = s"$queryId $queryContent"
 
-  var expandedQuery: String = queryContent
+  lazy val expandedQuery: ExpandedQuery = QueryFactory.expand(this)
 }
 
+class ExpandedTerm(val term: String, val weight: Double)
+
+
 object QueryFactory {
+  type ExpandedQuery = Array[ExpandedTerm]
+
+  def expand(query: Query): ExpandedQuery = {
+    query.queryContent.split(" ").map(s => new ExpandedTerm(s, 1))
+  }
+
   @throws(classOf[RichFileNotFoundException])
   def loadFromFile(file: File) = {
     try {

@@ -3,7 +3,10 @@ package hk.edu.polyu.ir.groupc.searchengine;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalDocument;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
+import scala.util.Random;
 
 import java.util.ArrayList;
 
@@ -18,9 +21,10 @@ public class DummyTest {
     public static final String JUDGEROBUST = "res/judgerobust";
     public static final String QUERY_T="res/queryT";
     public static final String QUERY_TDN="res/queryTDN";
+    private static final String RESULT_FILE = "res/result.txt";
 
     public static void main(String[] args) {
-        new Launcher() {
+        Launcher launcher = new Launcher() {
             @Override
             public String FILE_PATH() {
                 return FILE_PATH;
@@ -50,11 +54,17 @@ public class DummyTest {
             public String QUERY() {
                 return QUERY_T;
             }
-        }.start(new RetrievalModel() {
+        };
+        RetrievalModel retrievalModel = new RetrievalModel() {
             @Override
             public SearchResult search(Query query) {
-                return SearchResultFactory.create(new ArrayList<>());
+                ArrayList<RetrievalDocument> retrievalDocuments = new ArrayList<>();
+                Random random=new Random();
+                retrievalDocuments.add(new RetrievalDocument(random.nextInt(10)+1,random.nextDouble()));
+                return SearchResultFactory.create(query, retrievalDocuments);
             }
-        });
+        };
+        SearchResultFactory.setRunId("GroupC-demoModel");
+        launcher.start(retrievalModel,RESULT_FILE);
     }
 }
