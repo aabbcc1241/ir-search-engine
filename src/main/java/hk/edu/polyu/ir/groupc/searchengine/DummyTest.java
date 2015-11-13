@@ -64,7 +64,7 @@ public class DummyTest {
                 return SearchResultFactory.create(query, retrievalDocuments);
             }
         };
-        SearchResultFactory.setRunId("GroupC-demoModel");
+        SearchResultFactory.setRunId("GroupC-DemoModel");
         launcher.start(retrievalModel,RESULT_FILE);
     }
 }

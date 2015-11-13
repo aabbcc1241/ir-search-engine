@@ -1,35 +1,26 @@
 package comm
 
-import java.io.{FileWriter, IOException}
-import java.util.function.Consumer
+import java.io.{BufferedWriter, FileWriter, IOException, PrintWriter}
 
 /**
   * Created by beenotung on 11/13/15.
   */
 object FileUtils {
   @throws(classOf[IOException])
-  def appendToFile(lines: Seq[String],filename:String) = {
-    val fw = new FileWriter(filename)
+  def appendToFile(lines: Seq[String], filename: String) = {
+    val out = new PrintWriter(new BufferedWriter(new FileWriter(filename, true)))
     try {
-      lines.foreach(s => fw.write(s + "\n"))
-      fw.close()
+      lines.foreach(s => out.write(s + "\n"))
+      out.close()
     } catch {
-      case e: IOException => fw.close()
+      case e: IOException => out.close()
         throw e
     }
   }
 
   @throws(classOf[IOException])
-  def appendToFile(lines: java.util.List[String],filename:String) = {
-    val fw = new FileWriter(filename)
-    try {
-      lines.forEach(new Consumer[String] {
-        override def accept(t: String): Unit = fw.write(t + "\n")
-      })
-      fw.close()
-    } catch {
-      case e: IOException => fw.close()
-        throw e
-    }
+  def appendToFile(lines: java.util.List[String], filename: String) :Unit= {
+    import scala.collection.JavaConverters._
+    appendToFile(lines.asScala, filename)
   }
 }
