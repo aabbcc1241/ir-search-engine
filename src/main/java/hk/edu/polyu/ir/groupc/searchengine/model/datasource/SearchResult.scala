@@ -20,7 +20,7 @@ object SearchResultFactory {
   def create(query: Query, retrievalDocuments: java.util.List[RetrievalDocument]): SearchResult =
     create(query.queryId, retrievalDocuments)
 
-  def create(queryId: String, retrievalDocuments: java.util.List[RetrievalDocument]): SearchResult =
+  def create(queryId: String, retrievalDocuments: java.util.List[RetrievalDocument]) =
     new SearchResult(runId, queryId, retrievalDocuments)
 
   @throws(classOf[IOException])
