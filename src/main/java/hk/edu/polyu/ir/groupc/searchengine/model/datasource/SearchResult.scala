@@ -51,10 +51,10 @@ class SearchResult(val runId: String, val queryId: String, val retrievalDocument
   def toStrings: Array[String] = {
     Array.tabulate(retrievalDocuments.size())(i => {
       val doc = retrievalDocuments.get(i)
-//      logd(s"queryid=$queryId")
-//      logd(s"doc=$doc")
-//      logd(s"doc.id=${doc.documentId}")
-//      logd(s"doc.score=${doc.similarityScore}")
+      //      logd(s"queryid=$queryId")
+      //      logd(s"doc=$doc")
+      //      logd(s"doc.id=${doc.documentId}")
+      //      logd(s"doc.score=${doc.similarityScore}")
       queryId + " " + doc.documentId + " " + (i + 1) + " " + doc.similarityScore + " " + runId
     })
   }

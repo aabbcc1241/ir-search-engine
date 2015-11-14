@@ -9,6 +9,7 @@ import hk.edu.polyu.ir.groupc.searchengine.Debug.log
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory.{FilePositionMap, TermFileMap}
 
 import scala.collection.mutable
+import scala.collection.mutable.ArrayBuffer
 
 /**
   * Created by beenotung on 11/7/15.
@@ -53,39 +54,30 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
     case Some(filePositionMap) => filePositionMap.count(x => x._1 == fileId)
   }
 
-  @deprecated("slow", "1.0")
+  //  @deprecated("slow", "1.0")
   def addTerm(termInfo: RawTermInfo) = {
-    val filePositionMap = underlying.getOrElse(termInfo.termStem, {
-      val m = new FilePositionMap
-      underlying.put(termInfo.termStem, m)
-      m
-    })
-    val positions: List[Int] = filePositionMap.get(termInfo.fileId) match {
-      case None => List(termInfo.logicalWordPosition)
-      case Some(xs) => xs :+ termInfo.logicalWordPosition
-    }
-    filePositionMap.put(termInfo.fileId, positions)
+    underlying.getOrElseUpdate(termInfo.termStem, new FilePositionMap)
+      .getOrElseUpdate(termInfo.fileId, new ArrayBuffer[Int](1))
+      .+=(termInfo.logicalWordPosition)
   }
 
   def addTerm(term: String, fileId: Int, positions: Array[Int]) = {
-    val filePositionMap = underlying.getOrElseUpdate(term, new FilePositionMap)
-    filePositionMap.get(fileId) match {
-      case None => filePositionMap.put(fileId, positions.toList)
-      case Some(xs: List[Int]) => filePositionMap.put(fileId, xs ++ positions.toList)
-    }
+    underlying.getOrElseUpdate(term, new FilePositionMap)
+      .put(fileId, ArrayBuffer.empty[Int] ++ positions)
   }
 
-  @deprecated("useless", "1.0")
+  //  @deprecated("useless", "1.0")
   def shrink() = {
-    val newInstance = new TermFileMap
+    //    underlying.foreach(_._2.foreach(_._2.sorted))
+    //    val newInstance = new TermFileMap
     underlying.foreach(termFile => {
       val filePositionMap: FilePositionMap = new FilePositionMap
       termFile._2.foreach(filePosition => {
         filePositionMap.put(filePosition._1, filePosition._2.distinct.sortWith(_ < _))
       })
-      newInstance.put(termFile._1, filePositionMap)
+      //      newInstance.put(termFile._1, filePositionMap)
     })
-    underlying = newInstance
+    //    underlying = newInstance
   }
 
   def writeToFile(filename: String) = {
@@ -116,7 +108,7 @@ object TermInfoFactory {
     * @define key : fileId
     * @define value : positions
     **/
-  type FilePositionMap = mutable.HashMap[Int, List[Int]]
+  type FilePositionMap = mutable.HashMap[Int, ArrayBuffer[Int]]
   //  type FilePositionMap = scala.collection.mutable.HashMap[Int, Array[Int]]
 
   /**
@@ -157,9 +149,9 @@ object TermInfoFactory {
           termIndex.addTerm(post)
         }
       })
-      //      log("start shrinking index")
-      //      termIndex.shrink()
-      //      log("shrieked")
+      log("start shrinking index")
+      termIndex.shrink()
+      log("shrieked")
       cachedTermIndex = termIndex
     } catch {
       case e: FileNotFoundException => throw new RichFileNotFoundException(file)
@@ -206,7 +198,7 @@ object TermInfoFactory {
               val words = line.split(" ")
               val fileId = words.head.toInt
               val positions = words.tail.map(_.toInt)
-              filePositionMap.put(fileId, positions.toList)
+              filePositionMap.put(fileId, ArrayBuffer.empty[Int] ++ positions)
           }
         }
       })
