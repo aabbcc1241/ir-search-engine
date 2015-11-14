@@ -33,11 +33,11 @@ public abstract class Launcher {
 
     public abstract String QUERY();
 
-    public void start(RetrievalModel retrievalModel, String resultFilename) {
+    public void start(RetrievalModel retrievalModel, String resultFilename, int numOfRetrievalDocument) {
         try {
             init();
             log("running retrieval model: " + retrievalModel.getClass().getName());
-            List<SearchResult> searchResults = run(retrievalModel);
+            List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument);
             log("saving search result to file <" + resultFilename + ">");
             try {
                 SearchResultFactory.writeToFile(searchResults, resultFilename);
@@ -76,11 +76,11 @@ public abstract class Launcher {
         }
     }
 
-    protected List<SearchResult> run(RetrievalModel retrievalModel) {
+    protected List<SearchResult> run(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
         List<SearchResult> searchResults = new LinkedList<>();
         Utils.foreach(QueryFactory.getQueries(), query -> {
             log("searching on queryId: " + query.queryId());
-            searchResults.add(retrievalModel.search(query, 1000));
+            searchResults.add(retrievalModel.search(query, numOfRetrievalDocument));
             log("finished search");
         });
         return searchResults;

@@ -51,6 +51,6 @@ public class DummyTest {
         };
         RetrievalModel retrievalModel = new DummyModel();
         SearchResultFactory.setRunId("GroupC-DemoModel");
-        launcher.start(retrievalModel, RESULT_FILE);
+        launcher.start(retrievalModel, RESULT_FILE, 10);
     }
 }

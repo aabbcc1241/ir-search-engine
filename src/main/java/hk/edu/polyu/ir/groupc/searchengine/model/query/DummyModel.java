@@ -15,8 +15,8 @@ import java.util.function.Consumer;
  */
 public class DummyModel extends RetrievalModel {
     @Override
-    public SearchResult search(Query query, int numResult) {
-        ConcurrentLinkedQueue<Object> retrievalDocuments = new ConcurrentLinkedQueue<>();
+    public SearchResult search(Query query, int numOfRetrievalDocument) {
+        ConcurrentLinkedQueue<RetrievalDocument> retrievalDocuments = new ConcurrentLinkedQueue<>();
         for (ExpandedTerm expandedTerm : query.expandedTerms()) {
             ScalaSupport.foreachMap(expandedTerm.term().filePositionMap(), new Consumer<Tuple2<Object, ArrayBuffer<Object>>>() {
                 @Override
@@ -25,8 +25,10 @@ public class DummyModel extends RetrievalModel {
                 }
             });
         }
-        RetrievalDocument[] docs = new RetrievalDocument[retrievalDocuments.size()];
-        docs = retrievalDocuments.toArray(docs);
+        RetrievalDocument[] docs = new RetrievalDocument[Math.min(numOfRetrievalDocument, retrievalDocuments.size())];
+        int i = 0;
+        while (i < docs.length)
+            docs[i++] = retrievalDocuments.poll();
         Arrays.sort(docs);
         return SearchResultFactory.create(query, Arrays.asList(docs));
     }
