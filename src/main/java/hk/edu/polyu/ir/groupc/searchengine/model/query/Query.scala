@@ -3,27 +3,42 @@ package hk.edu.polyu.ir.groupc.searchengine.model.query
 import java.io.{File, FileNotFoundException}
 
 import comm.exception.RichFileNotFoundException
-import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory.ExpandedQuery
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.{TermEntity, TermInfoFactory}
 
 import scala.io.Source
 
 /**
   * Created by beenotung on 11/6/15.
   */
-class Query(val queryId: String, val queryContent: String) {
-  override def toString: String = s"$queryId $queryContent"
+class Query(val queryId: String, val rawQueryContent: String) {
+  lazy val simpleTerms = QueryFactory.extract(rawQueryContent)
+  lazy val expandedTerms = QueryFactory.expand(simpleTerms flatten)
 
-  lazy val expandedQuery: ExpandedQuery = QueryFactory.expand(this)
+  override def toString: String = s"$queryId $rawQueryContent"
 }
 
-class ExpandedTerm(val term: String, val weight: Double)
+class ExpandedTerm(val term: TermEntity, val weight: Double)
 
+class QueryDescription(val relevant: Boolean, val primarily: Boolean, val primarilyMentioned: Boolean)
 
 object QueryFactory {
-  type ExpandedQuery = Array[ExpandedTerm]
 
-  def expand(query: Query): ExpandedQuery = {
-    query.queryContent.split(" ").map(s => new ExpandedTerm(s, 1))
+  @throws(classOf[IllegalStateException])
+  private var queries: Iterator[Query] = null
+
+  def extract(rawString: String): Array[Option[TermEntity]] = {
+    rawString.split(" ").map(stem).map(TermInfoFactory.getTermIndex.getTermEntity)
+  }
+
+  def stem(string: String): String = {
+    val stemmer = new Stemmer()
+    stemmer.add(string.toCharArray, string.length)
+    stemmer.stem()
+    stemmer.toString.toLowerCase
+  }
+
+  def expand(terms: Array[TermEntity]): Array[ExpandedTerm] = {
+    terms.map(t => new ExpandedTerm(t, 1))
   }
 
   @throws(classOf[RichFileNotFoundException])
@@ -40,9 +55,6 @@ object QueryFactory {
     val content = rawString.substring(4, rawString.length)
     new Query(id.trim, content.trim)
   }
-
-  @throws(classOf[IllegalStateException])
-  private var queries: Iterator[Query] = null
 
   def getQueries: Iterator[Query] = {
     if (queries == null) throw new IllegalStateException("query has not been loaded")

@@ -36,13 +36,6 @@ object SearchResultFactory {
 
 
 class SearchResult(val runId: String, val queryId: String, val retrievalDocuments: java.util.List[RetrievalDocument]) {
-  def toStrings: Array[String] = {
-    Array.tabulate(retrievalDocuments.size())(i => {
-      val doc = retrievalDocuments.get(i)
-      queryId + " " + doc.documentId + " " + (i + 1) + " " + doc.similarityScore + " " + runId
-    })
-  }
-
   @throws(classOf[IOException])
   def writeToFile(filename: String) = {
     val fw = new FileWriter(filename)
@@ -53,5 +46,16 @@ class SearchResult(val runId: String, val queryId: String, val retrievalDocument
       case e: IOException => fw.close()
         throw e
     }
+  }
+
+  def toStrings: Array[String] = {
+    Array.tabulate(retrievalDocuments.size())(i => {
+      val doc = retrievalDocuments.get(i)
+      //      logd(s"queryid=$queryId")
+      //      logd(s"doc=$doc")
+      //      logd(s"doc.id=${doc.documentId}")
+      //      logd(s"doc.score=${doc.similarityScore}")
+      queryId + " " + doc.documentId + " " + (i + 1) + " " + doc.similarityScore + " " + runId
+    })
   }
 }
