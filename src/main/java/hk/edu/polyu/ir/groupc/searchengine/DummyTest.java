@@ -2,10 +2,7 @@ package hk.edu.polyu.ir.groupc.searchengine;
 
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
-import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalDocument;
-import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.*;
 import scala.util.Random;
 
 import java.util.ArrayList;
@@ -16,7 +13,7 @@ import java.util.ArrayList;
 public class DummyTest {
     public static final String FILE_PATH = "res/file.txt";
     public static final String TERM_INDEX_PATH = "res/term_index.txt";
-    public static final String POST_PATH = "res/psot1.txt";
+    public static final String POST_PATH = "res/post1.txt";
     public static final String STOP_PATH = "res/estop.lst";
     public static final String JUDGEROBUST = "res/judgerobust";
     public static final String QUERY_T="res/queryT";
@@ -55,15 +52,7 @@ public class DummyTest {
                 return QUERY_T;
             }
         };
-        RetrievalModel retrievalModel = new RetrievalModel() {
-            @Override
-            public SearchResult search(Query query) {
-                ArrayList<RetrievalDocument> retrievalDocuments = new ArrayList<>();
-                Random random=new Random();
-                retrievalDocuments.add(new RetrievalDocument(random.nextInt(10)+1,random.nextDouble()));
-                return SearchResultFactory.create(query, retrievalDocuments);
-            }
-        };
+        RetrievalModel retrievalModel =new DummyModel();
         SearchResultFactory.setRunId("GroupC-DemoModel");
         launcher.start(retrievalModel,RESULT_FILE);
     }

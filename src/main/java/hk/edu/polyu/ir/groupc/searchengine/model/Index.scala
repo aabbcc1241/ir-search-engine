@@ -10,9 +10,9 @@ object Index {
   //TODO implementing lazy get
   //TODO avoid lazy
 
-  def getDocumentLength(fileId: Int) = getDocLen(fileId)
+  def getFilePositionMap(term: String) = TermInfoFactory.getTermIndex.getFilePositionMap(term)
 
-  def getDocLen(fileId: Int) = DocFileFactory.getDocFile(fileId).docLen
+  def getDocumentLength(fileId: Int) =  DocFileFactory.getDocFile(fileId).docLen
 
   @deprecated("slow")
   /* get term frequency by in document (file) */

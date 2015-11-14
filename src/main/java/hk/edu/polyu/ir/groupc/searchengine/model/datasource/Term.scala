@@ -5,6 +5,8 @@ import java.util.function.Consumer
 
 import comm.Utils
 import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
+import hk.edu.polyu.ir.groupc.searchengine.Debug
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory.{FilePositionMap, TermFileMap}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -18,22 +20,13 @@ import scala.collection.mutable.ListBuffer
   **/
 private class RawTermInfo(val term: String, val fileId: Int, val logicalWordPosition: Int)
 
-/**
-  * @define key : fileId
-  * @define value : positionList
-  **/
-class FilePositionMap extends mutable.HashMap[Int, ListBuffer[Int]]
-
-/**
-  * @define key : term
-  * @define value : FilePositionMap [fileId, positionList]
-  **/
-class TermFileMap extends mutable.HashMap[String, FilePositionMap]
 
 class TermEntity(val termStem: String, val filePositionMap: FilePositionMap)
 
 class TermIndex(initMap: TermFileMap = new TermFileMap) {
   private var underlying = initMap
+
+  def getFilePositionMap(term: String) = underlying.get(term)
 
   @deprecated("slow")
   def getTF(term: String, fileId: Int): Int = underlying.get(term) match {
@@ -97,6 +90,19 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
 }
 
 object TermInfoFactory {
+
+  /**
+    * @define key : fileId
+    * @define value : positionList
+    **/
+  type FilePositionMap = mutable.HashMap[Int, ListBuffer[Int]]
+
+  /**
+    * @define key : term
+    * @define value : FilePositionMap [fileId, positionList]
+    **/
+  type TermFileMap = mutable.HashMap[String, FilePositionMap]
+
   /* index by term
  * content : HastMap [file id -> List[position] ]
  * example : apple -> (d1->1,2,3),(d2->2,3,4)
@@ -110,8 +116,20 @@ object TermInfoFactory {
   def build(file: File) = {
     try {
       val termIndex = new TermIndex
+      val N = Utils.countLines(file)
+      var i = 0
+      var lp = 0f
+      var p = 0f
       Utils.processLines(file, new Consumer[String] {
         override def accept(t: String): Unit = {
+          i += 1
+          p = 1f * i / N
+          if ((p - lp) > 1f / 100f) {
+            Debug.log(p * 100f + "% "
+              + Runtime.getRuntime.totalMemory() / 1024 / 1024 + "M / "
+              + Runtime.getRuntime.maxMemory() / 1024 / 1024 + "M")
+            lp = p
+          }
           val post = createFromString(t)
           termIndex.addTerm(post)
         }
@@ -125,7 +143,7 @@ object TermInfoFactory {
 
   private def createFromString(rawString: String): RawTermInfo = {
     val xs = rawString.split(" ")
-    new RawTermInfo(xs(0), xs(1).toInt, xs(2).toInt)
+    new RawTermInfo(xs(0).toLowerCase, xs(1).toInt, xs(2).toInt)
   }
 
   private val MODE_EMPTY = 0
@@ -140,8 +158,21 @@ object TermInfoFactory {
       var lineLeft = -2
       /* tmp vars */
       var filePositionMap: FilePositionMap = null
+      val termIndex = new TermIndex
+      val N = Utils.countLines(file)
+      var i = 0
+      var lp = 0f
+      var p = 0f
       Utils.processLines(file, new Consumer[String] {
         override def accept(line: String): Unit = {
+          i += 1
+          p = 1f * i / N
+          if ((p - lp) > 1f / 100f) {
+            Debug.log(p * 100f + "% "
+              + Runtime.getRuntime.totalMemory() / 1024 / 1024 + "M / "
+              + Runtime.getRuntime.maxMemory() / 1024 / 1024 + "M")
+            lp = p
+          }
           lineLeft match {
             case -2 | -1 =>
               lineLeft += 1

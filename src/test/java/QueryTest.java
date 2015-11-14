@@ -15,7 +15,7 @@ public class QueryTest {
         Utils.foreach(QueryFactory.getQueries(), query ->
                 System.out.printf("%s %s\n",
                         query.queryId(),
-                        query.queryContent()
+                        query.rawQueryContent()
                 ));
     }
 }

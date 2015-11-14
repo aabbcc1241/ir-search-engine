@@ -1,5 +1,7 @@
 package comm;
 
+import comm.lang.ScalaSupport;
+import scala.Function1;
 import scala.collection.Iterator;
 
 import java.io.*;
@@ -56,4 +58,5 @@ public class Utils {
             is.close();
         }
     }
+
 }

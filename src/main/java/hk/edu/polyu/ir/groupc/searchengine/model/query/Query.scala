@@ -3,6 +3,7 @@ package hk.edu.polyu.ir.groupc.searchengine.model.query
 import java.io.{File, FileNotFoundException}
 
 import comm.exception.RichFileNotFoundException
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermEntity
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory.ExpandedQuery
 
 import scala.io.Source
@@ -10,20 +11,27 @@ import scala.io.Source
 /**
   * Created by beenotung on 11/6/15.
   */
-class Query(val queryId: String, val queryContent: String) {
-  override def toString: String = s"$queryId $queryContent"
-
-  lazy val expandedQuery: ExpandedQuery = QueryFactory.expand(this)
+class Query(val queryId: String, val rawQueryContent: String) {
+  override def toString: String = s"$queryId $rawQueryContent"
+lazy val queryTerms:Array[TermEntity]=QueryFactory.extract(this)
+  lazy val expandedQuery: Array[ExpandedTerm] = QueryFactory.expand(this)
 }
 
 class ExpandedTerm(val term: String, val weight: Double)
 
+class QueryDescribtion(val relevant:Boolean,val primarily:Boolean,val primarilyMentioned:Boolean)
 
 object QueryFactory {
-  type ExpandedQuery = Array[ExpandedTerm]
 
-  def expand(query: Query): ExpandedQuery = {
-    query.queryContent.split(" ").map(s => new ExpandedTerm(s, 1))
+  def stem(string: String): String = {
+    val stemmer = new Stemmer()
+    stemmer.add(string.toCharArray, string.length)
+    stemmer.stem()
+    stemmer.toString.toLowerCase
+  }
+def extract
+  def expand(query: Query): Array[ExpandedTerm] = {
+    query.rawQueryContent.split(" ").map(s => new ExpandedTerm(stem(s), 1))
   }
 
   @throws(classOf[RichFileNotFoundException])
