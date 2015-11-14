@@ -14,9 +14,12 @@ object Debug extends App {
 
   def loge(x: Any) = if (!skipError) log(x)
 
-  def logd(x: Any) = if (!skipDebug) log(x)
+  def log(x: Any) = {
+    println(x)
+    Console.out.flush()
+  }
 
-  def log(x: Any) = println(x)
+  def logd(x: Any) = if (!skipDebug) log(x)
 
   /*@deprecated
   override def main(args: Array[String]) {

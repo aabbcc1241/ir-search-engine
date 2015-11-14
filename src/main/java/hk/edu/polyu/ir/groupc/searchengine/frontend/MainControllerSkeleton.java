@@ -31,7 +31,7 @@ public class MainControllerSkeleton {
     protected Label label_right_status;
 
     @FXML
-  public void build_index(ActionEvent event) {
+    public void build_index(ActionEvent event) {
 
     }
 

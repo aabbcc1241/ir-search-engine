@@ -12,7 +12,7 @@ object Index {
 
   def getFilePositionMap(term: String) = TermInfoFactory.getTermIndex.getFilePositionMap(term)
 
-  def getDocumentLength(fileId: Int) =  DocFileFactory.getDocFile(fileId).docLen
+  def getDocumentLength(fileId: Int) = DocFileFactory.getDocFile(fileId).docLen
 
   @deprecated("slow")
   /* get term frequency by in document (file) */
@@ -41,6 +41,10 @@ object Index {
   def getIDF(term: String, fileId: Int) = IDFFactory.getIDF(term, fileId)
 
   def getDocFile(fileId: Int) = DocFileFactory.getDocFile(fileId)
+
+  def getTermEntity(termStem: String) = {
+    TermInfoFactory.getTermIndex.getTermEntity(termStem)
+  }
 
   def hello = {
     Debug.log("Hello")

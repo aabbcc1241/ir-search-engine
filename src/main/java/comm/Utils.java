@@ -1,7 +1,5 @@
 package comm;
 
-import comm.lang.ScalaSupport;
-import scala.Function1;
 import scala.collection.Iterator;
 
 import java.io.*;
@@ -14,6 +12,11 @@ import java.util.stream.Stream;
  * Created by beenotung on 11/7/15.
  */
 public class Utils {
+    public static String getRamUsageString() {
+        Runtime runtime = Runtime.getRuntime();
+        return runtime.totalMemory() / 1024 / 1024 + "M / " + runtime.maxMemory() / 1024 / 1024 + "M";
+    }
+
     public static <E> void foreach(Iterator<E> iterator, Consumer<E> consumer) {
         while (iterator.hasNext())
             consumer.accept(iterator.next());

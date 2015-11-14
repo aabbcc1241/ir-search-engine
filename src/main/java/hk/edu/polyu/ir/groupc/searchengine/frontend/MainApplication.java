@@ -4,17 +4,15 @@ package hk.edu.polyu.ir.groupc.searchengine.frontend;
  * Created by beenotung on 11/8/15.
  */
 
-import hk.edu.polyu.ir.groupc.searchengine.Debug;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import sun.rmi.runtime.Log;
 
 import java.io.IOException;
 
-import static hk.edu.polyu.ir.groupc.searchengine.Debug.*;
+import static hk.edu.polyu.ir.groupc.searchengine.Debug.log;
 
 public class MainApplication extends Application {
     static String title = "IR 2015 GroupC";

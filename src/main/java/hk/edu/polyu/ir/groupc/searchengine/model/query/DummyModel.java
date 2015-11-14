@@ -1,17 +1,12 @@
 package hk.edu.polyu.ir.groupc.searchengine.model.query;
 
 import comm.lang.ScalaSupport;
-import hk.edu.polyu.ir.groupc.searchengine.model.Index;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
-import scala.Option;
 import scala.Tuple2;
-import scala.collection.mutable.HashMap;
-import scala.collection.mutable.ListBuffer;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Arrays;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
 
 /**
@@ -19,21 +14,19 @@ import java.util.function.Consumer;
  */
 public class DummyModel extends RetrievalModel {
     @Override
-    public SearchResult search(Query query) {
-        List<RetrievalDocument> retrievalDocuments = new ArrayList<>();
-        for (ExpandedTerm expandedTerm : query.expandedQuery()) {
-            Option<HashMap<Object, ListBuffer<Object>>> option = Index.getFilePositionMap(expandedTerm.term());
-            if (option.isEmpty()) continue;
-            HashMap<Object, ListBuffer<Object>> filePositionMap = option.get();
-            ScalaSupport.foreachMap(filePositionMap, new Consumer<Tuple2<Object, ListBuffer<Object>>>() {
+    public SearchResult search(Query query, int numResult) {
+        ConcurrentLinkedQueue<Object> retrievalDocuments = new ConcurrentLinkedQueue<>();
+        for (ExpandedTerm expandedTerm : query.expandedTerms()) {
+            ScalaSupport.foreachParMap(expandedTerm.term().filePositionMap(), new Consumer<Tuple2<Object, int[]>>() {
                 @Override
-                public void accept(Tuple2<Object, ListBuffer<Object>> e) {
-                    retrievalDocuments.add(new RetrievalDocument((int) e._1(), e._2().length()));
+                public void accept(Tuple2<Object, int[]> e) {
+                    retrievalDocuments.add(new RetrievalDocument((int) e._1(), e._2().length * expandedTerm.weight()));
                 }
             });
-//            filePositionMap.foreach(e ->
-//                    retrievalDocuments.add(new RetrievalDocument((int) e._1(), e._2().length())));
         }
-        return SearchResultFactory.create(query, retrievalDocuments);
+        RetrievalDocument[] docs = new RetrievalDocument[retrievalDocuments.size()];
+        docs = retrievalDocuments.toArray(docs);
+        Arrays.sort(docs);
+        return SearchResultFactory.create(query, Arrays.asList(docs));
     }
 }

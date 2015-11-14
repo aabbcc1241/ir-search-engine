@@ -80,7 +80,7 @@ public abstract class Launcher {
         List<SearchResult> searchResults = new LinkedList<>();
         Utils.foreach(QueryFactory.getQueries(), query -> {
             log("searching on queryId: " + query.queryId());
-            searchResults.add(retrievalModel.search(query));
+            searchResults.add(retrievalModel.search(query,1000));
             log("finished search");
         });
         return searchResults;
