@@ -8,7 +8,7 @@ import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
 import hk.edu.polyu.ir.groupc.searchengine.Debug.log
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory.{FilePositionMap, TermFileMap}
 
-import scala.collection.parallel.mutable.ParHashMap
+import scala.collection.mutable
 
 /**
   * Created by beenotung on 11/7/15.
@@ -60,19 +60,19 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
       underlying.put(termInfo.termStem, m)
       m
     })
-    val positions = filePositionMap.get(termInfo.fileId) match {
-      case None => Array(termInfo.logicalWordPosition)
+    val positions: List[Int] = filePositionMap.get(termInfo.fileId) match {
+      case None => List(termInfo.logicalWordPosition)
       case Some(xs) => xs :+ termInfo.logicalWordPosition
     }
     filePositionMap.put(termInfo.fileId, positions)
   }
 
   def addTerm(term: String, fileId: Int, positions: Array[Int]) = {
-    underlying.getOrElse(term,{
-      val m=new FilePositionMap
-      underlying.put(term,m)
-      m
-    }).put(fileId,positions)
+    val filePositionMap = underlying.getOrElseUpdate(term, new FilePositionMap)
+    filePositionMap.get(fileId) match {
+      case None => filePositionMap.put(fileId, positions.toList)
+      case Some(xs: List[Int]) => filePositionMap.put(fileId, xs ++ positions.toList)
+    }
   }
 
   @deprecated("useless", "1.0")
@@ -116,14 +116,14 @@ object TermInfoFactory {
     * @define key : fileId
     * @define value : positions
     **/
-  type FilePositionMap = ParHashMap[Int, Array[Int]]
+  type FilePositionMap = mutable.HashMap[Int, List[Int]]
   //  type FilePositionMap = scala.collection.mutable.HashMap[Int, Array[Int]]
 
   /**
     * @define key : term
     * @define value : FilePositionMap [fileId, positionList]
     **/
-  type TermFileMap = ParHashMap[String, FilePositionMap]
+  type TermFileMap = mutable.HashMap[String, FilePositionMap]
   //  type TermFileMap = scala.collection.mutable.HashMap[String, FilePositionMap]
   private val MODE_EMPTY = 0
   private val MODE_COMMENT = -1
@@ -206,7 +206,7 @@ object TermInfoFactory {
               val words = line.split(" ")
               val fileId = words.head.toInt
               val positions = words.tail.map(_.toInt)
-              filePositionMap.put(fileId, positions)
+              filePositionMap.put(fileId, positions.toList)
           }
         }
       })

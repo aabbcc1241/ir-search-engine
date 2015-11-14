@@ -12,6 +12,10 @@ object ScalaSupport {
     map.foreach(e => consumer.accept(e))
   }
 
+  def foreachMap[K, V](map: scala.collection.mutable.HashMap[K, V], consumer: Consumer[(K, V)]) = {
+    map.foreach(e => consumer.accept(e))
+  }
+
   def foreachMap[K, V](map: Map[K, V], consumer: Consumer[(K, V)]) = {
     map.foreach(e => consumer.accept(e))
   }

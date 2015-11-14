@@ -4,7 +4,9 @@ import comm.lang.ScalaSupport;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
 import scala.Tuple2;
+import scala.collection.immutable.List;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Consumer;
@@ -17,12 +19,12 @@ public class DummyModel extends RetrievalModel {
     public SearchResult search(Query query, int numResult) {
         ConcurrentLinkedQueue<Object> retrievalDocuments = new ConcurrentLinkedQueue<>();
         for (ExpandedTerm expandedTerm : query.expandedTerms()) {
-            ScalaSupport.foreachParMap(expandedTerm.term().filePositionMap(), new Consumer<Tuple2<Object, int[]>>() {
+            ScalaSupport.foreachMap(expandedTerm.term().filePositionMap(), new Consumer<Tuple2<Object, List<Object>>>() {
                 @Override
-                public void accept(Tuple2<Object, int[]> e) {
-                    retrievalDocuments.add(new RetrievalDocument((int) e._1(), e._2().length * expandedTerm.weight()));
+                public void accept(Tuple2<Object, List<Object>> e) {
+                    retrievalDocuments.add(new RetrievalDocument((int) e._1(), e._2().size() * expandedTerm.weight()));
                 }
-            });
+            }) ;
         }
         RetrievalDocument[] docs = new RetrievalDocument[retrievalDocuments.size()];
         docs = retrievalDocuments.toArray(docs);
