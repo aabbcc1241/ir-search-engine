@@ -7,6 +7,7 @@ import comm.Utils
 import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
 import hk.edu.polyu.ir.groupc.searchengine.Debug.log
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory.{FilePositionMap, TermFileMap}
+import org.EditDistance
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.parallel.mutable.ParHashMap
@@ -21,7 +22,9 @@ import scala.collection.parallel.mutable.ParHashMap
 private class RawTermInfo(val termStem: String, val fileId: Int, val logicalWordPosition: Int)
 
 
-class TermEntity(val termStem: String, val filePositionMap: FilePositionMap)
+class TermEntity(val termStem: String, val filePositionMap: FilePositionMap) {
+  def editDistance(another: TermEntity) = TermInfoFactory.editDistance(termStem, another.termStem)
+}
 
 class TermIndex(initMap: TermFileMap = new TermFileMap) {
   private var underlying = initMap
@@ -234,4 +237,16 @@ object TermInfoFactory {
     cachedTermIndex
   }
 
+  def editDistance(term1: String, term2: String) = {
+    //    EditDistance.editDistance(term1, term2)
+//    import sbt.complete.EditDistance
+    EditDistance.levenshtein(term1, term2,
+      insertCost = 2,
+      deleteCost = 3,
+      subCost = 1,
+      transposeCost = 3,
+      matchCost = 0,
+      caseCost = 0,
+      transpositions = false)
+  }
 }
