@@ -1,11 +1,17 @@
 package comm
 
+import java.util.function.Supplier
+
 import hk.edu.polyu.ir.groupc.searchengine.Debug
 
 /**
   * Created by beenotung on 11/15/15.
   */
 object Test {
+  def time_J[R](supplier: Supplier[R], repeat: Int = 1, report: Boolean = false, preGC: Boolean = false, postGC: Boolean = false): Array[(R, Long)] = {
+    time(supplier.get, repeat, report, preGC, postGC)
+  }
+
   def time[R](block: => R, repeat: Int = 1, report: Boolean = false, preGC: Boolean = false, postGC: Boolean = false): Array[(R, Long)] = {
     Array.tabulate(repeat)(i => {
       if (report)

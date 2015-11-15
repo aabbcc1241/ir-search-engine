@@ -1,19 +1,22 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
-import comm.Utils;
 import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
+import comm.lang.ScalaSupport;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
+import scala.collection.SeqView;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Function;
 
 import static hk.edu.polyu.ir.groupc.searchengine.Debug.*;
 
@@ -32,6 +35,20 @@ public abstract class Launcher {
     public abstract String JUDGEROBUST();
 
     public abstract String QUERY();
+
+    public List<SearchResult> test(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
+        try {
+            init();
+            log("running retrieval model: " + retrievalModel.getClass().getName());
+            List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument);
+            deinit();
+            return searchResults;
+        } catch (EssentialFileNotFoundException e) {
+            exception(e);
+            loge("Error: Please make sure you have '" + e.path + "'");
+        }
+        return null;
+    }
 
     public void start(RetrievalModel retrievalModel, String resultFilename, int numOfRetrievalDocument) {
         try {
@@ -78,11 +95,15 @@ public abstract class Launcher {
 
     protected List<SearchResult> run(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
         List<SearchResult> searchResults = new LinkedList<>();
-        Utils.foreach(QueryFactory.getQueries(), query -> {
-            log("searching on queryId: " + query.queryId());
-            searchResults.add(retrievalModel.search(query, numOfRetrievalDocument));
-            log("finished search");
-        });
+        QueryFactory.getQueries().foreach(ScalaSupport.function1(new Function<Query, Object>() {
+            @Override
+            public Object apply(Query query) {
+                log("searching on queryId: " + query.queryId());
+                searchResults.add(retrievalModel.search(query, numOfRetrievalDocument));
+                log("finished search");
+                return null;
+            }
+        }));
         return searchResults;
     }
 
