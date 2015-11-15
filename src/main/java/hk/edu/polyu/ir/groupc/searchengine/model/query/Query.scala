@@ -5,6 +5,7 @@ import java.io.{File, FileNotFoundException}
 import comm.exception.RichFileNotFoundException
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.{TermEntity, TermInfoFactory}
 
+import scala.collection.SeqView
 import scala.io.Source
 
 /**
@@ -24,7 +25,7 @@ class QueryDescription(val relevant: Boolean, val primarily: Boolean, val primar
 object QueryFactory {
 
   @throws(classOf[IllegalStateException])
-  private var queries: Iterator[Query] = null
+  private var queries: List[Query] = null
 
   def extract(rawString: String): Array[Option[TermEntity]] = {
     rawString.split(" ").map(stem).map(TermInfoFactory.getTermIndex.getTermEntity)
@@ -44,7 +45,7 @@ object QueryFactory {
   @throws(classOf[RichFileNotFoundException])
   def loadFromFile(file: File) = {
     try {
-      queries = Source.fromFile(file).getLines().map[Query](createFromString)
+      queries = Source.fromFile(file).getLines().map[Query](createFromString).toList
     } catch {
       case e: FileNotFoundException => throw new RichFileNotFoundException(file)
     }
@@ -56,9 +57,9 @@ object QueryFactory {
     new Query(id.trim, content.trim)
   }
 
-  def getQueries: Iterator[Query] = {
+  def getQueries: SeqView[Query, List[Query]] = {
     if (queries == null) throw new IllegalStateException("query has not been loaded")
-    queries
+    queries.view
   }
 }
 
