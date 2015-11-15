@@ -1,11 +1,13 @@
 
 import comm.Test;
 import hk.edu.polyu.ir.groupc.searchengine.Launcher;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.SimpleModel;
 import scala.Tuple2;
 
+import java.util.List;
 import java.util.function.Supplier;
 
 import static hk.edu.polyu.ir.groupc.searchengine.Debug.log;
@@ -60,7 +62,9 @@ public class SimpleModelTest {
         Tuple2<Object, Object>[] results = Test.time_J(new Supplier<Object>() {
             @Override
             public Object get() {
-                return launcher.test(retrievalModel, Integer.MAX_VALUE - 8);
+                List<SearchResult> searchResults = launcher.test(retrievalModel, 10);
+                System.out.println(searchResults.size());
+                return searchResults;
             }
         }, 10, true, true, true);
         for (Tuple2<Object, Object> result : results) {
