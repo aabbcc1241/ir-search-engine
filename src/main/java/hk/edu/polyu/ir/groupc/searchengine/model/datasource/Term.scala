@@ -26,6 +26,8 @@ class TermEntity(val termStem: String, val filePositionMap: FilePositionMap)
 class TermIndex(initMap: TermFileMap = new TermFileMap) {
   private var underlying = initMap
 
+  def reset = underlying = null
+
   def getTermEntity(termStem: String) = underlying.get(termStem) match {
     case None => None
     case Some(filePositionMap) => Some(new TermEntity(termStem, filePositionMap))
@@ -131,6 +133,7 @@ object TermInfoFactory {
     **/
   @throws(classOf[RichFileNotFoundException])
   def build(file: File) = {
+    cachedTermIndex = null
     try {
       val termIndex = new TermIndex
       val N = Utils.countLines(file)
@@ -166,6 +169,7 @@ object TermInfoFactory {
   @throws(classOf[InvalidFileFormatException])
   @throws(classOf[RichFileNotFoundException])
   def load(file: File) = {
+    cachedTermIndex = null
     try {
       val termFileMap = new TermFileMap
       var lineLeft = -2

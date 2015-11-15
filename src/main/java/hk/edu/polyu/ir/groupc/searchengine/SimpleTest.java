@@ -1,13 +1,13 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.query.DummyModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.SimpleModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
 
 /**
  * Created by beenotung on 11/12/15.
  */
-public class DummyTest {
+public class SimpleTest {
     public static final String FILE_PATH = "res/file.txt";
     public static final String TERM_INDEX_PATH = "res/term_index.txt";
     public static final String POST_PATH = "res/post1.txt";
@@ -49,7 +49,7 @@ public class DummyTest {
                 return QUERY_T;
             }
         };
-        RetrievalModel retrievalModel = new DummyModel();
+        RetrievalModel retrievalModel = new SimpleModel();
         SearchResultFactory.setRunId("GroupC-DemoModel");
         launcher.start(retrievalModel, RESULT_FILE, 10);
     }
