@@ -37,16 +37,15 @@ public class Utils {
     @Deprecated
     public static <T> ArrayList<T> streamToArray(Stream<T> stream) {
         ArrayList<T> ts = new ArrayList<>();
-        stream.forEach(t -> ts.add(t));
+        stream.forEach(ts::add);
         return ts;
     }
 
     public static int countLines(File file) throws IOException {
-        InputStream is = new BufferedInputStream(new FileInputStream(file));
-        try {
+        try (InputStream is = new BufferedInputStream(new FileInputStream(file))) {
             byte[] c = new byte[1024];
             int count = 0;
-            int readChars = 0;
+            int readChars;
             boolean empty = true;
             while ((readChars = is.read(c)) != -1) {
                 empty = false;
@@ -57,8 +56,6 @@ public class Utils {
                 }
             }
             return (count == 0 && !empty) ? 1 : count;
-        } finally {
-            is.close();
         }
     }
 

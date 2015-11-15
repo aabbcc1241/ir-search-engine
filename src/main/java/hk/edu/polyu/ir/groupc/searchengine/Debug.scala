@@ -1,11 +1,14 @@
 package hk.edu.polyu.ir.groupc.searchengine
 
+import comm.FileUtils
+
 /**
   * Created by beenotung on 10/23/15.
   */
 object Debug extends App {
-  val skipDebug = false
-  val skipError = false
+  lazy val skipDebug = false
+  lazy val skipError = false
+  lazy val FILE_LOG = "log.txt"
 
   def exception(e: Exception) = {
     e.printStackTrace()
@@ -17,6 +20,7 @@ object Debug extends App {
   def log(x: Any) = {
     println(x)
     Console.out.flush()
+    FileUtils.appendToFile(x.toString :: Nil, FILE_LOG)
   }
 
   def logd(x: Any) = if (!skipDebug) log(x)

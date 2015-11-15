@@ -1,13 +1,21 @@
-package hk.edu.polyu.ir.groupc.searchengine;
 
+import comm.Test;
+import hk.edu.polyu.ir.groupc.searchengine.Launcher;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.query.DummyModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.SimpleModel;
+import scala.Tuple2;
+
+import java.util.List;
+import java.util.function.Supplier;
+
+import static hk.edu.polyu.ir.groupc.searchengine.Debug.log;
 
 /**
  * Created by beenotung on 11/12/15.
  */
-public class DummyTest {
+public class SimpleModelTest {
     public static final String FILE_PATH = "res/file.txt";
     public static final String TERM_INDEX_PATH = "res/term_index.txt";
     public static final String POST_PATH = "res/post1.txt";
@@ -49,8 +57,18 @@ public class DummyTest {
                 return QUERY_T;
             }
         };
-        RetrievalModel retrievalModel = new DummyModel();
+        RetrievalModel retrievalModel = new SimpleModel();
         SearchResultFactory.setRunId("GroupC-DemoModel");
-        launcher.start(retrievalModel, RESULT_FILE, 10);
+        Tuple2<Object, Object>[] results = Test.time_J(new Supplier<Object>() {
+            @Override
+            public Object get() {
+                List<SearchResult> searchResults = launcher.test(retrievalModel, 10);
+                System.out.println(searchResults.size());
+                return searchResults;
+            }
+        }, 10, true, true, true);
+        for (Tuple2<Object, Object> result : results) {
+            log("used time " + (long) result._2() + " ns");
+        }
     }
 }

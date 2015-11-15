@@ -8,8 +8,8 @@ import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
 import hk.edu.polyu.ir.groupc.searchengine.Debug.log
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory.{FilePositionMap, TermFileMap}
 
-import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
+import scala.collection.parallel.mutable.ParHashMap
 
 /**
   * Created by beenotung on 11/7/15.
@@ -25,6 +25,8 @@ class TermEntity(val termStem: String, val filePositionMap: FilePositionMap)
 
 class TermIndex(initMap: TermFileMap = new TermFileMap) {
   private var underlying = initMap
+
+  def reset = underlying = null
 
   def getTermEntity(termStem: String) = underlying.get(termStem) match {
     case None => None
@@ -56,23 +58,38 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
 
   //  @deprecated("slow", "1.0")
   def addTerm(termInfo: RawTermInfo) = {
-    underlying.getOrElseUpdate(termInfo.termStem, new FilePositionMap)
-      .getOrElseUpdate(termInfo.fileId, new ArrayBuffer[Int](1))
-      .+=(termInfo.logicalWordPosition)
+    val filePositionMap = underlying.getOrElse(termInfo.termStem, {
+      val m = new FilePositionMap
+      underlying.put(termInfo.termStem, m)
+      m
+    })
+    filePositionMap.getOrElse(termInfo.fileId, {
+      val l = new ArrayBuffer[Int](1)
+      filePositionMap.put(termInfo.fileId, l)
+      l
+    }) += termInfo.logicalWordPosition
   }
 
   def addTerm(term: String, fileId: Int, positions: Array[Int]) = {
-    underlying.getOrElseUpdate(term, new FilePositionMap)
-      .put(fileId, ArrayBuffer.empty[Int] ++ positions)
+    val filePositionMap = underlying.getOrElse(term, {
+      val m = new FilePositionMap
+      underlying.put(term, m)
+      m
+    })
+    filePositionMap.getOrElse(fileId, {
+      val l = new ArrayBuffer[Int](1)
+      filePositionMap.put(fileId, l)
+      l
+    }) ++= positions
   }
 
   //  @deprecated("useless", "1.0")
   def shrink() = {
     //    underlying.foreach(_._2.foreach(_._2.sorted))
     //    val newInstance = new TermFileMap
-    underlying.foreach(termFile => {
+    underlying.toStream.foreach(termFile => {
       val filePositionMap: FilePositionMap = new FilePositionMap
-      termFile._2.foreach(filePosition => {
+      termFile._2.toStream.foreach(filePosition => {
         filePositionMap.put(filePosition._1, filePosition._2.distinct.sortWith(_ < _))
       })
       //      newInstance.put(termFile._1, filePositionMap)
@@ -86,9 +103,9 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
     val out = new BufferedWriter(new FileWriter(file))
     out.write("# term, number of files\n")
     out.write("# fileId, position...\n")
-    underlying.foreach(termFile => {
+    underlying.toStream.foreach(termFile => {
       out.write(termFile._1 + " " + termFile._2.size)
-      termFile._2.foreach(filePositionMap => {
+      termFile._2.toStream.foreach(filePositionMap => {
         out.write("\n" + filePositionMap._1)
         filePositionMap._2.foreach(p => out.write(" " + p))
       }
@@ -108,14 +125,14 @@ object TermInfoFactory {
     * @define key : fileId
     * @define value : positions
     **/
-  type FilePositionMap = mutable.HashMap[Int, ArrayBuffer[Int]]
+  type FilePositionMap = ParHashMap[Int, ArrayBuffer[Int]]
   //  type FilePositionMap = scala.collection.mutable.HashMap[Int, Array[Int]]
 
   /**
     * @define key : term
     * @define value : FilePositionMap [fileId, positionList]
     **/
-  type TermFileMap = mutable.HashMap[String, FilePositionMap]
+  type TermFileMap = ParHashMap[String, FilePositionMap]
   //  type TermFileMap = scala.collection.mutable.HashMap[String, FilePositionMap]
   private val MODE_EMPTY = 0
   private val MODE_COMMENT = -1
@@ -131,6 +148,7 @@ object TermInfoFactory {
     **/
   @throws(classOf[RichFileNotFoundException])
   def build(file: File) = {
+    cachedTermIndex = null
     try {
       val termIndex = new TermIndex
       val N = Utils.countLines(file)
@@ -166,6 +184,7 @@ object TermInfoFactory {
   @throws(classOf[InvalidFileFormatException])
   @throws(classOf[RichFileNotFoundException])
   def load(file: File) = {
+    cachedTermIndex = null
     try {
       val termFileMap = new TermFileMap
       var lineLeft = -2
