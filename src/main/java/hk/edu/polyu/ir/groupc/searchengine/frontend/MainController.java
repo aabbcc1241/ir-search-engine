@@ -4,7 +4,7 @@ import comm.AlertUtils;
 import hk.MainControllerSkeleton;
 import hk.edu.polyu.ir.groupc.searchengine.Debug;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory;
 import javafx.event.ActionEvent;
 
 import java.io.File;
@@ -80,7 +80,7 @@ public class MainController extends MainControllerSkeleton {
         statusMain(action);
         String filename = text_post.getText();
         try {
-            TermInfoFactory.build(new File(filename));
+            TermIndexFactory.build(new File(filename));
         } catch (Exception e) {
             Debug.exception(e);
             AlertUtils.error_(e.toString());
@@ -94,7 +94,7 @@ public class MainController extends MainControllerSkeleton {
         statusMain(action);
         String filename = text_post.getText();
         try {
-            TermInfoFactory.build(new File(filename));
+            TermIndexFactory.build(new File(filename));
         } catch (Exception e) {
             Debug.exception(e);
             AlertUtils.error_(e.toString());
@@ -108,7 +108,7 @@ public class MainController extends MainControllerSkeleton {
         statusMain(action);
         String filename = text_post.getText();
         try {
-            TermInfoFactory.getTermIndex().writeToFile(filename);
+            TermIndexFactory.getTermIndex().writeToFile(filename);
         } catch (Exception e) {
             Debug.exception(e);
             AlertUtils.error_(e.toString());

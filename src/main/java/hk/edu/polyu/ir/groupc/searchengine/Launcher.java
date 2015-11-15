@@ -6,11 +6,10 @@ import comm.lang.ScalaSupport;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
-import scala.collection.SeqView;
 
 import java.io.File;
 import java.io.IOException;
@@ -78,13 +77,13 @@ public abstract class Launcher {
             log("loaded");
             try {
                 log("loading term index");
-                TermInfoFactory.load(new File(TERM_INDEX_PATH()));
+                TermIndexFactory.load(new File(TERM_INDEX_PATH()));
                 log("loaded");
             } catch (comm.exception.RichFileNotFoundException e) {
                 log("term index not found\nbuilding term index");
-                TermInfoFactory.build(new File(POST_PATH()));
+                TermIndexFactory.build(new File(POST_PATH()));
                 log("built index, saving term index");
-                TermInfoFactory.getTermIndex().writeToFile(TERM_INDEX_PATH());
+                TermIndexFactory.getTermIndex().writeToFile(TERM_INDEX_PATH());
                 log("saved");
             }
             QueryFactory.loadFromFile(new File(QUERY()));

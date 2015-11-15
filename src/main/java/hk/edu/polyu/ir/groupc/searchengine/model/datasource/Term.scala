@@ -6,7 +6,7 @@ import java.util.function.Consumer
 import comm.Utils
 import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
 import hk.edu.polyu.ir.groupc.searchengine.Debug.log
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory.{FilePositionMap, TermFileMap}
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory.{FilePositionMap, TermFileMap}
 import org.EditDistance
 
 import scala.collection.mutable.ArrayBuffer
@@ -23,13 +23,14 @@ private class RawTermInfo(val termStem: String, val fileId: Int, val logicalWord
 
 
 class TermEntity(val termStem: String, val filePositionMap: FilePositionMap) {
-  def editDistance(another: TermEntity) = TermInfoFactory.editDistance(termStem, another.termStem)
+  def editDistance(another: TermEntity) = TermIndexFactory.editDistance(termStem, another.termStem)
 }
 
 class TermIndex(initMap: TermFileMap = new TermFileMap) {
   private var underlying = initMap
 
-  def reset = underlying = null
+  @deprecated("used during test only")
+  def reset() = underlying = null
 
   def getTermEntity(termStem: String) = underlying.get(termStem) match {
     case None => None
@@ -102,8 +103,7 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
 
   def writeToFile(filename: String) = {
     //    org.apache.commons.io.FileUtils.deleteQuietly(new File(filename))
-    val file = new File(filename)
-    val out = new BufferedWriter(new FileWriter(file))
+    val out = new BufferedWriter(new FileWriter(filename))
     out.write("# term, number of files\n")
     out.write("# fileId, position...\n")
     underlying.toStream.foreach(termFile => {
@@ -117,12 +117,10 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
     }
     )
     out.close()
-    //    println(underlying.toString())
-    //    output.write(underlying.toString())
   }
 }
 
-object TermInfoFactory {
+object TermIndexFactory {
 
   /**
     * @define key : fileId
@@ -144,14 +142,14 @@ object TermInfoFactory {
  * content : HastMap [file id -> List[position] ]
  * example : apple -> (d1->1,2,3),(d2->2,3,4)
  * */
-  private var cachedTermIndex: TermIndex = null
+  private var cachedInstance: TermIndex = null
 
   /**
     * @param file : post file
     **/
   @throws(classOf[RichFileNotFoundException])
   def build(file: File) = {
-    cachedTermIndex = null
+    cachedInstance = null
     try {
       val termIndex = new TermIndex
       val N = Utils.countLines(file)
@@ -173,7 +171,7 @@ object TermInfoFactory {
       log("start shrinking index")
       termIndex.shrink()
       log("shrieked")
-      cachedTermIndex = termIndex
+      cachedInstance = termIndex
     } catch {
       case e: FileNotFoundException => throw new RichFileNotFoundException(file)
     }
@@ -187,13 +185,12 @@ object TermInfoFactory {
   @throws(classOf[InvalidFileFormatException])
   @throws(classOf[RichFileNotFoundException])
   def load(file: File) = {
-    cachedTermIndex = null
+    cachedInstance = null
     try {
       val termFileMap = new TermFileMap
       var lineLeft = -2
       /* tmp vars */
       var filePositionMap: FilePositionMap = null
-      val termIndex = new TermIndex
       val N = Utils.countLines(file)
       var i = 0
       var lp = 0f
@@ -224,7 +221,7 @@ object TermInfoFactory {
           }
         }
       })
-      cachedTermIndex = new TermIndex(termFileMap)
+      cachedInstance = new TermIndex(termFileMap)
     } catch {
       case e: NumberFormatException => throw new InvalidFileFormatException(file)
       case e: FileNotFoundException => throw new RichFileNotFoundException(file)
@@ -233,13 +230,13 @@ object TermInfoFactory {
 
   @throws(classOf[IllegalStateException])
   def getTermIndex: TermIndex = {
-    if (cachedTermIndex == null) throw new IllegalStateException("index has not been loaded")
-    cachedTermIndex
+    if (cachedInstance == null) throw new IllegalStateException("index has not been loaded")
+    cachedInstance
   }
 
   def editDistance(term1: String, term2: String) = {
     //    EditDistance.editDistance(term1, term2)
-//    import sbt.complete.EditDistance
+    //    import sbt.complete.EditDistance
     EditDistance.levenshtein(term1, term2,
       insertCost = 2,
       deleteCost = 3,
