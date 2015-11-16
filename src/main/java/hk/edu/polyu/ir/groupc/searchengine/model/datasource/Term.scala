@@ -6,10 +6,11 @@ import java.util.function.Consumer
 import comm.Utils
 import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
 import hk.edu.polyu.ir.groupc.searchengine.Debug.log
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermInfoFactory.{FilePositionMap, TermFileMap}
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory.{FilePositionMap, TermFileMap}
+import org.EditDistance
 
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
-import scala.collection.parallel.mutable.ParHashMap
 
 /**
   * Created by beenotung on 11/7/15.
@@ -21,12 +22,15 @@ import scala.collection.parallel.mutable.ParHashMap
 private class RawTermInfo(val termStem: String, val fileId: Int, val logicalWordPosition: Int)
 
 
-class TermEntity(val termStem: String, val filePositionMap: FilePositionMap)
+class TermEntity(val termStem: String, val filePositionMap: FilePositionMap) {
+  def editDistance(another: TermEntity) = TermIndexFactory.editDistance(termStem, another.termStem)
+}
 
 class TermIndex(initMap: TermFileMap = new TermFileMap) {
   private var underlying = initMap
 
-  def reset = underlying = null
+  @deprecated("used during test only")
+  def reset() = underlying = null
 
   def getTermEntity(termStem: String) = underlying.get(termStem) match {
     case None => None
@@ -58,54 +62,58 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
 
   //  @deprecated("slow", "1.0")
   def addTerm(termInfo: RawTermInfo) = {
-    val filePositionMap = underlying.getOrElse(termInfo.termStem, {
-      val m = new FilePositionMap
-      underlying.put(termInfo.termStem, m)
-      m
-    })
-    filePositionMap.getOrElse(termInfo.fileId, {
-      val l = new ArrayBuffer[Int](1)
-      filePositionMap.put(termInfo.fileId, l)
-      l
-    }) += termInfo.logicalWordPosition
+    underlying.getOrElseUpdate(termInfo.termStem, new FilePositionMap)
+      .getOrElseUpdate(termInfo.fileId, ArrayBuffer.empty[Int])
+      .+=(termInfo.logicalWordPosition)
+    //    filePositionMap.getOrElse(termInfo.fileId,ArrayBuffer.empty[Int])
+    //
+    //    val filePositionMap = underlying.getOrElse(termInfo.termStem, {
+    //      val m = new FilePositionMap
+    //      underlying.put(termInfo.termStem, m)
+    //      m
+    //    })
+    //    filePositionMap.getOrElse(termInfo.fileId, {
+    //      val l = new ArrayBuffer[Int](1)
+    //      filePositionMap.put(termInfo.fileId, l)
+    //      l
+    //    }) += termInfo.logicalWordPosition
   }
 
   def addTerm(term: String, fileId: Int, positions: Array[Int]) = {
-    val filePositionMap = underlying.getOrElse(term, {
-      val m = new FilePositionMap
-      underlying.put(term, m)
-      m
-    })
-    filePositionMap.getOrElse(fileId, {
-      val l = new ArrayBuffer[Int](1)
-      filePositionMap.put(fileId, l)
-      l
-    }) ++= positions
+    val filePositionMap = underlying.getOrElseUpdate(term, new FilePositionMap())
+    val _positions = filePositionMap.getOrElse(fileId, new ArrayBuffer[Int](positions.length))
+    filePositionMap.put(fileId, _positions ++ positions)
+    //        val filePositionMap = underlying.getOrElse(term, {
+    //          val m = new FilePositionMap
+    //          underlying.put(term, m)
+    //          m
+    //        })
+    //        filePositionMap.getOrElse(fileId, {
+    //          val l = new ArrayBuffer[Int](1)
+    //          filePositionMap.put(fileId, l)
+    //          l
+    //        }) ++= positions
   }
 
   //  @deprecated("useless", "1.0")
   def shrink() = {
-    //    underlying.foreach(_._2.foreach(_._2.sorted))
-    //    val newInstance = new TermFileMap
-    underlying.toStream.foreach(termFile => {
+    underlying.foreach(termFile => {
       val filePositionMap: FilePositionMap = new FilePositionMap
-      termFile._2.toStream.foreach(filePosition => {
+      termFile._2.foreach(filePosition => {
         filePositionMap.put(filePosition._1, filePosition._2.distinct.sortWith(_ < _))
       })
-      //      newInstance.put(termFile._1, filePositionMap)
+      underlying.put(termFile._1,filePositionMap)
     })
-    //    underlying = newInstance
   }
 
   def writeToFile(filename: String) = {
     //    org.apache.commons.io.FileUtils.deleteQuietly(new File(filename))
-    val file = new File(filename)
-    val out = new BufferedWriter(new FileWriter(file))
+    val out = new BufferedWriter(new FileWriter(filename))
     out.write("# term, number of files\n")
     out.write("# fileId, position...\n")
-    underlying.toStream.foreach(termFile => {
+    underlying.foreach(termFile => {
       out.write(termFile._1 + " " + termFile._2.size)
-      termFile._2.toStream.foreach(filePositionMap => {
+      termFile._2.foreach(filePositionMap => {
         out.write("\n" + filePositionMap._1)
         filePositionMap._2.foreach(p => out.write(" " + p))
       }
@@ -114,25 +122,23 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
     }
     )
     out.close()
-    //    println(underlying.toString())
-    //    output.write(underlying.toString())
   }
 }
 
-object TermInfoFactory {
+object TermIndexFactory {
 
   /**
     * @define key : fileId
     * @define value : positions
     **/
-  type FilePositionMap = ParHashMap[Int, ArrayBuffer[Int]]
+  type FilePositionMap = mutable.HashMap[Int, ArrayBuffer[Int]]
   //  type FilePositionMap = scala.collection.mutable.HashMap[Int, Array[Int]]
 
   /**
     * @define key : term
     * @define value : FilePositionMap [fileId, positionList]
     **/
-  type TermFileMap = ParHashMap[String, FilePositionMap]
+  type TermFileMap = mutable.HashMap[String, FilePositionMap]
   //  type TermFileMap = scala.collection.mutable.HashMap[String, FilePositionMap]
   private val MODE_EMPTY = 0
   private val MODE_COMMENT = -1
@@ -141,14 +147,14 @@ object TermInfoFactory {
  * content : HastMap [file id -> List[position] ]
  * example : apple -> (d1->1,2,3),(d2->2,3,4)
  * */
-  private var cachedTermIndex: TermIndex = null
+  private var cachedInstance: TermIndex = null
 
   /**
     * @param file : post file
     **/
   @throws(classOf[RichFileNotFoundException])
   def build(file: File) = {
-    cachedTermIndex = null
+    cachedInstance = null
     try {
       val termIndex = new TermIndex
       val N = Utils.countLines(file)
@@ -170,7 +176,7 @@ object TermInfoFactory {
       log("start shrinking index")
       termIndex.shrink()
       log("shrieked")
-      cachedTermIndex = termIndex
+      cachedInstance = termIndex
     } catch {
       case e: FileNotFoundException => throw new RichFileNotFoundException(file)
     }
@@ -184,13 +190,12 @@ object TermInfoFactory {
   @throws(classOf[InvalidFileFormatException])
   @throws(classOf[RichFileNotFoundException])
   def load(file: File) = {
-    cachedTermIndex = null
+    cachedInstance = null
     try {
       val termFileMap = new TermFileMap
       var lineLeft = -2
       /* tmp vars */
       var filePositionMap: FilePositionMap = null
-      val termIndex = new TermIndex
       val N = Utils.countLines(file)
       var i = 0
       var lp = 0f
@@ -221,7 +226,7 @@ object TermInfoFactory {
           }
         }
       })
-      cachedTermIndex = new TermIndex(termFileMap)
+      cachedInstance = new TermIndex(termFileMap)
     } catch {
       case e: NumberFormatException => throw new InvalidFileFormatException(file)
       case e: FileNotFoundException => throw new RichFileNotFoundException(file)
@@ -230,8 +235,20 @@ object TermInfoFactory {
 
   @throws(classOf[IllegalStateException])
   def getTermIndex: TermIndex = {
-    if (cachedTermIndex == null) throw new IllegalStateException("index has not been loaded")
-    cachedTermIndex
+    if (cachedInstance == null) throw new IllegalStateException("index has not been loaded")
+    cachedInstance
   }
 
+  def editDistance(term1: String, term2: String) = {
+    //    EditDistance.editDistance(term1, term2)
+    //    import sbt.complete.EditDistance
+    EditDistance.levenshtein(term1, term2,
+      insertCost = 2,
+      deleteCost = 3,
+      subCost = 1,
+      transposeCost = 3,
+      matchCost = 0,
+      caseCost = 0,
+      transpositions = false)
+  }
 }

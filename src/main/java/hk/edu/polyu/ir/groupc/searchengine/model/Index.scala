@@ -1,7 +1,7 @@
 package hk.edu.polyu.ir.groupc.searchengine.model
 
 import hk.edu.polyu.ir.groupc.searchengine.Debug
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.{DocFileFactory, IDFFactory, TermEntity, TermInfoFactory}
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.{DocFileFactory, IDFFactory, TermEntity, TermIndexFactory}
 
 /**
   * Created by beenotung on 11/8/15.
@@ -10,24 +10,24 @@ object Index {
   //TODO implementing lazy get
   //TODO avoid lazy
 
-  def getFilePositionMap(term: String) = TermInfoFactory.getTermIndex.getFilePositionMap(term)
+  def getFilePositionMap(term: String) = TermIndexFactory.getTermIndex.getFilePositionMap(term)
 
   def getDocumentLength(fileId: Int) = DocFileFactory.getDocFile(fileId).docLen
 
   @deprecated("slow")
   /* get term frequency by in document (file) */
-  def getTF(term: String, fileId: Int): Int = TermInfoFactory.getTermIndex.getTF(term, fileId)
+  def getTF(term: String, fileId: Int): Int = TermIndexFactory.getTermIndex.getTF(term, fileId)
 
   /* get term frequency by in document (file) */
-  def getTF(termEntity: TermEntity, fileId: Int): Int = TermInfoFactory.getTermIndex.getTF(termEntity, fileId)
+  def getTF(termEntity: TermEntity, fileId: Int): Int = TermIndexFactory.getTermIndex.getTF(termEntity, fileId)
 
   @deprecated("slow")
   def getDocumentFrequentByTerm(term: String, fileId: Int): Double = getDF(term, fileId)
 
   @deprecated("slow")
-  def getDF(term: String, fileId: Int): Double = TermInfoFactory.getTermIndex.getDF(term, fileId)
+  def getDF(term: String, fileId: Int): Double = TermIndexFactory.getTermIndex.getDF(term, fileId)
 
-  def getDF(termEntity: TermEntity, fileId: Int): Double = TermInfoFactory.getTermIndex.getDF(termEntity, fileId)
+  def getDF(termEntity: TermEntity, fileId: Int): Double = TermIndexFactory.getTermIndex.getDF(termEntity, fileId)
 
   def getDocumentCount = getDocN
 
@@ -43,7 +43,7 @@ object Index {
   def getDocFile(fileId: Int) = DocFileFactory.getDocFile(fileId)
 
   def getTermEntity(termStem: String) = {
-    TermInfoFactory.getTermIndex.getTermEntity(termStem)
+    TermIndexFactory.getTermIndex.getTermEntity(termStem)
   }
 
   def hello = {

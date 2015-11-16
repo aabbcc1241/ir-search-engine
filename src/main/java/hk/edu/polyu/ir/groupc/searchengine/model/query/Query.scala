@@ -3,7 +3,7 @@ package hk.edu.polyu.ir.groupc.searchengine.model.query
 import java.io.{File, FileNotFoundException}
 
 import comm.exception.RichFileNotFoundException
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.{TermEntity, TermInfoFactory}
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.{TermEntity, TermIndexFactory}
 
 import scala.collection.SeqView
 import scala.io.Source
@@ -28,7 +28,7 @@ object QueryFactory {
   private var queries: List[Query] = null
 
   def extract(rawString: String): Array[Option[TermEntity]] = {
-    rawString.split(" ").map(stem).map(TermInfoFactory.getTermIndex.getTermEntity)
+    rawString.split(" ").map(stem).map(TermIndexFactory.getTermIndex.getTermEntity)
   }
 
   def stem(string: String): String = {
