@@ -9,8 +9,8 @@ import hk.edu.polyu.ir.groupc.searchengine.Debug.log
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory.{FilePositionMap, TermFileMap}
 import org.EditDistance
 
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
-import scala.collection.parallel.mutable.ParHashMap
 
 /**
   * Created by beenotung on 11/7/15.
@@ -62,43 +62,48 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
 
   //  @deprecated("slow", "1.0")
   def addTerm(termInfo: RawTermInfo) = {
-    val filePositionMap = underlying.getOrElse(termInfo.termStem, {
-      val m = new FilePositionMap
-      underlying.put(termInfo.termStem, m)
-      m
-    })
-    filePositionMap.getOrElse(termInfo.fileId, {
-      val l = new ArrayBuffer[Int](1)
-      filePositionMap.put(termInfo.fileId, l)
-      l
-    }) += termInfo.logicalWordPosition
+    underlying.getOrElseUpdate(termInfo.termStem, new FilePositionMap)
+      .getOrElseUpdate(termInfo.fileId, ArrayBuffer.empty[Int])
+      .+=(termInfo.logicalWordPosition)
+    //    filePositionMap.getOrElse(termInfo.fileId,ArrayBuffer.empty[Int])
+    //
+    //    val filePositionMap = underlying.getOrElse(termInfo.termStem, {
+    //      val m = new FilePositionMap
+    //      underlying.put(termInfo.termStem, m)
+    //      m
+    //    })
+    //    filePositionMap.getOrElse(termInfo.fileId, {
+    //      val l = new ArrayBuffer[Int](1)
+    //      filePositionMap.put(termInfo.fileId, l)
+    //      l
+    //    }) += termInfo.logicalWordPosition
   }
 
   def addTerm(term: String, fileId: Int, positions: Array[Int]) = {
-    val filePositionMap = underlying.getOrElse(term, {
-      val m = new FilePositionMap
-      underlying.put(term, m)
-      m
-    })
-    filePositionMap.getOrElse(fileId, {
-      val l = new ArrayBuffer[Int](1)
-      filePositionMap.put(fileId, l)
-      l
-    }) ++= positions
+    val filePositionMap = underlying.getOrElseUpdate(term, new FilePositionMap())
+    val _positions = filePositionMap.getOrElse(fileId, new ArrayBuffer[Int](positions.length))
+    filePositionMap.put(fileId, _positions ++ positions)
+    //        val filePositionMap = underlying.getOrElse(term, {
+    //          val m = new FilePositionMap
+    //          underlying.put(term, m)
+    //          m
+    //        })
+    //        filePositionMap.getOrElse(fileId, {
+    //          val l = new ArrayBuffer[Int](1)
+    //          filePositionMap.put(fileId, l)
+    //          l
+    //        }) ++= positions
   }
 
   //  @deprecated("useless", "1.0")
   def shrink() = {
-    //    underlying.foreach(_._2.foreach(_._2.sorted))
-    //    val newInstance = new TermFileMap
-    underlying.toStream.foreach(termFile => {
+    underlying.foreach(termFile => {
       val filePositionMap: FilePositionMap = new FilePositionMap
-      termFile._2.toStream.foreach(filePosition => {
+      termFile._2.foreach(filePosition => {
         filePositionMap.put(filePosition._1, filePosition._2.distinct.sortWith(_ < _))
       })
-      //      newInstance.put(termFile._1, filePositionMap)
+      underlying.put(termFile._1,filePositionMap)
     })
-    //    underlying = newInstance
   }
 
   def writeToFile(filename: String) = {
@@ -106,9 +111,9 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
     val out = new BufferedWriter(new FileWriter(filename))
     out.write("# term, number of files\n")
     out.write("# fileId, position...\n")
-    underlying.toStream.foreach(termFile => {
+    underlying.foreach(termFile => {
       out.write(termFile._1 + " " + termFile._2.size)
-      termFile._2.toStream.foreach(filePositionMap => {
+      termFile._2.foreach(filePositionMap => {
         out.write("\n" + filePositionMap._1)
         filePositionMap._2.foreach(p => out.write(" " + p))
       }
@@ -126,14 +131,14 @@ object TermIndexFactory {
     * @define key : fileId
     * @define value : positions
     **/
-  type FilePositionMap = ParHashMap[Int, ArrayBuffer[Int]]
+  type FilePositionMap = mutable.HashMap[Int, ArrayBuffer[Int]]
   //  type FilePositionMap = scala.collection.mutable.HashMap[Int, Array[Int]]
 
   /**
     * @define key : term
     * @define value : FilePositionMap [fileId, positionList]
     **/
-  type TermFileMap = ParHashMap[String, FilePositionMap]
+  type TermFileMap = mutable.HashMap[String, FilePositionMap]
   //  type TermFileMap = scala.collection.mutable.HashMap[String, FilePositionMap]
   private val MODE_EMPTY = 0
   private val MODE_COMMENT = -1
