@@ -1,14 +1,8 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
-import comm.Test;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.SimpleModel;
-import scala.Tuple2;
-
-import java.util.function.Supplier;
-
-import static hk.edu.polyu.ir.groupc.searchengine.Debug.log;
 
 /**
  * Created by beenotung on 11/12/15.
@@ -54,17 +48,14 @@ public class SimpleTest {
             public String QUERY() {
                 return QUERY_T;
             }
+
+            @Override
+            protected boolean needDocumentIndex() {
+                return false;
+            }
         };
         RetrievalModel retrievalModel = new SimpleModel();
         SearchResultFactory.setRunId("GroupC-DemoModel");
-        Tuple2<Object, Object>[] results = Test.time_J(new Supplier<Object>() {
-            @Override
-            public Object get() {
-                return launcher.test(retrievalModel, Integer.MAX_VALUE - 8);
-            }
-        }, 10, true, true, true);
-        for (Tuple2<Object, Object> result : results) {
-            log("used time " + (long) result._2() + " ns");
-        }
+        launcher.test(retrievalModel, Integer.MAX_VALUE - 8);
     }
 }

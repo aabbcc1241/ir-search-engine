@@ -5,7 +5,8 @@ import java.util.function.Consumer
 
 import comm.Utils
 import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
-import hk.edu.polyu.ir.groupc.searchengine.Debug.log
+import hk.edu.polyu.ir.groupc.searchengine.Debug
+import hk.edu.polyu.ir.groupc.searchengine.Debug.{logp, log}
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory.{FilePositionMap, TermFileMap}
 import org.EditDistance
 
@@ -29,6 +30,16 @@ class TermEntity(val termStem: String, val filePositionMap: FilePositionMap) {
 class TermIndex(initMap: TermFileMap = new TermFileMap) {
   private var underlying = initMap
 
+  def createDocumentIndex() = {
+    DocumentIndexFactory.createFromTermIndex(underlying)
+  }
+
+  def cacheIDF() = {
+    val docN = DocFileFactory.getDocumentCount
+    underlying.foreach(termFilePosition =>
+      IDFFactory.storeIDF(termFilePosition._1, IDFFactory.calcIDF(docN, termFilePosition._2.size)))
+  }
+
   @deprecated("used during test only")
   def reset() = underlying = null
 
@@ -51,13 +62,11 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
     case Some(positionList) => positionList.length
   }
 
-  /* get document(file) frequency by term */
-  def getDF(termEntity: TermEntity, fileId: Int) = termEntity.filePositionMap.count(x => x._1.==(fileId))
-
   @deprecated("slow")
-  def getDF(term: String, fileId: Int) = underlying.get(term) match {
+  /* get document(file) frequency by term */
+  def getDF(term: String) = underlying.get(term) match {
     case None => 0
-    case Some(filePositionMap) => filePositionMap.count(x => x._1 == fileId)
+    case Some(filePositionMap) => filePositionMap.size
   }
 
   //  @deprecated("slow", "1.0")
@@ -102,7 +111,7 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
       termFile._2.foreach(filePosition => {
         filePositionMap.put(filePosition._1, filePosition._2.distinct.sortWith(_ < _))
       })
-      underlying.put(termFile._1,filePositionMap)
+      underlying.put(termFile._1, filePositionMap)
     })
   }
 
@@ -132,17 +141,12 @@ object TermIndexFactory {
     * @define value : positions
     **/
   type FilePositionMap = mutable.HashMap[Int, ArrayBuffer[Int]]
-  //  type FilePositionMap = scala.collection.mutable.HashMap[Int, Array[Int]]
 
   /**
     * @define key : term
     * @define value : FilePositionMap [fileId, positionList]
     **/
   type TermFileMap = mutable.HashMap[String, FilePositionMap]
-  //  type TermFileMap = scala.collection.mutable.HashMap[String, FilePositionMap]
-  private val MODE_EMPTY = 0
-  private val MODE_COMMENT = -1
-  private val MODE_READING = 1
   /* index by term
  * content : HastMap [file id -> List[position] ]
  * example : apple -> (d1->1,2,3),(d2->2,3,4)
@@ -165,8 +169,8 @@ object TermIndexFactory {
         override def accept(t: String): Unit = {
           i += 1
           p = 1f * i / N
-          if ((p - lp) > 1f / 100f) {
-            log(p * 100f + "% \t" + Utils.getRamUsageString)
+          if ((p - lp) > Debug.process_step) {
+            logp(p * 100f + "% \t" + Utils.getRamUsageString)
             lp = p
           }
           val post = createFromString(t)
@@ -204,8 +208,8 @@ object TermIndexFactory {
         override def accept(line: String): Unit = {
           i += 1
           p = 1f * i / N
-          if ((p - lp) > 1f / 100f) {
-            log(p * 100f + "% \t" + Utils.getRamUsageString)
+          if ((p - lp) > Debug.process_step) {
+            logp(p * 100f + "% \t" + Utils.getRamUsageString)
             lp = p
           }
           lineLeft match {
@@ -238,6 +242,7 @@ object TermIndexFactory {
     if (cachedInstance == null) throw new IllegalStateException("index has not been loaded")
     cachedInstance
   }
+
 
   def editDistance(term1: String, term2: String) = {
     //    EditDistance.editDistance(term1, term2)

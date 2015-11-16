@@ -56,6 +56,11 @@ public class SimpleModelTest {
             public String QUERY() {
                 return QUERY_T;
             }
+
+            @Override
+            protected boolean needDocumentIndex() {
+                return false;
+            }
         };
         RetrievalModel retrievalModel = new SimpleModel();
         SearchResultFactory.setRunId("GroupC-DemoModel");

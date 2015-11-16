@@ -8,6 +8,8 @@ import scala.collection.mutable
   * Created by beenotung on 11/11/15.
   */
 object IDFFactory {
+
+  //TODO avoid lazy init
   /**
     * @define key term
     * @define value idf
@@ -23,14 +25,25 @@ object IDFFactory {
   @deprecated("slow")
   def getTFIDF(term: String, fileId: Int): Double =
     term_tfidf_map.getOrElseUpdate(term, new mutable.HashMap[Int, Double]())
-      .getOrElseUpdate(fileId, Index.getTF(term, fileId) * getIDF(term, fileId))
+      .getOrElseUpdate(fileId, Index.getTF(term, fileId) * getIDF(term))
+
+  @deprecated("slow")
+  def getIDF(term: String): Double = term_idf_map.getOrElseUpdate(term, findIDF(term))
+
+  @deprecated("slow")
+  protected def findIDF(term: String) = {
+    TermIndexFactory.getTermIndex.getDF(term)
+  }
 
   def getTFIDF(termEntity: TermEntity, fileId: Int): Double =
     term_tfidf_map.getOrElseUpdate(termEntity.termStem, new mutable.HashMap[Int, Double]())
-      .getOrElseUpdate(fileId, Index.getTF(termEntity, fileId) * getIDF(termEntity.termStem, fileId))
+      .getOrElseUpdate(fileId, Index.getTF(termEntity, fileId) * getIDF(termEntity.termStem))
 
-  def getIDF(term: String, fileId: Int): Double = term_idf_map.getOrElseUpdate(term, findIDF(Index.getDF(term, fileId), Index.getDocN))
+  def getIDF(term: TermEntity): Double = term_idf_map.getOrElseUpdate(term.termStem, findIDF(term))
 
-  protected def findIDF(df: Double, docN: Double) = Math.log(docN / df) / Math.log(2)
+  protected def findIDF(termEntity: TermEntity) = calcIDF(Index.getDocumentCount, termEntity.filePositionMap.size)
 
+  def calcIDF(docN: Int, documentFrequency: Int) = Math.log(docN / (1d + documentFrequency))
+
+  def storeIDF(term: String, idf: Double)=term_idf_map.put(term,idf)
 }

@@ -5,12 +5,13 @@ import java.util.function.Consumer
 
 import comm.Utils
 import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
-import hk.edu.polyu.ir.groupc.searchengine.Debug.log
+import hk.edu.polyu.ir.groupc.searchengine.Debug
+import hk.edu.polyu.ir.groupc.searchengine.Debug.{logp, log}
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocumentIndexFactory.DocInfoMap
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory.TermFileMap
 
+import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
-import scala.collection.parallel.mutable
 
 /**
   * Created by beenotung on 11/15/15.
@@ -38,6 +39,8 @@ class DocumentIndex(initMap: DocInfoMap = new DocInfoMap) {
 }
 
 object DocumentIndexFactory {
+  type TermPositionMap = mutable.HashMap[String, ArrayBuffer[Int]]
+  type DocInfoMap = mutable.HashMap[Int, TermPositionMap]
   private var cachedInstance: DocumentIndex = null
 
   @throws(classOf[IllegalStateException])
@@ -45,9 +48,6 @@ object DocumentIndexFactory {
     if (cachedInstance == null) throw new IllegalStateException("index has not been loaded")
     cachedInstance
   }
-
-  type TermPositionMap = mutable.ParHashMap[String, ArrayBuffer[Int]]
-  type DocInfoMap = mutable.ParHashMap[Int, TermPositionMap]
 
   @throws(classOf[InvalidFileFormatException])
   @throws(classOf[RichFileNotFoundException])
@@ -66,8 +66,8 @@ object DocumentIndexFactory {
         override def accept(line: String): Unit = {
           i += 1
           p = 1f * i / N
-          if ((p - lp) > 1f / 100f) {
-            log(p * 100f + "% \t" + Utils.getRamUsageString)
+          if ((p - lp) > Debug.process_step) {
+            logp(p * 100f + "% \t" + Utils.getRamUsageString)
             lp = p
           }
           lineLeft match {
@@ -95,7 +95,7 @@ object DocumentIndexFactory {
     }
   }
 
-  def bind(termFileMap: TermFileMap) = {
+  def createFromTermIndex(termFileMap: TermFileMap) = {
     val docInfoMap = new DocInfoMap
     termFileMap.foreach(termFilePosition =>
       termFilePosition._2.foreach(filePosition => {

@@ -1,10 +1,10 @@
 package comm.lang
 
-import java.util.function.Consumer
+import scala.collection.JavaConverters._
 
 /**
   * Created by beenotung on 11/13/15.
   */
 object Convert {
-
+  def toJava[E](list: List[E]) = list.asJava
 }
