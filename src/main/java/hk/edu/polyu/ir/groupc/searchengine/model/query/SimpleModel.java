@@ -1,8 +1,11 @@
 package hk.edu.polyu.ir.groupc.searchengine.model.query;
 
+import comm.lang.Convert;
 import comm.lang.ScalaSupport;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermEntity;
+import scala.Option;
 import scala.Tuple2;
 import scala.collection.mutable.ArrayBuffer;
 

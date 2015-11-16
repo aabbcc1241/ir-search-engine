@@ -3,10 +3,7 @@ package hk.edu.polyu.ir.groupc.searchengine;
 import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
 import comm.lang.ScalaSupport;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.*;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
@@ -23,17 +20,19 @@ public abstract class Launcher {
 
     private boolean inited = false;
 
-    public abstract String FILE_PATH();
+    protected abstract String FILE_PATH();
 
-    public abstract String TERM_INDEX_PATH();
+    protected abstract String TERM_INDEX_PATH();
 
-    public abstract String POST_PATH();
+    protected abstract String POST_PATH();
 
-    public abstract String STOP_PATH();
+    protected abstract String STOP_PATH();
 
-    public abstract String JUDGEROBUST();
+    protected abstract String JUDGEROBUST();
 
-    public abstract String QUERY();
+    protected abstract String QUERY();
+
+    protected abstract boolean needDocumentIndex();
 
     public List<SearchResult> test(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
         try {
@@ -79,6 +78,14 @@ public abstract class Launcher {
                 log("loading term index");
                 TermIndexFactory.load(new File(TERM_INDEX_PATH()));
                 log("loaded");
+                log("calculating IDF");
+                TermIndexFactory.getTermIndex().cacheIDF();
+                log("done");
+                if (needDocumentIndex()) {
+                    log("loading document index");
+                    TermIndexFactory.getTermIndex().createDocumentIndex();
+                    log("loaded");
+                }
             } catch (comm.exception.RichFileNotFoundException e) {
                 log("term index not found\nbuilding term index");
                 TermIndexFactory.build(new File(POST_PATH()));

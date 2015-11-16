@@ -1,7 +1,5 @@
 package comm.exception;
 
-import comm.exception.RichFileNotFoundException;
-
 import java.io.File;
 
 /**

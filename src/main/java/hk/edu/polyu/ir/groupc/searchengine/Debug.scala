@@ -9,6 +9,8 @@ object Debug extends App {
   lazy val skipDebug = false
   lazy val skipError = false
   lazy val FILE_LOG = "log.txt"
+  lazy val skipProgress = false
+  lazy val process_step = 5f / 100f
 
   def exception(e: Exception) = {
     e.printStackTrace()
@@ -21,6 +23,11 @@ object Debug extends App {
     println(x)
     Console.out.flush()
     FileUtils.appendToFile(x.toString :: Nil, FILE_LOG)
+  }
+
+  def logp(x: Any) = if (!skipProgress) {
+    println(x)
+    Console.out.flush()
   }
 
   def logd(x: Any) = if (!skipDebug) log(x)
