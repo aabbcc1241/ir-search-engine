@@ -38,8 +38,10 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
     val docN = DocFileFactory.getDocumentCount
     underlying.foreach(termFilePosition =>
       IDFFactory.storeIDF(termFilePosition._1, IDFFactory.calcIDF(docN, termFilePosition._2.size)))
+    IDFFactory.updateStatis
   }
 
+  @Deprecated
   @deprecated("used during test only")
   def reset() = underlying = null
 
@@ -50,6 +52,7 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
 
   def getFilePositionMap(term: String) = underlying.get(term)
 
+  @Deprecated
   @deprecated("slow")
   def getTF(term: String, fileId: Int): Int = underlying.get(term) match {
     case None => 0
@@ -62,6 +65,7 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
     case Some(positionList) => positionList.length
   }
 
+  @Deprecated
   @deprecated("slow")
   /* get document(file) frequency by term */
   def getDF(term: String) = underlying.get(term) match {
@@ -69,7 +73,6 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
     case Some(filePositionMap) => filePositionMap.size
   }
 
-  //  @deprecated("slow", "1.0")
   def addTerm(termInfo: RawTermInfo) = {
     underlying.getOrElseUpdate(termInfo.termStem, new FilePositionMap)
       .getOrElseUpdate(termInfo.fileId, ArrayBuffer.empty[Int])
@@ -104,7 +107,6 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
     //        }) ++= positions
   }
 
-  //  @deprecated("useless", "1.0")
   def shrink() = {
     underlying.foreach(termFile => {
       val filePositionMap: FilePositionMap = new FilePositionMap

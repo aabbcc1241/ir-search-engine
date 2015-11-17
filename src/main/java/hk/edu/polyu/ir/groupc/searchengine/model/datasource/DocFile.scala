@@ -27,6 +27,9 @@ object DocFileFactory {
     docFiles.length
   }
 
+  var maxDocLength: Int = throw new IllegalStateException("the index has not been loaded")
+  var avgDocLength: Int = throw new IllegalStateException("the index has not been loaded")
+
   @throws(classOf[RichFileNotFoundException])
   def load(file: File) = {
     try {
@@ -35,6 +38,8 @@ object DocFileFactory {
         override def accept(t: String): Unit = arrayBuffer += createFromString(t)
       })
       docFiles = arrayBuffer.toArray
+      maxDocLength = docFiles.map(_.docLen).max
+      avgDocLength = docFiles.map(_.docLen).sum / docFiles.length
     } catch {
       case e: FileNotFoundException => throw new RichFileNotFoundException(file)
     }

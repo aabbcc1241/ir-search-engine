@@ -8,7 +8,6 @@ import scala.collection.mutable
   * Created by beenotung on 11/11/15.
   */
 object IDFFactory {
-
   //TODO avoid lazy init
   /**
     * @define key term
@@ -22,14 +21,17 @@ object IDFFactory {
     **/
   private val term_tfidf_map = new mutable.HashMap[String, mutable.HashMap[Int, Double]]()
 
+  @Deprecated
   @deprecated("slow")
   def getTFIDF(term: String, fileId: Int): Double =
     term_tfidf_map.getOrElseUpdate(term, new mutable.HashMap[Int, Double]())
       .getOrElseUpdate(fileId, Index.getTF(term, fileId) * getIDF(term))
 
+  @Deprecated
   @deprecated("slow")
   def getIDF(term: String): Double = term_idf_map.getOrElseUpdate(term, findIDF(term))
 
+  @Deprecated
   @deprecated("slow")
   protected def findIDF(term: String) = {
     TermIndexFactory.getTermIndex.getDF(term)
@@ -45,5 +47,13 @@ object IDFFactory {
 
   def calcIDF(docN: Int, documentFrequency: Int) = Math.log(docN / (1d + documentFrequency))
 
-  def storeIDF(term: String, idf: Double)=term_idf_map.put(term,idf)
+  def storeIDF(term: String, idf: Double) = term_idf_map.put(term, idf)
+
+  var maxIDF: Double = throw new IllegalStateException("the index has not been loaded")
+  var avgIDF: Double = throw new IllegalStateException("the index has not been loaded")
+
+  def updateStatis() = {
+    maxIDF = term_idf_map.values.max
+    avgIDF = term_idf_map.values.sum / term_idf_map.size
+  }
 }

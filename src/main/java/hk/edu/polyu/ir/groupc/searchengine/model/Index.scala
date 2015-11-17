@@ -13,6 +13,7 @@ object Index {
 
   def getDocumentLength(fileId: Int) = DocFileFactory.getDocFile(fileId).docLen
 
+  @Deprecated
   @deprecated("slow")
   /* get term frequency by in document (file) */
   def getTF(term: String, fileId: Int): Int = TermIndexFactory.getTermIndex.getTF(term, fileId)
@@ -20,19 +21,16 @@ object Index {
   /* get term frequency by in document (file) */
   def getTF(termEntity: TermEntity, fileId: Int): Int = TermIndexFactory.getTermIndex.getTF(termEntity, fileId)
 
-  //  @deprecated("slow")
-  //  def getDocumentFrequentByTerm(term: String, fileId: Int): Double = getDF(term, fileId)
-
-  //  @deprecated("slow")
-  //  def getDF(term: String, fileId: Int): Double = TermIndexFactory.getTermIndex.getDF(term, fileId)
 
   def getDocumentCount = DocFileFactory.getDocumentCount
 
+  @Deprecated
   @deprecated("slow")
   def getTFIDF(term: String, fileId: Int) = IDFFactory.getTFIDF(term, fileId)
 
   def getTFIDF(termEntity: TermEntity, fileId: Int) = IDFFactory.getTFIDF(termEntity, fileId)
 
+  @Deprecated
   @deprecated("slow")
   def getIDF(term: String) = IDFFactory.getIDF(term)
 
@@ -43,6 +41,14 @@ object Index {
   def getTermEntity(termStem: String) = {
     TermIndexFactory.getTermIndex.getTermEntity(termStem)
   }
+
+  def maxDocumentLength = DocFileFactory.maxDocLength
+
+  def averageDocumentLength = DocFileFactory.avgDocLength
+
+  def maxIDF = IDFFactory.maxIDF
+
+  def averageIDF = IDFFactory.avgIDF
 
   def hello = {
     Debug.log("Hello")
