@@ -32,7 +32,7 @@ public abstract class Launcher {
 
     protected abstract String QUERY();
 
-    protected abstract boolean needDocumentIndex();
+    protected boolean needDocumentIndex(){return true;};
 
     public List<SearchResult> test(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
         try {

@@ -1,7 +1,7 @@
 package hk.edu.polyu.ir.groupc.searchengine.model
 
 import hk.edu.polyu.ir.groupc.searchengine.Debug
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.{DocFileFactory, IDFFactory, TermEntity, TermIndexFactory}
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource._
 
 /**
   * Created by beenotung on 11/8/15.
@@ -42,12 +42,19 @@ object Index {
     TermIndexFactory.getTermIndex.getTermEntity(termStem)
   }
 
+  @throws(classOf[IllegalStateException])
   def maxDocumentLength = DocFileFactory.maxDocLength
 
+  @throws(classOf[IllegalStateException])
   def averageDocumentLength = DocFileFactory.avgDocLength
 
+  @throws(classOf[IllegalStateException])
   def maxIDF = IDFFactory.maxIDF
 
+  @throws(classOf[IllegalStateException])
+  def maxTermFrequency(fileId: Int) = DocumentIndexFactory.getDocumentIndex.maxTF(fileId)
+
+  @throws(classOf[IllegalStateException])
   def averageIDF = IDFFactory.avgIDF
 
   def hello = {

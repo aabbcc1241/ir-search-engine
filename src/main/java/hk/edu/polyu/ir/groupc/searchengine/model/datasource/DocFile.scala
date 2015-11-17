@@ -27,7 +27,9 @@ object DocFileFactory {
     docFiles.length
   }
 
+  @throws(classOf[IllegalStateException])
   var maxDocLength: Int = throw new IllegalStateException("the index has not been loaded")
+  @throws(classOf[IllegalStateException])
   var avgDocLength: Int = throw new IllegalStateException("the index has not been loaded")
 
   @throws(classOf[RichFileNotFoundException])
