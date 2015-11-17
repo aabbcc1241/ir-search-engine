@@ -6,7 +6,7 @@ import java.util.function.Consumer
 import comm.Utils
 import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
 import hk.edu.polyu.ir.groupc.searchengine.Debug
-import hk.edu.polyu.ir.groupc.searchengine.Debug.{logp, log}
+import hk.edu.polyu.ir.groupc.searchengine.Debug.logp
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocumentIndexFactory.DocInfoMap
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory.TermFileMap
 
@@ -36,10 +36,29 @@ class DocumentIndex(initMap: DocInfoMap = new DocInfoMap) {
     })
     out.close()
   }
+
+  val file_maxTF = mutable.HashMap.empty[Int, Int]
+
+  @throws(classOf[IllegalStateException])
+  def maxTF(fileId: Int): Int = {
+    file_maxTF.getOrElseUpdate(fileId,
+      underlying.get(fileId) match {
+        case None => throw new IllegalStateException("index has not been loaded")
+        case Some(xs) => xs.values.map(_.length).max
+      })
+  }
 }
 
 object DocumentIndexFactory {
+  /**
+    * @define key term
+    * @define value positions[]
+    **/
   type TermPositionMap = mutable.HashMap[String, ArrayBuffer[Int]]
+  /**
+    * @define key fileId
+    * @define value termPositionMap
+    **/
   type DocInfoMap = mutable.HashMap[Int, TermPositionMap]
   private var cachedInstance: DocumentIndex = null
 
