@@ -1,11 +1,9 @@
 package hk.edu.polyu.ir.groupc.searchengine.model.query;
 
-import comm.lang.Convert;
 import comm.lang.ScalaSupport;
+import hk.edu.polyu.ir.groupc.searchengine.model.Index;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermEntity;
-import scala.Option;
 import scala.Tuple2;
 import scala.collection.mutable.ArrayBuffer;
 
@@ -25,6 +23,7 @@ public class SimpleModel extends RetrievalModel {
                 @Override
                 public void accept(Tuple2<Object, ArrayBuffer<Object>> e) {
                     retrievalDocuments.add(new RetrievalDocument((int) e._1(), e._2().size() * expandedTerm.weight()));
+//                    System.out.println(Index.maxTermFrequency((Integer) e._1()));
                 }
             });
         }

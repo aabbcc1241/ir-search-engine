@@ -7,7 +7,7 @@ import comm.Utils
 import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
 import hk.edu.polyu.ir.groupc.searchengine.Debug
 import hk.edu.polyu.ir.groupc.searchengine.Debug.logp
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocumentIndexFactory.DocInfoMap
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocumentIndexFactory.DocTermPositionMap
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory.TermFileMap
 
 import scala.collection.mutable
@@ -16,7 +16,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by beenotung on 11/15/15.
   */
-class DocumentIndex(initMap: DocInfoMap = new DocInfoMap) {
+class DocumentIndex(initMap: DocTermPositionMap = new DocTermPositionMap) {
   private var underlying = initMap
 
   @deprecated("used during test only")
@@ -26,7 +26,7 @@ class DocumentIndex(initMap: DocInfoMap = new DocInfoMap) {
     val out = new BufferedWriter(new FileWriter(filename))
     out.write("# fileId, number of lines\n")
     out.write("# term, position...\n")
-    underlying.toStream.foreach(docInfo => {
+    underlying.foreach(docInfo => {
       out.write(docInfo._1 + " " + docInfo._2.size)
       docInfo._2.toStream.foreach(termPosition => {
         out.write("\n" + termPosition._1)
@@ -44,7 +44,12 @@ class DocumentIndex(initMap: DocInfoMap = new DocInfoMap) {
     file_maxTF.getOrElseUpdate(fileId,
       underlying.get(fileId) match {
         case None => throw new IllegalStateException("index has not been loaded")
-        case Some(xs) => xs.values.map(_.length).max
+        case Some(termPositions) => if (termPositions.isEmpty) {
+          /*doc not found*/
+          0
+        } else {
+          termPositions.values.map(_.length).max
+        }
       })
   }
 }
@@ -59,7 +64,7 @@ object DocumentIndexFactory {
     * @define key fileId
     * @define value termPositionMap
     **/
-  type DocInfoMap = mutable.HashMap[Int, TermPositionMap]
+  type DocTermPositionMap = mutable.HashMap[Int, TermPositionMap]
   private var cachedInstance: DocumentIndex = null
 
   @throws(classOf[IllegalStateException])
@@ -73,7 +78,7 @@ object DocumentIndexFactory {
   def load(file: File) = {
     cachedInstance = null
     try {
-      val docInfoMap = new DocInfoMap
+      val docInfoMap = new DocTermPositionMap
       var lineLeft = -2
       /* tmp vars */
       var termPositionMap: TermPositionMap = null
@@ -115,7 +120,7 @@ object DocumentIndexFactory {
   }
 
   def createFromTermIndex(termFileMap: TermFileMap) = {
-    val docInfoMap = new DocInfoMap
+    val docInfoMap = new DocTermPositionMap
     termFileMap.foreach(termFilePosition =>
       termFilePosition._2.foreach(filePosition => {
         val termPositionMap: TermPositionMap = docInfoMap.getOrElse(filePosition._1, {
@@ -123,7 +128,7 @@ object DocumentIndexFactory {
           docInfoMap.put(filePosition._1, m)
           m
         })
-        termPositionMap.getOrElse(termFilePosition._1, new ArrayBuffer[Int](1))
+        termPositionMap.getOrElseUpdate(termFilePosition._1, new ArrayBuffer[Int](1))
           .++=(filePosition._2)
       }
       )
