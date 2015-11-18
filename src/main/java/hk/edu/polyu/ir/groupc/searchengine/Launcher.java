@@ -1,18 +1,23 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
+import comm.Utils;
 import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
 import comm.lang.ScalaSupport;
-import hk.edu.polyu.ir.groupc.searchengine.model.Index;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.*;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalDocument;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static hk.edu.polyu.ir.groupc.searchengine.Debug.*;
@@ -33,7 +38,11 @@ public abstract class Launcher {
 
     protected abstract String QUERY();
 
-    protected boolean needDocumentIndex(){return true;};
+    protected boolean needDocumentIndex() {
+        return true;
+    }
+
+    ;
 
     public List<SearchResult> test(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
         try {
@@ -106,7 +115,10 @@ public abstract class Launcher {
             @Override
             public Object apply(Query query) {
                 log("searching on queryId: " + query.queryId());
-                searchResults.add(retrievalModel.search(query, numOfRetrievalDocument));
+                List<RetrievalDocument> retrievalDocuments = retrievalModel.search(query);
+                SearchResult searchResult = SearchResultFactory.create(query, retrievalDocuments);
+                searchResult.shrink(numOfRetrievalDocument);
+                searchResults.add(searchResult);
                 log("finished search");
                 return null;
             }
