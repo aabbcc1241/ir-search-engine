@@ -1,6 +1,8 @@
 package hk.edu.polyu.ir.groupc.searchengine.model.datasource
 
 import java.io.{FileWriter, IOException}
+import java.util
+import java.util.Collections
 
 import comm.FileUtils
 import hk.edu.polyu.ir.groupc.searchengine.model.query.{Query, RetrievalDocument}
@@ -35,7 +37,17 @@ object SearchResultFactory {
 }
 
 
-class SearchResult(val runId: String, val queryId: String, val retrievalDocuments: java.util.List[RetrievalDocument]) {
+class SearchResult(val runId: String, val queryId: String, private var retrievalDocuments: java.util.List[RetrievalDocument]) {
+  def shrink(numOfRetrievalDocument: Int): Unit = {
+    if (numOfRetrievalDocument >= retrievalDocuments.size()) return
+    new util.ArrayList[RetrievalDocument](numOfRetrievalDocument)
+    Collections.sort[RetrievalDocument](retrievalDocuments)
+    val iterator = retrievalDocuments.iterator()
+    val results = Array.fill[RetrievalDocument](numOfRetrievalDocument)(iterator.next())
+    import scala.collection.JavaConverters._
+    retrievalDocuments = results.toList.asJava
+  }
+
   @throws(classOf[IOException])
   def writeToFile(filename: String) = {
     val fw = new FileWriter(filename)
