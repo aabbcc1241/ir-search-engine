@@ -3,6 +3,7 @@ package hk.edu.polyu.ir.groupc.searchengine;
 import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
 import comm.lang.ScalaSupport;
+import hk.edu.polyu.ir.groupc.searchengine.model.Index;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.*;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;

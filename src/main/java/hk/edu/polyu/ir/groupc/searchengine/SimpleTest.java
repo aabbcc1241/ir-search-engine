@@ -51,7 +51,7 @@ public class SimpleTest {
 
             @Override
             protected boolean needDocumentIndex() {
-                return false;
+                return true;
             }
         };
         RetrievalModel retrievalModel = new SimpleModel();
