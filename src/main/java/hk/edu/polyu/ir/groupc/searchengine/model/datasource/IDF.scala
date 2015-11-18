@@ -49,10 +49,8 @@ object IDFFactory {
 
   def storeIDF(term: String, idf: Double) = term_idf_map.put(term, idf)
 
-  @throws(classOf[IllegalStateException])
-  var maxIDF: Double = throw new IllegalStateException("the index has not been loaded")
-  @throws(classOf[IllegalStateException])
-  var avgIDF: Double = throw new IllegalStateException("the index has not been loaded")
+  var maxIDF: Double = -1
+  var avgIDF: Double = -1
 
   def updateStatis() = {
     maxIDF = term_idf_map.values.max

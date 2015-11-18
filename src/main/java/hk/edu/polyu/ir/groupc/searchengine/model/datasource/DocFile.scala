@@ -27,10 +27,8 @@ object DocFileFactory {
     docFiles.length
   }
 
-  @throws(classOf[IllegalStateException])
-  var maxDocLength: Int = throw new IllegalStateException("the index has not been loaded")
-  @throws(classOf[IllegalStateException])
-  var avgDocLength: Int = throw new IllegalStateException("the index has not been loaded")
+  var maxDocLength: Int = -1
+  var avgDocLength: Int = -1
 
   @throws(classOf[RichFileNotFoundException])
   def load(file: File) = {
