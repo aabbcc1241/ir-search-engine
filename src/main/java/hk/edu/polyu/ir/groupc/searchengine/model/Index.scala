@@ -11,7 +11,7 @@ object Index {
 
   def getFilePositionMap(term: String) = TermIndexFactory.getTermIndex.getFilePositionMap(term)
 
-  def getDocumentLength(fileId: Int) = DocFileFactory.getDocFile(fileId).docLen
+  def getDocumentLength(fileId: Int) = DocumentIndexFactory.getDocumentIndex.getDocumentLength(fileId)
 
   @Deprecated
   @deprecated("slow")

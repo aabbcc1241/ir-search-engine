@@ -1,13 +1,9 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
-import comm.Utils;
 import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
 import comm.lang.ScalaSupport;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.*;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalDocument;
@@ -17,7 +13,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static hk.edu.polyu.ir.groupc.searchengine.Debug.*;
@@ -103,13 +98,18 @@ public abstract class Launcher {
                 TermIndexFactory.getTermIndex().writeToFile(TERM_INDEX_PATH());
                 log("saved");
             }
+            log("loading stop word list");
+            StopWordFactory.load(new File(STOP_PATH()));
+            log("done");
+            log("loading query");
             QueryFactory.loadFromFile(new File(QUERY()));
+            log("done");
         } catch (RichFileNotFoundException e) {
             throw new EssentialFileNotFoundException(e.path);
         }
     }
 
-    protected List<SearchResult> run(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
+    private List<SearchResult> run(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
         List<SearchResult> searchResults = new LinkedList<>();
         QueryFactory.getQueries().foreach(ScalaSupport.function1(new Function<Query, Object>() {
             @Override

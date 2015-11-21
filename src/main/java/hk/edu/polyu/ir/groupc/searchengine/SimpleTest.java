@@ -56,6 +56,6 @@ public class SimpleTest {
         };
         RetrievalModel retrievalModel = new SimpleModel();
         SearchResultFactory.setRunId("GroupC-DemoModel");
-        launcher.test(retrievalModel, Integer.MAX_VALUE - 8);
+        launcher.start(retrievalModel, RESULT_FILE, 10);
     }
 }

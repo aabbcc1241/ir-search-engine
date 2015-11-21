@@ -20,6 +20,8 @@ object IDFFactory {
     * @define value tfidf
     **/
   private val term_tfidf_map = new mutable.HashMap[String, mutable.HashMap[Int, Double]]()
+  var maxIDF: Double = -1
+  var avgIDF: Double = -1
 
   @Deprecated
   @deprecated("slow")
@@ -27,30 +29,27 @@ object IDFFactory {
     term_tfidf_map.getOrElseUpdate(term, new mutable.HashMap[Int, Double]())
       .getOrElseUpdate(fileId, Index.getTF(term, fileId) * getIDF(term))
 
+  def getTFIDF(termEntity: TermEntity, fileId: Int): Double =
+    term_tfidf_map.getOrElseUpdate(termEntity.termStem, new mutable.HashMap[Int, Double]())
+      .getOrElseUpdate(fileId, Index.getTF(termEntity, fileId) * getIDF(termEntity.termStem))
+
   @Deprecated
   @deprecated("slow")
   def getIDF(term: String): Double = term_idf_map.getOrElseUpdate(term, findIDF(term))
 
   @Deprecated
   @deprecated("slow")
-  protected def findIDF(term: String) = {
-    TermIndexFactory.getTermIndex.getDF(term)
+  protected def findIDF(term: String): Double = {
+    findIDF(Index.getDocumentCount, TermIndexFactory.getTermIndex.getDF(term))
   }
 
-  def getTFIDF(termEntity: TermEntity, fileId: Int): Double =
-    term_tfidf_map.getOrElseUpdate(termEntity.termStem, new mutable.HashMap[Int, Double]())
-      .getOrElseUpdate(fileId, Index.getTF(termEntity, fileId) * getIDF(termEntity.termStem))
+  /*calculate idf*/
+  def findIDF(docN: Int, documentFrequency: Int) = Math.log(docN / (1d + documentFrequency))
 
-  def getIDF(term: TermEntity): Double = term_idf_map.getOrElseUpdate(term.termStem, findIDF(term))
-
-  protected def findIDF(termEntity: TermEntity) = calcIDF(Index.getDocumentCount, termEntity.filePositionMap.size)
-
-  def calcIDF(docN: Int, documentFrequency: Int) = Math.log(docN / (1d + documentFrequency))
+  /*return cached idf, update if not cached*/
+  def getIDF(term: TermEntity): Double = term_idf_map.getOrElseUpdate(term.termStem, findIDF(Index.getDocumentCount, term.filePositionMap.size))
 
   def storeIDF(term: String, idf: Double) = term_idf_map.put(term, idf)
-
-  var maxIDF: Double = -1
-  var avgIDF: Double = -1
 
   def updateStatis() = {
     maxIDF = term_idf_map.values.max

@@ -7,6 +7,7 @@ import comm.Utils
 import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
 import hk.edu.polyu.ir.groupc.searchengine.Debug
 import hk.edu.polyu.ir.groupc.searchengine.Debug.logp
+import hk.edu.polyu.ir.groupc.searchengine.model.Index
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocumentIndexFactory.DocTermPositionMap
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory.TermFileMap
 
@@ -17,6 +18,8 @@ import scala.collection.mutable.ArrayBuffer
   * Created by beenotung on 11/15/15.
   */
 class DocumentIndex(initMap: DocTermPositionMap = new DocTermPositionMap) {
+  val file_maxTF = mutable.HashMap.empty[Int, Int]
+  val file_docLen = mutable.HashMap.empty[Int, Double]
   private var underlying = initMap
 
   @deprecated("used during test only")
@@ -37,7 +40,26 @@ class DocumentIndex(initMap: DocTermPositionMap = new DocTermPositionMap) {
     out.close()
   }
 
-  val file_maxTF = mutable.HashMap.empty[Int, Int]
+  def getDocumentLength(fileId: Int) = {
+    file_docLen.getOrElseUpdate(fileId, findDocumentLength(fileId))
+  }
+
+  protected def findDocumentLength(fileId: Int) = {
+    //TODO calc doc length
+    underlying.get(fileId) match {
+      /*document not found*/
+      case None => 0d
+      /*document found*/
+      case Some(termPositionMap) =>
+        var sum = 0d
+        termPositionMap.foreach(termPosition => {
+          val idf = Index.getIDF(termPosition._1)
+          val tf = termPosition._2.length
+          sum += Math.pow(tf * idf, 2)
+        })
+        Math.sqrt(sum)
+    }
+  }
 
   @throws(classOf[IllegalStateException])
   def maxTF(fileId: Int): Int = {
@@ -121,7 +143,17 @@ object DocumentIndexFactory {
 
   def createFromTermIndex(termFileMap: TermFileMap) = {
     val docInfoMap = new DocTermPositionMap
-    termFileMap.foreach(termFilePosition =>
+    val N = termFileMap.size
+    var i = 0
+    var lp = 0f
+    var p = 0f
+    termFileMap.foreach(termFilePosition => {
+      i += 1
+      p = 1f * i / N
+      if ((p - lp) > Debug.process_step) {
+        logp(p * 100f + "% \t" + Utils.getRamUsageString)
+        lp = p
+      }
       termFilePosition._2.foreach(filePosition => {
         val termPositionMap: TermPositionMap = docInfoMap.getOrElse(filePosition._1, {
           val m = new TermPositionMap
@@ -132,6 +164,7 @@ object DocumentIndexFactory {
           .++=(filePosition._2)
       }
       )
+    }
     )
     cachedInstance = new DocumentIndex(docInfoMap)
   }

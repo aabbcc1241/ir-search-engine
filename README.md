@@ -44,8 +44,16 @@ Given Material (available in Blackboard):
 2. irproj.zip (programs, readme file, etc.)
 3. file.txt (contains the mapping between file identifier and document name used for TREC evaluation)
 4. post.txt (contains the inverted index information of the collection)
-5. trec_eval.tar.gz (TREC evaluation program and its Windows version)
+5. trec_eval.tar.gz (evaluation program and its Windows version)
 6. query.zip (Query and relevance judgement files)
    - judgerobust: contains the relevance judgment of each query
    - queryTDN: long queries
    - queryT: short queries
+
+Record:
+=======
+max JVM Memory usage : 5814M
+
+Requirement:
+============
+JVM Memory : 6G

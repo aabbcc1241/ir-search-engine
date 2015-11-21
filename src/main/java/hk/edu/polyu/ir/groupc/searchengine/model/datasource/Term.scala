@@ -6,7 +6,7 @@ import java.util.function.Consumer
 import comm.Utils
 import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
 import hk.edu.polyu.ir.groupc.searchengine.Debug
-import hk.edu.polyu.ir.groupc.searchengine.Debug.{logp, log}
+import hk.edu.polyu.ir.groupc.searchengine.Debug.{log, logp}
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory.{FilePositionMap, TermFileMap}
 import org.EditDistance
 
@@ -37,7 +37,7 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
   def cacheIDF() = {
     val docN = DocFileFactory.getDocumentCount
     underlying.foreach(termFilePosition =>
-      IDFFactory.storeIDF(termFilePosition._1, IDFFactory.calcIDF(docN, termFilePosition._2.size)))
+      IDFFactory.storeIDF(termFilePosition._1, IDFFactory.findIDF(docN, termFilePosition._2.size)))
     IDFFactory.updateStatis
   }
 

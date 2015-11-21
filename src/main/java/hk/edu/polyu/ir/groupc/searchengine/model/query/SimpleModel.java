@@ -1,6 +1,7 @@
 package hk.edu.polyu.ir.groupc.searchengine.model.query;
 
 import comm.lang.ScalaSupport;
+import hk.edu.polyu.ir.groupc.searchengine.model.Index;
 import scala.Tuple2;
 import scala.collection.mutable.ArrayBuffer;
 
@@ -19,7 +20,9 @@ public class SimpleModel extends RetrievalModel {
             ScalaSupport.foreachMap(expandedTerm.term().filePositionMap(), new Consumer<Tuple2<Object, ArrayBuffer<Object>>>() {
                 @Override
                 public void accept(Tuple2<Object, ArrayBuffer<Object>> e) {
-                    retrievalDocuments.add(new RetrievalDocument((int) e._1(), e._2().size() * expandedTerm.weight()));
+                    double similarityScore = e._2().size() * expandedTerm.weight();
+                    similarityScore /= Index.getDocumentLength((Integer) e._1());
+                    retrievalDocuments.add(new RetrievalDocument((int) e._1(), similarityScore));
                 }
             });
         }

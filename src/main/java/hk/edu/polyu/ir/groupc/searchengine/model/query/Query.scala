@@ -3,7 +3,7 @@ package hk.edu.polyu.ir.groupc.searchengine.model.query
 import java.io.{File, FileNotFoundException}
 
 import comm.exception.RichFileNotFoundException
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.{TermEntity, TermIndexFactory}
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.{StopWordFactory, TermEntity, TermIndexFactory}
 
 import scala.collection.SeqView
 import scala.io.Source
@@ -27,14 +27,15 @@ object QueryFactory {
   @throws(classOf[IllegalStateException])
   private var queries: List[Query] = null
 
-  def extract(rawString: String): Array[Option[TermEntity]] = {
-    rawString.split(" ").map(stem).map(TermIndexFactory.getTermIndex.getTermEntity)
+  def extract(rawStringLine: String): Array[Option[TermEntity]] = {
+    //    rawStringLine split " " map stem map TermIndexFactory.getTermIndex.getTermEntity
+    rawStringLine split " " map (_.toLowerCase) filter (!StopWordFactory.isStopWord(_)) map stem map TermIndexFactory.getTermIndex.getTermEntity
   }
 
   def stem(string: String): String = {
     val stemmer = new Stemmer()
-    stemmer.add(string.toCharArray, string.length)
-    stemmer.stem()
+    stemmer add(string.toCharArray, string.length)
+    stemmer stem()
     stemmer.toString.toLowerCase
   }
 
