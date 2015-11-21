@@ -20,6 +20,8 @@ object IDFFactory {
     * @define value tfidf
     **/
   private val term_tfidf_map = new mutable.HashMap[String, mutable.HashMap[Int, Double]]()
+  var maxIDF: Double = -1
+  var avgIDF: Double = -1
 
   @Deprecated
   @deprecated("slow")
@@ -33,7 +35,7 @@ object IDFFactory {
 
   @Deprecated
   @deprecated("slow")
-  protected def findIDF(term: String) = {
+  protected def findIDF(term: String): Double = {
     findIDF(Index.getDocumentCount, TermIndexFactory.getTermIndex.getDF(term))
   }
 
@@ -45,12 +47,9 @@ object IDFFactory {
   def getIDF(term: TermEntity): Double = term_idf_map.getOrElseUpdate(term.termStem, findIDF(Index.getDocumentCount, term.filePositionMap.size))
 
   /*calculate idf*/
-  protected def findIDF(docN: Int, documentFrequency: Int) = Math.log(docN / (1d + documentFrequency))
+  def findIDF(docN: Int, documentFrequency: Int) = Math.log(docN / (1d + documentFrequency))
 
   def storeIDF(term: String, idf: Double) = term_idf_map.put(term, idf)
-
-  var maxIDF: Double = -1
-  var avgIDF: Double = -1
 
   def updateStatis() = {
     maxIDF = term_idf_map.values.max

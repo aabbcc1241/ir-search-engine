@@ -11,10 +11,12 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * Created by beenotung on 11/7/15.
   */
-class DocFile(val fileId: Int, val docLen: Int, val docId: String, val path: String) {}
+class DocFile(val fileId: Int, @deprecated("not for retrieval model") val docLen: Int, val docId: String, val path: String) {}
 
 object DocFileFactory {
 
+  var maxDocLength: Int = -1
+  var avgDocLength: Int = -1
   private var docFiles: Array[DocFile] = null
 
   def getDocFile(fileId: Int): DocFile = {
@@ -26,9 +28,6 @@ object DocFileFactory {
     if (docFiles == null) throw new IllegalStateException("the index has not been loaded")
     docFiles.length
   }
-
-  var maxDocLength: Int = -1
-  var avgDocLength: Int = -1
 
   @throws(classOf[RichFileNotFoundException])
   def load(file: File) = {

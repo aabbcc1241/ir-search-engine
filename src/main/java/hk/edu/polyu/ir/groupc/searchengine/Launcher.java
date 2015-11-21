@@ -1,6 +1,5 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
-import comm.Utils;
 import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
 import comm.lang.ScalaSupport;
@@ -17,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static hk.edu.polyu.ir.groupc.searchengine.Debug.*;
@@ -109,7 +107,7 @@ public abstract class Launcher {
         }
     }
 
-    protected List<SearchResult> run(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
+    private List<SearchResult> run(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
         List<SearchResult> searchResults = new LinkedList<>();
         QueryFactory.getQueries().foreach(ScalaSupport.function1(new Function<Query, Object>() {
             @Override
