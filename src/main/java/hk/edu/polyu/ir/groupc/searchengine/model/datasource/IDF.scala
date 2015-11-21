@@ -43,11 +43,11 @@ object IDFFactory {
     findIDF(Index.getDocumentCount, TermIndexFactory.getTermIndex.getDF(term))
   }
 
-  /*calculate idf*/
-  def findIDF(docN: Int, documentFrequency: Int) = Math.log(docN / (1d + documentFrequency))
-
   /*return cached idf, update if not cached*/
   def getIDF(term: TermEntity): Double = term_idf_map.getOrElseUpdate(term.termStem, findIDF(Index.getDocumentCount, term.filePositionMap.size))
+
+  /*calculate idf*/
+  def findIDF(docN: Int, documentFrequency: Int) = Math.log(docN / (1d + documentFrequency))
 
   def storeIDF(term: String, idf: Double) = term_idf_map.put(term, idf)
 

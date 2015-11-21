@@ -3,11 +3,15 @@ package hk.edu.polyu.ir.groupc.searchengine;
 import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
 import comm.lang.ScalaSupport;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.*;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.StopWordFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalDocument;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.result.RetrievalDocument;
+import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResult;
+import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -83,14 +87,6 @@ public abstract class Launcher {
                 log("loading term index");
                 TermIndexFactory.load(new File(TERM_INDEX_PATH()));
                 log("loaded");
-                log("calculating IDF");
-                TermIndexFactory.getTermIndex().cacheIDF();
-                log("done");
-                if (needDocumentIndex()) {
-                    log("loading document index");
-                    TermIndexFactory.getTermIndex().createDocumentIndex();
-                    log("loaded");
-                }
             } catch (comm.exception.RichFileNotFoundException e) {
                 log("term index not found\nbuilding term index");
                 TermIndexFactory.build(new File(POST_PATH()));
@@ -98,12 +94,21 @@ public abstract class Launcher {
                 TermIndexFactory.getTermIndex().writeToFile(TERM_INDEX_PATH());
                 log("saved");
             }
+//            if (needDocumentIndex()) {
+            log("loading document index");
+            TermIndexFactory.getTermIndex().createDocumentIndex();
+            log("loaded");
+//            }
+
+            log("calculating IDF");
+            TermIndexFactory.getTermIndex().cacheIDF();
+            log("calculated");
             log("loading stop word list");
             StopWordFactory.load(new File(STOP_PATH()));
-            log("done");
+            log("loaded");
             log("loading query");
             QueryFactory.loadFromFile(new File(QUERY()));
-            log("done");
+            log("loaded");
         } catch (RichFileNotFoundException e) {
             throw new EssentialFileNotFoundException(e.path);
         }

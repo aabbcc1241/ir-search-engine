@@ -19,18 +19,18 @@ object Debug extends App {
 
   def loge(x: Any) = if (!skipError) log(x)
 
+  def log(x: Any) = {
+    println(x)
+    Console.out.flush()
+    FileUtils.appendToFile(x.toString :: Nil, FILE_LOG)
+  }
+
   def logp(x: Any) = if (!skipProgress) {
     println(x)
     Console.out.flush()
   }
 
   def logd(x: Any) = if (!skipDebug) log(x)
-
-  def log(x: Any) = {
-    println(x)
-    Console.out.flush()
-    FileUtils.appendToFile(x.toString :: Nil, FILE_LOG)
-  }
 
   /*@deprecated
   override def main(args: Array[String]) {

@@ -8,7 +8,7 @@ import comm.exception.{InvalidFileFormatException, RichFileNotFoundException}
 import hk.edu.polyu.ir.groupc.searchengine.Debug
 import hk.edu.polyu.ir.groupc.searchengine.Debug.logp
 import hk.edu.polyu.ir.groupc.searchengine.model.Index
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocumentIndexFactory.DocTermPositionMap
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocumentIndexFactory.{DocTermPositionMap, TermPositionMap}
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory.TermFileMap
 
 import scala.collection.mutable
@@ -20,6 +20,8 @@ import scala.collection.mutable.ArrayBuffer
 class DocumentIndex(initMap: DocTermPositionMap = new DocTermPositionMap) {
   val file_maxTF = mutable.HashMap.empty[Int, Int]
   val file_docLen = mutable.HashMap.empty[Int, Double]
+  var docLenAvg = 0d
+  var docLenMedian = 0d
   private var underlying = initMap
 
   @deprecated("used during test only")
@@ -44,21 +46,41 @@ class DocumentIndex(initMap: DocTermPositionMap = new DocTermPositionMap) {
     file_docLen.getOrElseUpdate(fileId, findDocumentLength(fileId))
   }
 
-  protected def findDocumentLength(fileId: Int) = {
-    //TODO calc doc length
+  protected def findDocumentLength(fileId: Int): Double = {
     underlying.get(fileId) match {
       /*document not found*/
       case None => 0d
       /*document found*/
-      case Some(termPositionMap) =>
-        var sum = 0d
-        termPositionMap.foreach(termPosition => {
-          val idf = Index.getIDF(termPosition._1)
-          val tf = termPosition._2.length
-          sum += Math.pow(tf * idf, 2)
-        })
-        Math.sqrt(sum)
+      case Some(termPositionMap: TermPositionMap) => findDocumentLength(termPositionMap)
     }
+  }
+
+  def updateStatis() = {
+    /*update all document length*/
+    underlying.foreach(p => {
+      file_docLen.put(p._1, findDocumentLength(p._2))
+    })
+    /*find average, median*/
+    docLenAvg = file_docLen.values.sum / file_docLen.size
+    docLenMedian = {
+      val sorted = file_docLen.values.toSeq.sortWith(_ < _)
+      if (sorted.length % 2 == 0) {
+        val i = sorted.length / 2
+        (sorted(i - 1) + sorted(i)) / 2
+      }
+      else
+        sorted(sorted.length / 2)
+    }
+  }
+
+  protected def findDocumentLength(termPositionMap: TermPositionMap): Double = {
+    var sum = 0d
+    termPositionMap.foreach(termPosition => {
+      val idf = Index.getIDF(termPosition._1)
+      val tf = termPosition._2.length
+      sum += Math.pow(tf * idf, 2)
+    })
+    Math.sqrt(sum)
   }
 
   @throws(classOf[IllegalStateException])
@@ -74,6 +96,8 @@ class DocumentIndex(initMap: DocTermPositionMap = new DocTermPositionMap) {
         }
       })
   }
+
+  updateStatis()
 }
 
 object DocumentIndexFactory {
@@ -94,6 +118,7 @@ object DocumentIndexFactory {
     if (cachedInstance == null) throw new IllegalStateException("index has not been loaded")
     cachedInstance
   }
+
 
   @throws(classOf[InvalidFileFormatException])
   @throws(classOf[RichFileNotFoundException])

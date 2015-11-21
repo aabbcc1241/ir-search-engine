@@ -43,10 +43,10 @@ object Index {
   }
 
   @throws(classOf[IllegalStateException])
-  def maxDocumentLength = DocFileFactory.maxDocLength
+  def averageDocumentLength = DocumentIndexFactory.getDocumentIndex.docLenAvg
 
   @throws(classOf[IllegalStateException])
-  def averageDocumentLength = DocFileFactory.avgDocLength
+  def medianDocumentLength = DocumentIndexFactory.getDocumentIndex.docLenMedian
 
   @throws(classOf[IllegalStateException])
   def maxIDF = IDFFactory.maxIDF

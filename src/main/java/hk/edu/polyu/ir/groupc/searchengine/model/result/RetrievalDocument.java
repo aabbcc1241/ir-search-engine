@@ -1,4 +1,4 @@
-package hk.edu.polyu.ir.groupc.searchengine.model.query;
+package hk.edu.polyu.ir.groupc.searchengine.model.result;
 
 import hk.edu.polyu.ir.groupc.searchengine.model.Index;
 

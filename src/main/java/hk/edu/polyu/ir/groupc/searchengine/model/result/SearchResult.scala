@@ -1,11 +1,11 @@
-package hk.edu.polyu.ir.groupc.searchengine.model.datasource
+package hk.edu.polyu.ir.groupc.searchengine.model.result
 
 import java.io.{FileWriter, IOException}
 import java.util
 import java.util.Collections
 
 import comm.FileUtils
-import hk.edu.polyu.ir.groupc.searchengine.model.query.{Query, RetrievalDocument}
+import hk.edu.polyu.ir.groupc.searchengine.model.query.Query
 
 import scala.collection.JavaConverters._
 

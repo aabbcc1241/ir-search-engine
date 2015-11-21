@@ -15,7 +15,9 @@ class DocFile(val fileId: Int, @deprecated("not for retrieval model") val docLen
 
 object DocFileFactory {
 
+  @deprecated("not for retrieval model")
   var maxDocLength: Int = -1
+  @deprecated("not for retrieval model")
   var avgDocLength: Int = -1
   private var docFiles: Array[DocFile] = null
 
