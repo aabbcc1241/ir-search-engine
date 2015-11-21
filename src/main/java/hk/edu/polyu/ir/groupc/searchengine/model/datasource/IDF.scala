@@ -29,6 +29,10 @@ object IDFFactory {
     term_tfidf_map.getOrElseUpdate(term, new mutable.HashMap[Int, Double]())
       .getOrElseUpdate(fileId, Index.getTF(term, fileId) * getIDF(term))
 
+  def getTFIDF(termEntity: TermEntity, fileId: Int): Double =
+    term_tfidf_map.getOrElseUpdate(termEntity.termStem, new mutable.HashMap[Int, Double]())
+      .getOrElseUpdate(fileId, Index.getTF(termEntity, fileId) * getIDF(termEntity.termStem))
+
   @Deprecated
   @deprecated("slow")
   def getIDF(term: String): Double = term_idf_map.getOrElseUpdate(term, findIDF(term))
@@ -39,15 +43,11 @@ object IDFFactory {
     findIDF(Index.getDocumentCount, TermIndexFactory.getTermIndex.getDF(term))
   }
 
-  def getTFIDF(termEntity: TermEntity, fileId: Int): Double =
-    term_tfidf_map.getOrElseUpdate(termEntity.termStem, new mutable.HashMap[Int, Double]())
-      .getOrElseUpdate(fileId, Index.getTF(termEntity, fileId) * getIDF(termEntity.termStem))
+  /*calculate idf*/
+  def findIDF(docN: Int, documentFrequency: Int) = Math.log(docN / (1d + documentFrequency))
 
   /*return cached idf, update if not cached*/
   def getIDF(term: TermEntity): Double = term_idf_map.getOrElseUpdate(term.termStem, findIDF(Index.getDocumentCount, term.filePositionMap.size))
-
-  /*calculate idf*/
-  def findIDF(docN: Int, documentFrequency: Int) = Math.log(docN / (1d + documentFrequency))
 
   def storeIDF(term: String, idf: Double) = term_idf_map.put(term, idf)
 
