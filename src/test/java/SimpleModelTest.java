@@ -1,10 +1,10 @@
 
 import comm.Test;
 import hk.edu.polyu.ir.groupc.searchengine.Launcher;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.SimpleModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
 import scala.Tuple2;
 
 import java.util.List;
