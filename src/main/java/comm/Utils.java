@@ -31,7 +31,7 @@ public class Utils {
     }
 
     public static String[] getLines(File file) throws IOException {
-        return new BufferedReader(new FileReader(file)).lines().toArray(value -> new String[value]);
+        return new BufferedReader(new FileReader(file)).lines().toArray(String[]::new);
     }
 
     @Deprecated

@@ -21,7 +21,7 @@ public class SimpleModel extends RetrievalModel {
                 @Override
                 public void accept(Tuple2<Object, ArrayBuffer<Object>> e) {
                     double similarityScore = e._2().size() * expandedTerm.weight();
-                    similarityScore/= Index.getDocumentLength((Integer) e._1());
+                    similarityScore /= Index.getDocumentLength((Integer) e._1());
                     retrievalDocuments.add(new RetrievalDocument((int) e._1(), similarityScore));
                 }
             });

@@ -3,10 +3,7 @@ package hk.edu.polyu.ir.groupc.searchengine;
 import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
 import comm.lang.ScalaSupport;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResult;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.SearchResultFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.datasource.*;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalDocument;
@@ -101,7 +98,12 @@ public abstract class Launcher {
                 TermIndexFactory.getTermIndex().writeToFile(TERM_INDEX_PATH());
                 log("saved");
             }
+            log("loading stop word list");
+            StopWordFactory.load(new File(STOP_PATH()));
+            log("done");
+            log("loading query");
             QueryFactory.loadFromFile(new File(QUERY()));
+            log("done");
         } catch (RichFileNotFoundException e) {
             throw new EssentialFileNotFoundException(e.path);
         }
