@@ -18,11 +18,11 @@ public abstract class RetrievalModel {
 
     public abstract String getMode();
 
-    public abstract void setMode(String newMode);
-
     public final void setMode(int index) {
         setMode(getModes().get(index));
     }
+
+    public abstract void setMode(String newMode);
 
     public abstract List<Parameter> getParameters();
 
@@ -33,10 +33,11 @@ public abstract class RetrievalModel {
         public final T max;
         public final T suggested;
         /*for UI, and report*/
-        public String name;
+        public final String name;
         public T value;
 
-        public Parameter(T min, T max, T suggested) {
+        public Parameter(String name, T min, T max, T suggested) {
+            this.name = name;
             this.min = min;
             this.max = max;
             this.suggested = suggested;
