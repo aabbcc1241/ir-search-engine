@@ -8,7 +8,6 @@ import scala.collection.mutable
   * Created by beenotung on 11/11/15.
   */
 object IDFFactory {
-  //TODO avoid lazy init
   /**
     * @define key term
     * @define value idf

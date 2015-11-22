@@ -4,6 +4,7 @@ package hk.edu.polyu.ir.groupc.searchengine.frontend;
  * Created by beenotung on 11/8/15.
  */
 
+import comm.Utils;
 import hk.edu.polyu.ir.groupc.searchengine.Debug;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -18,7 +19,7 @@ import static hk.edu.polyu.ir.groupc.searchengine.Debug.log_;
 public class MainApplication extends Application {
     static String title = "IR 2015 GroupC";
     private static MainApplication instance;
-    public ThreadGroup threadGroup = new ThreadGroup("MainApplication thread group");
+    public static ThreadGroup threadGroup = new ThreadGroup("MainApplication thread group");
 
     public static MainApplication getInstance() {
         if (instance == null) throw new IllegalStateException("MainApplication has not been created");
@@ -36,17 +37,8 @@ public class MainApplication extends Application {
         launch(args);
 
         log_("MainApplication closing");
-        ThreadGroup threadGroup = instance.threadGroup;
-        Thread[] threads = new Thread[threadGroup.activeCount()];
-        threadGroup.enumerate(threads);
-        for (Thread thread : threads) {
-            thread.interrupt();
-            while (thread.isAlive()) {
-                Debug.logd("terminating " + thread.toString());
-                thread.stop();
-            }
-        }
-        threadGroup.destroy();
+        Utils.terminate(instance.threadGroup,false);
+
         log_("MainApplication end");
     }
 
@@ -63,6 +55,12 @@ public class MainApplication extends Application {
     public Stage getStage() {
         if (mStage == null) throw new IllegalStateException("stage has not been created in MainApplication");
         return mStage;
+    }
+
+    public static Scene getScene() {
+        if (instance == null)
+            throw new IllegalStateException("Main Application has not been created");
+        return instance.getStage().getScene();
     }
 
     @Override

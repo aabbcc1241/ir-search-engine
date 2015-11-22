@@ -2,8 +2,9 @@ package hk.edu.polyu.ir.groupc.searchengine
 
 import javafx.application.Platform
 
+import comm.FileUtils
+import comm.gui.AlertUtils
 import comm.lang.Convert.funcToRunnable
-import comm.{AlertUtils, FileUtils}
 import hk.edu.polyu.ir.groupc.searchengine.frontend.MainController
 
 /**
@@ -21,6 +22,18 @@ object Debug extends App {
     loge(e)
   }
 
+  def loge(msg: String, e: Exception) = {
+    log_(msg)
+    log_(e)
+    try {
+      e.printStackTrace()
+      AlertUtils.error(contentText = msg, exception = e)
+    } catch {
+      case e: Exception =>
+        log("GUI is not supported, error message not prompted")
+    }
+  }
+
   def loge(x: Any) = {
     log("Error: " + x, mainStatus = true)
     try {
@@ -33,9 +46,15 @@ object Debug extends App {
 
   def log_(x: Any) = log(x, mainStatus = false, minorStatus = false)
 
+  def logBothStatus(main: String, minor: String) = {
+    log_(main)
+    log_(minor)
+    MainController.bothStatus(main, minor)
+  }
+
   def logDone(x: Any = {
     try {
-      MainController getMajorStatus
+      MainController getInstance() getMajorStatus
     } catch {
       case e: IllegalStateException => ""
     }

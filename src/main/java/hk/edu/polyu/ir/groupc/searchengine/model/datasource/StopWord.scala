@@ -20,8 +20,10 @@ object StopWordFactory {
 
   @throws(classOf[RichFileNotFoundException])
   def load(file: File) = {
-    try
+    try {
+      stopWords = null
       stopWords = (Source fromFile file getLines() map (_.toLowerCase)) toSet
+    }
     catch {
       case e: FileNotFoundException => throw new RichFileNotFoundException(file)
     }

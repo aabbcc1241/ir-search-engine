@@ -41,9 +41,9 @@ class TermIndex(initMap: TermFileMap = new TermFileMap) {
     IDFFactory.updateStatis
   }
 
-  @Deprecated
-  @deprecated("used during test only")
-  def reset() = underlying = null
+//  @Deprecated
+//  @deprecated("used during test only")
+//  def reset() = underlying = null
 
   def getTermEntity(termStem: String) = underlying.get(termStem) match {
     case None => None

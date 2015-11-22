@@ -167,6 +167,7 @@ object DocumentIndexFactory {
   }
 
   def createFromTermIndex(termFileMap: TermFileMap) = {
+    cachedInstance=null
     val docInfoMap = new DocTermPositionMap
     val N = termFileMap.size
     var i = 0
