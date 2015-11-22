@@ -2,67 +2,67 @@
  * Sample Skeleton for 'MainWindow.fxml' Controller Class
  */
 
-package hk.edu.polyu.ir.groupc.searchengine.frontend;
-
-import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.Parameter;
-import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.RetrievalModel;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.text.Font;
+package hk;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.fxml.FXML;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.text.Font;
 
-public class MainControllerSkeleton {
+public class MainController {
 
     @FXML // ResourceBundle that was given to the FXMLLoader
-    protected ResourceBundle resources;
+    private ResourceBundle resources;
 
     @FXML // URL location of the FXML file that was given to the FXMLLoader
-    protected URL location;
+    private URL location;
 
     @FXML // fx:id="text_data_path"
-    protected TextField text_data_path; // Value injected by FXMLLoader
+    private TextField text_data_path; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_query_file"
-    protected TextField text_query_file; // Value injected by FXMLLoader
+    private TextField text_query_file; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_result_path"
-    protected TextField text_result_path; // Value injected by FXMLLoader
+    private TextField text_result_path; // Value injected by FXMLLoader
 
     @FXML // fx:id="combo_model"
-    protected ComboBox<RetrievalModel> combo_model; // Value injected by FXMLLoader
+    private ComboBox<?> combo_model; // Value injected by FXMLLoader
 
     @FXML // fx:id="table_model"
-    protected TableView<Parameter> table_model; // Value injected by FXMLLoader
+    private TableView<?> table_model; // Value injected by FXMLLoader
 
     @FXML // fx:id="tablecolumn_model_param_name"
-    protected TableColumn<Parameter, String> tablecolumn_model_param_name; // Value injected by FXMLLoader
+    private TableColumn<?, ?> tablecolumn_model_param_name; // Value injected by FXMLLoader
 
     @FXML // fx:id="tablecolumn_model_param_min"
-    protected TableColumn<Parameter, Number> tablecolumn_model_param_min; // Value injected by FXMLLoader
+    private TableColumn<?, ?> tablecolumn_model_param_min; // Value injected by FXMLLoader
 
     @FXML // fx:id="tablecolumn_model_param_max"
-    protected TableColumn<Parameter, Number> tablecolumn_model_param_max; // Value injected by FXMLLoader
+    private TableColumn<?, ?> tablecolumn_model_param_max; // Value injected by FXMLLoader
 
     @FXML // fx:id="tablecolumn_model_param_suggested"
-    protected TableColumn<Parameter, Number> tablecolumn_model_param_suggested; // Value injected by FXMLLoader
+    private TableColumn<?, ?> tablecolumn_model_param_suggested; // Value injected by FXMLLoader
 
     @FXML // fx:id="tablecolumn_model_param_value"
-    protected TableColumn<Parameter, Number> tablecolumn_model_param_value; // Value injected by FXMLLoader
+    private TableColumn<?, ?> tablecolumn_model_param_value; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_model_param_editing"
-    protected TextField text_model_param_editing; // Value injected by FXMLLoader
+    private TextField text_model_param_editing; // Value injected by FXMLLoader
 
     @FXML // fx:id="label_left_status"
-    protected Label label_left_status; // Value injected by FXMLLoader
+    private Label label_left_status; // Value injected by FXMLLoader
 
     @FXML // fx:id="x3"
-    protected Font x3; // Value injected by FXMLLoader
+    private Font x3; // Value injected by FXMLLoader
 
     @FXML // fx:id="label_right_status"
-    protected Label label_right_status; // Value injected by FXMLLoader
+    private Label label_right_status; // Value injected by FXMLLoader
 
     @FXML
     void func_test(ActionEvent event) {

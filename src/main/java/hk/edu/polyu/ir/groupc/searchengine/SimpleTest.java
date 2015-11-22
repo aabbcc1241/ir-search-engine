@@ -1,8 +1,8 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
 import comm.exception.EssentialFileNotFoundException;
-import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
-import hk.edu.polyu.ir.groupc.searchengine.model.query.SimpleModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.RetrievalModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.SimpleModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
 
 /**

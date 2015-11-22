@@ -99,16 +99,25 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <SplitPane dividerPositions="0.298" layoutX="80.0" layoutY="49.0" prefHeight="160.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                    <items>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
-                                            <children>
-                                                <ComboBox fx:id="combo_model" layoutX="9.0" layoutY="112.0" prefWidth="150.0" />
-                                            </children>
-                                        </AnchorPane>
-                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0" />
-                                    </items>
-                                </SplitPane>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <top>
+                                          <ComboBox fx:id="combo_model" onAction="#set_model" prefWidth="150.0" BorderPane.alignment="CENTER" />
+                           </top>
+                           <center>
+                              <TableView fx:id="table_model" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                                <columns>
+                                  <TableColumn fx:id="tablecolumn_model_param_name" prefWidth="89.99999845027924" text="Parameter" />
+                                  <TableColumn fx:id="tablecolumn_model_param_min" prefWidth="61.00000762939453" text="min" />
+                                    <TableColumn fx:id="tablecolumn_model_param_max" prefWidth="75.0" text="max" />
+                                    <TableColumn fx:id="tablecolumn_model_param_suggested" prefWidth="94.0" text="suggested" />
+                                    <TableColumn fx:id="tablecolumn_model_param_value" prefWidth="56.0" text="value" />
+                                </columns>
+                              </TableView>
+                           </center>
+                           <bottom>
+                              <TextField fx:id="text_model_param_editing" onAction="#set_model_param_editing" BorderPane.alignment="CENTER" />
+                           </bottom>
+                        </BorderPane>
                             </children>
                         </AnchorPane>
                     </content>

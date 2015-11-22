@@ -3,15 +3,13 @@ import comm.Test;
 import hk.edu.polyu.ir.groupc.searchengine.Debug;
 import hk.edu.polyu.ir.groupc.searchengine.Launcher;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResult;
-import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
-import hk.edu.polyu.ir.groupc.searchengine.model.query.SimpleModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.RetrievalModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.SimpleModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
 import scala.Tuple2;
 
 import java.util.List;
 import java.util.function.Supplier;
-
-import static hk.edu.polyu.ir.groupc.searchengine.Debug.log;
 
 /**
  * Created by beenotung on 11/12/15.

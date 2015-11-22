@@ -1,5 +1,6 @@
-package hk.edu.polyu.ir.groupc.searchengine.model.query;
+package hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel;
 
+import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.RetrievalDocument;
 
 import java.util.List;
@@ -10,6 +11,15 @@ import java.util.List;
 public abstract class RetrievalModel {
     {
         setMode(getDefaultMode());
+    }
+
+    @Override
+    public final String toString() {
+        return name();
+    }
+
+    public String name() {
+        return getClass().getSimpleName();
     }
 
     public abstract List<String> getModes();
@@ -24,25 +34,8 @@ public abstract class RetrievalModel {
 
     public abstract void setMode(String newMode);
 
-    public abstract List<Parameter> getParameters();
+    public abstract List<Parameter<? extends Number>> getParameters();
 
     public abstract List<RetrievalDocument> search(Query query);
 
-    public class Parameter<T> {
-        public final T min;
-        public final T max;
-        public final T suggested;
-        /*for UI, and report*/
-        public final String name;
-        public T value;
-
-        public Parameter(String name, T min, T max, T suggested) {
-            this.name = name;
-            this.min = min;
-            this.max = max;
-            this.suggested = suggested;
-            value = suggested;
-        }
-
-    }
 }
