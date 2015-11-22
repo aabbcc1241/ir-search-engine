@@ -3,15 +3,18 @@ package hk.edu.polyu.ir.groupc.searchengine;
 import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
 import comm.lang.ScalaSupport;
+import hk.edu.polyu.ir.groupc.searchengine.frontend.MainController;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.StopWordFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.result.JudgeRobustFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.RetrievalDocument;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
+import javafx.application.Platform;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,94 +27,136 @@ import static hk.edu.polyu.ir.groupc.searchengine.Debug.*;
 public abstract class Launcher {
 
     private boolean inited = false;
+    private String _filePath, _termIndexPath, _postPath, _stopPath, _judgeRobust, _queryPath;
 
-    protected abstract String FILE_PATH();
-
-    protected abstract String TERM_INDEX_PATH();
-
-    protected abstract String POST_PATH();
-
-    protected abstract String STOP_PATH();
-
-    protected abstract String JUDGEROBUST();
-
-    protected abstract String QUERY();
-
-    protected boolean needDocumentIndex() {
-        return true;
+    public String filePath() {
+        return _filePath;
     }
 
-    ;
+    public void filePath(String newPath) throws RichFileNotFoundException {
+        _filePath = newPath;
+        if (inited) DocFileFactory.load(new File(newPath));
+    }
+
+    public void termIndexPath(String newPath) throws RichFileNotFoundException {
+        _termIndexPath = newPath;
+        if (inited) TermIndexFactory.load(new File(newPath));
+    }
+
+    public String termIndexPath() {
+        return _termIndexPath;
+    }
+
+    public void postPath(String newPath) throws RichFileNotFoundException {
+        _postPath = newPath;
+        if (inited) TermIndexFactory.build(new File(newPath));
+    }
+
+    public String postPath() {
+        return _postPath;
+    }
+
+    public void stopPath(String newPath) throws RichFileNotFoundException {
+        _stopPath = newPath;
+        if (inited) StopWordFactory.load(new File(newPath));
+    }
+
+    public String stopPath() {
+        return _stopPath;
+    }
+
+    public void judgeRobustPath(String newPath) throws RichFileNotFoundException {
+        _judgeRobust = newPath;
+        if (inited) JudgeRobustFactory.load(new File(newPath));
+    }
+
+    public String judgeRobustPath() {
+        return _judgeRobust;
+    }
+
+    @Deprecated
+    public void queryPath(String newPath) throws RichFileNotFoundException {
+        _queryPath = newPath;
+        if (inited) QueryFactory.loadFromFile(new File(newPath));
+    }
+
+    @Deprecated
+    public String queryPath() {
+        return _queryPath;
+    }
+
+    public boolean needDocumentIndex() {
+        return true;
+    }
 
     public List<SearchResult> test(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
         try {
             init();
-            log("running retrieval model: " + retrievalModel.getClass().getName());
+            logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
             List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument);
             deinit();
             return searchResults;
         } catch (EssentialFileNotFoundException e) {
-            exception(e);
-            loge("Error: Please make sure you have '" + e.path + "'");
+//            exception(e);
+            loge("Please make sure you have '" + e.path + "'");
         }
         return null;
     }
 
-    public void start(RetrievalModel retrievalModel, String resultFilename, int numOfRetrievalDocument) {
-        try {
+    public void start(RetrievalModel retrievalModel, String resultFilename, int numOfRetrievalDocument) throws EssentialFileNotFoundException {
             init();
-            log("running retrieval model: " + retrievalModel.getClass().getName());
+            logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
             List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument);
-            log("saving search result to file <" + resultFilename + ">");
+            logMainStatus("saving search result to file <" + resultFilename + ">");
             try {
                 SearchResultFactory.writeToFile(searchResults, resultFilename);
             } catch (IOException e) {
-                exception(e);
-                loge("Error: Failed to save search result!\nPlease make sure you have write permission on '" + resultFilename + "'");
+//                exception(e);
+                loge("Failed to save search result!\nPlease make sure you have write permission on '" + resultFilename + "'");
             }
             deinit();
-        } catch (EssentialFileNotFoundException e) {
-            exception(e);
-            loge("Error: Please make sure you have '" + e.path + "'");
-        }
+//            exception(e);
     }
 
-    private void init() throws EssentialFileNotFoundException {
+    public void init() throws EssentialFileNotFoundException {
         if (inited) return;
         inited = true;
         try {
-            log("loading file-doc list");
-            DocFileFactory.load(new File(FILE_PATH()));
-            log("loaded");
+            logMainStatus("loading file-doc list");
+            DocFileFactory.load(new File(filePath()));
+            logDone("loaded file-doc list");
             try {
-                log("loading term index");
-                TermIndexFactory.load(new File(TERM_INDEX_PATH()));
-                log("loaded");
+                logMainStatus("loading term index");
+                TermIndexFactory.load(new File(termIndexPath()));
+                logDone("loaded term index");
             } catch (comm.exception.RichFileNotFoundException e) {
-                log("term index not found\nbuilding term index");
-                TermIndexFactory.build(new File(POST_PATH()));
-                log("built index, saving term index");
-                TermIndexFactory.getTermIndex().writeToFile(TERM_INDEX_PATH());
-                log("saved");
+                logMainStatus("term index not found\nbuilding term index");
+                TermIndexFactory.build(new File(postPath()));
+//                logDone("built index, saving term index");
+                logMainStatus("built index, saving term index");
+                TermIndexFactory.getTermIndex().writeToFile(termIndexPath());
+                logDone("saved term index");
             }
 //            if (needDocumentIndex()) {
-            log("loading document index");
+            logMainStatus("loading document index");
             TermIndexFactory.getTermIndex().createDocumentIndex();
-            log("loaded");
+            logDone("loaded document index");
 //            }
-
-            log("calculating IDF");
+            logMainStatus("calculating IDF");
             TermIndexFactory.getTermIndex().cacheIDF();
-            log("calculated");
-            log("loading stop word list");
-            StopWordFactory.load(new File(STOP_PATH()));
-            log("loaded");
-            log("loading query");
-            QueryFactory.loadFromFile(new File(QUERY()));
-            log("loaded");
+            logDone("calculated IDF");
+            logMainStatus("loading stop word list");
+            StopWordFactory.load(new File(stopPath()));
+            logDone("loaded stop word list");
         } catch (RichFileNotFoundException e) {
             throw new EssentialFileNotFoundException(e.path);
         }
+    }
+
+    public void loadQuery(File file) throws RichFileNotFoundException {
+        logMainStatus("loading query");
+        QueryFactory.loadFromFile(file);
+        logDone("loaded query");
     }
 
     private List<SearchResult> run(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
@@ -119,12 +164,12 @@ public abstract class Launcher {
         QueryFactory.getQueries().foreach(ScalaSupport.function1(new Function<Query, Object>() {
             @Override
             public Object apply(Query query) {
-                log("searching on queryId: " + query.queryId());
+                logMainStatus("searching on queryId: " + query.queryId());
                 List<RetrievalDocument> retrievalDocuments = retrievalModel.search(query);
                 SearchResult searchResult = SearchResultFactory.create(query, retrievalDocuments);
                 searchResult.shrink(numOfRetrievalDocument);
                 searchResults.add(searchResult);
-                log("finished search");
+                logDone("finished search on queryId: " + query.queryId());
                 return null;
             }
         }));

@@ -1,5 +1,6 @@
 
 import comm.Test;
+import hk.edu.polyu.ir.groupc.searchengine.Debug;
 import hk.edu.polyu.ir.groupc.searchengine.Launcher;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
@@ -28,39 +29,39 @@ public class SimpleModelTest {
     public static void main(String[] args) {
         Launcher launcher = new Launcher() {
             @Override
-            public String FILE_PATH() {
+            public String filePath() {
                 return FILE_PATH;
             }
 
             @Override
-            public String TERM_INDEX_PATH() {
+            public String termIndexPath() {
                 return TERM_INDEX_PATH;
             }
 
             @Override
-            public String POST_PATH() {
+            public String postPath() {
                 return POST_PATH;
             }
 
             @Override
-            public String STOP_PATH() {
+            public String stopPath() {
                 return STOP_PATH;
             }
 
-            @Override
-            public String JUDGEROBUST() {
-                return JUDGEROBUST;
-            }
+//            @Override
+//            public String judgerobust() {
+//                return JUDGEROBUST;
+//            }
 
-            @Override
-            public String QUERY() {
-                return QUERY_T;
-            }
-
-            @Override
-            protected boolean needDocumentIndex() {
-                return false;
-            }
+//            @Override
+//            public String query() {
+//                return QUERY_T;
+//            }
+//
+//            @Override
+//            protected boolean needDocumentIndex() {
+//                return false;
+//            }
         };
         RetrievalModel retrievalModel = new SimpleModel();
         SearchResultFactory.setRunId("GroupC-DemoModel");
@@ -73,7 +74,7 @@ public class SimpleModelTest {
             }
         }, 10, true, true, true);
         for (Tuple2<Object, Object> result : results) {
-            log("used time " + (long) result._2() + " ns");
+            Debug.log_("used time " + (long) result._2() + " ns");
         }
     }
 }

@@ -7,4 +7,8 @@ import scala.collection.JavaConverters._
   */
 object Convert {
   def toJava[E](list: List[E]) = list.asJava
+
+  implicit def funcToRunnable(func: () => Unit):Runnable = new Runnable() {
+    override def run() = func()
+  }
 }

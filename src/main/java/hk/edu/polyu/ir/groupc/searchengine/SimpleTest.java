@@ -1,5 +1,6 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
+import comm.exception.EssentialFileNotFoundException;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.SimpleModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
@@ -19,43 +20,48 @@ public class SimpleTest {
 
     public static void main(String[] args) {
         Launcher launcher = new Launcher() {
+
             @Override
-            public String FILE_PATH() {
+            public String filePath() {
                 return FILE_PATH;
             }
 
             @Override
-            public String TERM_INDEX_PATH() {
+            public String termIndexPath() {
                 return TERM_INDEX_PATH;
             }
 
             @Override
-            public String POST_PATH() {
+            public String postPath() {
                 return POST_PATH;
             }
 
             @Override
-            public String STOP_PATH() {
+            public String stopPath() {
                 return STOP_PATH;
             }
 
             @Override
-            public String JUDGEROBUST() {
+            public String judgeRobustPath() {
                 return JUDGEROBUST;
             }
 
             @Override
-            public String QUERY() {
+            public String queryPath() {
                 return QUERY_T;
             }
 
-            @Override
-            protected boolean needDocumentIndex() {
-                return true;
-            }
+//            @Override
+//            protected boolean needDocumentIndex() {
+//                return true;
+//            }
         };
         RetrievalModel retrievalModel = new SimpleModel();
         SearchResultFactory.setRunId("GroupC-DemoModel");
-        launcher.start(retrievalModel, RESULT_FILE, 10);
+        try {
+            launcher.start(retrievalModel, RESULT_FILE, 10);
+        } catch (EssentialFileNotFoundException e) {
+            Debug.loge("res files does not exist");
+        }
     }
 }

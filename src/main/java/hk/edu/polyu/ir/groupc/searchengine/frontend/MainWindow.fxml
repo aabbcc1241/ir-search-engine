@@ -1,48 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.*?>
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
-<VBox xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65"
-      fx:controller="hk.edu.polyu.ir.groupc.searchengine.frontend.MainController">
+
+<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hk.edu.polyu.ir.groupc.searchengine.frontend.MainController">
     <children>
         <MenuBar disable="true" VBox.vgrow="NEVER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="New"/>
-                        <MenuItem mnemonicParsing="false" text="Open…"/>
-                        <Menu mnemonicParsing="false" text="Open Recent"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="false" text="Close"/>
-                        <MenuItem mnemonicParsing="false" text="Save"/>
-                        <MenuItem mnemonicParsing="false" text="Save As…"/>
-                        <MenuItem mnemonicParsing="false" text="Revert"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="false" text="Preferences…"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="false" text="Quit"/>
+                        <MenuItem mnemonicParsing="false" text="New" />
+                        <MenuItem mnemonicParsing="false" text="Open…" />
+                        <Menu mnemonicParsing="false" text="Open Recent" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Close" />
+                        <MenuItem mnemonicParsing="false" text="Save" />
+                        <MenuItem mnemonicParsing="false" text="Save As…" />
+                        <MenuItem mnemonicParsing="false" text="Revert" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Preferences…" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Quit" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Undo"/>
-                        <MenuItem mnemonicParsing="false" text="Redo"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="false" text="Cut"/>
-                        <MenuItem mnemonicParsing="false" text="Copy"/>
-                        <MenuItem mnemonicParsing="false" text="Paste"/>
-                        <MenuItem mnemonicParsing="false" text="Delete"/>
-                        <SeparatorMenuItem mnemonicParsing="false"/>
-                        <MenuItem mnemonicParsing="false" text="Select All"/>
-                        <MenuItem mnemonicParsing="false" text="Unselect All"/>
+                        <MenuItem mnemonicParsing="false" text="Undo" />
+                        <MenuItem mnemonicParsing="false" text="Redo" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Cut" />
+                        <MenuItem mnemonicParsing="false" text="Copy" />
+                        <MenuItem mnemonicParsing="false" text="Paste" />
+                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <SeparatorMenuItem mnemonicParsing="false" />
+                        <MenuItem mnemonicParsing="false" text="Select All" />
+                        <MenuItem mnemonicParsing="false" text="Unselect All" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About MyHelloApp"/>
+                        <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
                     </items>
                 </Menu>
             </menus>
@@ -52,53 +58,59 @@
                 <TitledPane animated="false" text="Settings">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                            <children>
-                                <Button layoutX="208.0" layoutY="56.0" mnemonicParsing="false" onAction="#import_post"
-                                        text="Import Post"/>
-                                <Button layoutX="210.0" layoutY="14.0" mnemonicParsing="false" onAction="#import_file"
-                                        text="Import File"/>
-                                <TextField fx:id="text_post" layoutX="14.0" layoutY="56.0" onDragDone="#drag_post"/>
-                                <TextField fx:id="text_file" layoutX="14.0" layoutY="14.0" onDragDone="#drag_file"/>
-                                <Button layoutX="313.0" layoutY="98.0" mnemonicParsing="false" onAction="#import_index"
-                                        text="Import Index"/>
-                                <Button layoutX="209.0" layoutY="98.0" mnemonicParsing="false" onAction="#build_index"
-                                        text="Build Index"/>
-                                <TextField fx:id="text_index" layoutX="14.0" layoutY="98.0" onDragDone="#drag_index"/>
-                                <Button layoutX="428.0" layoutY="98.0" mnemonicParsing="false" onAction="#export_index"
-                                        text="Export Index"/>
-                            </children>
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0" spacing="7.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
+                                 <children>
+                                            <TextField fx:id="text_data_path" onDragDone="#drag_file" HBox.hgrow="ALWAYS" />
+                                            <Button mnemonicParsing="false" onAction="#set_data_path" text="Set Data Path" textAlignment="CENTER">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
+                                 <children>
+                                            <TextField fx:id="text_result_path" onDragDone="#drag_post" HBox.hgrow="ALWAYS" />
+                                            <Button mnemonicParsing="false" onAction="#import_post" text="Set Result Path">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
                         </AnchorPane>
                     </content>
                 </TitledPane>
                 <TitledPane animated="false" text="Query">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                 </TitledPane>
                 <TitledPane animated="false" text="Analysis">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                     </content>
                 </TitledPane>
             </panes>
         </Accordion>
         <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
             <children>
-                <Label fx:id="label_left_status" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status"
-                       HBox.hgrow="ALWAYS">
+                <Label fx:id="label_left_status" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text=" " HBox.hgrow="ALWAYS">
                     <font>
-                        <Font size="11.0" fx:id="x3"/>
+                        <Font size="11.0" fx:id="x3" />
                     </font>
-                    <textFill>
-                        <Color blue="0.625" green="0.625" red="0.625" fx:id="x4"/>
-                    </textFill>
                 </Label>
-                <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS"/>
-                <Label fx:id="label_right_status" font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4"
-                       HBox.hgrow="NEVER"/>
+                <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
+                <Label fx:id="label_right_status" font="$x3" maxWidth="-1.0" text=" " HBox.hgrow="NEVER" />
             </children>
             <padding>
-                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
+                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
             </padding>
         </HBox>
     </children>

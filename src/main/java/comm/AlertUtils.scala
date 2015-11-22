@@ -1,7 +1,11 @@
 package comm
 
+import javafx.application.Platform
 import javafx.scene.control.Alert
 import javafx.scene.control.Alert.AlertType
+
+import comm.lang.Convert.funcToRunnable
+
 
 /**
   * Created by beenotung on 11/10/15.
@@ -15,11 +19,15 @@ object AlertUtils {
   }
 
   def show(title: String, headerText: String = null, contentText: String, alertType: AlertType) = {
-    val alert = new Alert(alertType)
-    alert.setTitle(title)
-    if (headerText != null)
-      alert.setHeaderText(headerText)
-    alert.setContentText(contentText)
-    alert.showAndWait()
+    Platform runLater (() => {
+      val alert = new Alert(alertType)
+      alert.setTitle(title)
+      if (headerText != null)
+        alert.setHeaderText(headerText)
+      alert.setResizable(true)
+      alert.getDialogPane.setPrefHeight(200)
+      alert.setContentText(contentText)
+      val result = alert.showAndWait()
+    })
   }
 }
