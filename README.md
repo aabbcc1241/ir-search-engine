@@ -3,27 +3,11 @@
 ##### Group C
 
 ## Todo-List
- - [X] Hello World
- - [ ] UI
-    - [X] Read query
-    - [X] Load data set
-    - [ ] call retrieval model
-    - [ ] show result
-       - [ ] basic
-       - [ ] chart
-       - [ ] compare
- - [ ] Function
-    - [ ] Retrieval Model
-       - [ ] Dummy Search (for testing)
-       - [ ] Boolean Retrieval Model
-       - [ ] Fuzzy Boolean Retrieval Model ?
-       - [ ] Vector Space Retrieval Model
-       - [ ] Probability Model
-    - [ ] Query Support
-       - [ ] basic
-       - [ ] phrasal
-       - [ ] proximity
-    
+ - [ ] fix Parameter bug
+ - [ ] fix boolean AND mode
+ - [ ] set runner id
+ - [ ] fix result filename
+
 ## project timeline 
 https://app.smartsheet.com/b/home?lx=HUWsKQO29OGkBjAgkVrWKA
 this link is accessible by shared user only, please send your email to Beeno
