@@ -1,1 +1,0 @@
-/home/beenotung/Documents/polyu/IR/group assignment/res
