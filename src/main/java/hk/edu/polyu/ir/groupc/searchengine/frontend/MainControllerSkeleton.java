@@ -58,6 +58,9 @@ public class MainControllerSkeleton {
     @FXML // fx:id="combo_model"
     protected ComboBox<RetrievalModel> combo_model; // Value injected by FXMLLoader
 
+    @FXML // fx:id="combo_model_mode"
+    protected ComboBox<String> combo_model_mode; // Value injected by FXMLLoader
+
     @FXML // fx:id="label_left_status"
     protected Label label_left_status; // Value injected by FXMLLoader
 
@@ -79,6 +82,11 @@ public class MainControllerSkeleton {
 
     @FXML
     void set_model(ActionEvent event) {
+
+    }
+
+    @FXML
+    void set_model_mode(ActionEvent event) {
 
     }
 
@@ -122,6 +130,7 @@ public class MainControllerSkeleton {
         assert tablecolumn_model_param_value != null : "fx:id=\"tablecolumn_model_param_value\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert text_model_param_editing != null : "fx:id=\"text_model_param_editing\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert combo_model != null : "fx:id=\"combo_model\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert combo_model_mode != null : "fx:id=\"combo_model_mode\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert label_left_status != null : "fx:id=\"label_left_status\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert x3 != null : "fx:id=\"x3\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert label_right_status != null : "fx:id=\"label_right_status\" was not injected: check your FXML file 'MainWindow.fxml'.";

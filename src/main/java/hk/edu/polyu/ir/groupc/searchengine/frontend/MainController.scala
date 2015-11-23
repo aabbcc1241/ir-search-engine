@@ -78,28 +78,6 @@ object MainController {
 class MainController extends MainControllerSkeleton {
   MainController.instance = this
 
-  /*//   @FXML // fx:id="combo_model"
-      protected var combo_model: ComboBox[RetrievalModel] ; // Value injected by FXMLLoader
-
-  //    @FXML // fx:id="table_model"
-      protected var   table_model    : TableView[RetrievalModel.Parameter[_<:Number]] ; // Value injected by FXMLLoader
-
-  //    @FXML // fx:id="tablecolumn_model_param_name"
-      protected var   tablecolumn_model_param_name    : TableColumn[RetrievalModel.Parameter[_<:Number], String] ; // Value injected by FXMLLoader
-
-      //@FXML // fx:id="tablecolumn_model_param_min"
-      protected var   tablecolumn_model_param_min    : TableColumn[RetrievalModel.Parameter[_<:Number], Number] ; // Value injected by FXMLLoader
-
-      //@FXML // fx:id="tablecolumn_model_param_max"
-      protected var   tablecolumn_model_param_max    : TableColumn[RetrievalModel.Parameter[_<:Number], Number] ; // Value injected by FXMLLoader
-
-      //@FXML // fx:id="tablecolumn_model_param_suggested"
-      protected var   tablecolumn_model_param_suggested    : TableColumn[RetrievalModel.Parameter[_<:Number], Number] ; // Value injected by FXMLLoader
-
-      //@FXML // fx:id="tablecolumn_model_param_value"
-      protected var     tablecolumn_model_param_value  : TableColumn[RetrievalModel.Parameter[_<:Number], Number] ; // Value injected by FXMLLoader*/
-
-
   private var numOfRetrievalDocument = MainController.defaultNumOfRetrievalDocument
 
   def getMajorStatus = label_left_status getText
@@ -170,8 +148,11 @@ class MainController extends MainControllerSkeleton {
 
   override def initialize() = {
     super.initialize()
+
+    /* init combo box items */
     combo_model.getItems.clear()
     combo_model.getItems.addAll(MainController.MODELS)
+    combo_model_mode.getItems.clear()
 
     tablecolumn_model_param_name.setCellValueFactory(new Callback[TableColumn.CellDataFeatures[Parameter[_ <: Number], String], ObservableValue[String]] {
       override def call(p: TableColumn.CellDataFeatures[Parameter[_ <: Number], String]): ObservableValue[String] = {
@@ -236,9 +217,23 @@ class MainController extends MainControllerSkeleton {
 
   override def set_model(event: ActionEvent) = {
     val model = combo_model.getSelectionModel.getSelectedItem
-    table_model.getItems.clear()
-    table_model.setItems(FXCollections.observableArrayList(model.getParameters))
-    //    table_model.getItems.addAll(model.getParameters)
+    if (model != null) {
+      table_model.getItems.clear()
+      table_model.setItems(FXCollections.observableArrayList(model.getParameters))
+      combo_model_mode.getItems.clear()
+      combo_model_mode.getItems.addAll(model.getModes)
+      logDone("selected model " + model.name())
+    }
+  }
+
+  override def set_model_mode(event: ActionEvent) = {
+    selectedModel match {
+      case None => AlertUtils.warn(contentText = "Please select retrieval mode; first")
+      case Some(model) =>
+        val mode: String = combo_model_mode.getSelectionModel.getSelectedItem
+        model.setMode(mode)
+        logDone("set mode to " + mode)
+    }
   }
 
   override def set_model_param_editing(event: ActionEvent) = {
