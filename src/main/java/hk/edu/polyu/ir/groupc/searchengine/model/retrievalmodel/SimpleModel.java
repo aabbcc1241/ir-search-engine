@@ -25,6 +25,9 @@ public class SimpleModel extends RetrievalModel {
     {
         MODES = new LinkedList<>();
         MODES.add(MODE_DEFAULT);
+        MODES.add("extra mode 1");
+        MODES.add("extra mode 2");
+        MODES.add("extra mode 3");
         PARAMETERS = new LinkedList<>();
         PARAMETERS.add(new DoubleParameter("P1", 0d, 1d, 0.5d));
         PARAMETERS.add(new IntegerParameter("P2", 5, 10, 8));
