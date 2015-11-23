@@ -100,9 +100,6 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
                         <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <top>
-                                          <ComboBox fx:id="combo_model" onAction="#set_model" prefWidth="150.0" BorderPane.alignment="CENTER" />
-                           </top>
                            <center>
                               <TableView fx:id="table_model" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                 <columns>
@@ -117,6 +114,19 @@
                            <bottom>
                               <TextField fx:id="text_model_param_editing" onAction="#set_model_param_editing" BorderPane.alignment="CENTER" />
                            </bottom>
+                           <top>
+                              <BorderPane BorderPane.alignment="CENTER">
+                                 <center>
+                                                <ComboBox fx:id="combo_model" onAction="#set_model" prefWidth="150.0" BorderPane.alignment="CENTER" />
+                                 </center>
+                                 <right>
+                                    <Button mnemonicParsing="false" onAction="#start_search" text="Search" BorderPane.alignment="CENTER" />
+                                 </right>
+                                 <padding>
+                                    <Insets bottom="7.0" left="7.0" right="7.0" />
+                                 </padding>
+                              </BorderPane>
+                           </top>
                         </BorderPane>
                             </children>
                         </AnchorPane>

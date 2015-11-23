@@ -31,9 +31,6 @@ public class MainControllerSkeleton {
     @FXML // fx:id="text_result_path"
     protected TextField text_result_path; // Value injected by FXMLLoader
 
-    @FXML // fx:id="combo_model"
-    protected ComboBox<RetrievalModel> combo_model; // Value injected by FXMLLoader
-
     @FXML // fx:id="table_model"
     protected TableView<Parameter> table_model; // Value injected by FXMLLoader
 
@@ -54,6 +51,9 @@ public class MainControllerSkeleton {
 
     @FXML // fx:id="text_model_param_editing"
     protected TextField text_model_param_editing; // Value injected by FXMLLoader
+
+    @FXML // fx:id="combo_model"
+    protected ComboBox<RetrievalModel> combo_model; // Value injected by FXMLLoader
 
     @FXML // fx:id="label_left_status"
     protected Label label_left_status; // Value injected by FXMLLoader
@@ -94,12 +94,16 @@ public class MainControllerSkeleton {
 
     }
 
+    @FXML
+    void start_search(ActionEvent event) {
+
+    }
+
     @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert text_data_path != null : "fx:id=\"text_data_path\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert text_query_file != null : "fx:id=\"text_query_file\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert text_result_path != null : "fx:id=\"text_result_path\" was not injected: check your FXML file 'MainWindow.fxml'.";
-        assert combo_model != null : "fx:id=\"combo_model\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert table_model != null : "fx:id=\"table_model\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert tablecolumn_model_param_name != null : "fx:id=\"tablecolumn_model_param_name\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert tablecolumn_model_param_min != null : "fx:id=\"tablecolumn_model_param_min\" was not injected: check your FXML file 'MainWindow.fxml'.";
@@ -107,6 +111,7 @@ public class MainControllerSkeleton {
         assert tablecolumn_model_param_suggested != null : "fx:id=\"tablecolumn_model_param_suggested\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert tablecolumn_model_param_value != null : "fx:id=\"tablecolumn_model_param_value\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert text_model_param_editing != null : "fx:id=\"text_model_param_editing\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert combo_model != null : "fx:id=\"combo_model\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert label_left_status != null : "fx:id=\"label_left_status\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert x3 != null : "fx:id=\"x3\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert label_right_status != null : "fx:id=\"label_right_status\" was not injected: check your FXML file 'MainWindow.fxml'.";

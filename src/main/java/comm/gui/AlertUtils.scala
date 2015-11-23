@@ -46,7 +46,10 @@ object AlertUtils {
     show(title, headerText, contentText, AlertType.ERROR, node)
   }
 
-  def info(title: String = "Error", headerText: String = null, contentText: String) = {
+  def warn(title: String = "Warning", headerText: String = null, contentText: String) = {
+    show(title, headerText, contentText, AlertType.WARNING)
+  }
+  def info(title: String = "Info", headerText: String = null, contentText: String) = {
     show(title, headerText, contentText, AlertType.INFORMATION)
   }
 

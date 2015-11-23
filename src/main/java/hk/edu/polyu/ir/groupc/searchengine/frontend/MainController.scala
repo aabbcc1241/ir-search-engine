@@ -230,4 +230,17 @@ class MainController extends MainControllerSkeleton {
       text_model_param_editing.setText(selected.value().toString)
     }
   }
+
+  def selectedModel: Option[RetrievalModel] = Option(combo_model.getSelectionModel.getSelectedItem)
+
+  override def start_search(event: ActionEvent) = {
+    selectedModel match {
+      case None => AlertUtils.warn(contentText = "Please choose a retrieval model")
+      case Some(model) =>
+        //TODO
+        val resultFilename= ???
+        val numOfRetrievalDocument = ???
+        MainController.launcher.start(model,resultFilename,numOfRetrievalDocument)
+    }
+  }
 }
