@@ -2,8 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 <VBox xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65"
       fx:controller="hk.edu.polyu.ir.groupc.searchengine.frontend.MainController">
@@ -53,26 +53,111 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <Button layoutX="208.0" layoutY="56.0" mnemonicParsing="false" onAction="#import_post"
-                                        text="Import Post"/>
-                                <Button layoutX="210.0" layoutY="14.0" mnemonicParsing="false" onAction="#import_file"
-                                        text="Import File"/>
-                                <TextField fx:id="text_post" layoutX="14.0" layoutY="56.0" onDragDone="#drag_post"/>
-                                <TextField fx:id="text_file" layoutX="14.0" layoutY="14.0" onDragDone="#drag_file"/>
-                                <Button layoutX="313.0" layoutY="98.0" mnemonicParsing="false" onAction="#import_index"
-                                        text="Import Index"/>
-                                <Button layoutX="209.0" layoutY="98.0" mnemonicParsing="false" onAction="#build_index"
-                                        text="Build Index"/>
-                                <TextField fx:id="text_index" layoutX="14.0" layoutY="98.0" onDragDone="#drag_index"/>
-                                <Button layoutX="428.0" layoutY="98.0" mnemonicParsing="false" onAction="#export_index"
-                                        text="Export Index"/>
+                                <VBox prefHeight="200.0" prefWidth="100.0" spacing="7.0" AnchorPane.bottomAnchor="0.0"
+                                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                      AnchorPane.topAnchor="0.0">
+                                    <children>
+                                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
+                                            <children>
+                                                <TextField fx:id="text_data_path" editable="false" HBox.hgrow="ALWAYS"/>
+                                                <Button mnemonicParsing="false" onAction="#set_data_path"
+                                                        text="Pick Data path" textAlignment="CENTER">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND"/>
+                                                    </cursor>
+                                                </Button>
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
+                                            <children>
+                                                <TextField fx:id="text_query_file" editable="false"
+                                                           HBox.hgrow="ALWAYS"/>
+                                                <Button mnemonicParsing="false" onAction="#set_query_file"
+                                                        text="Pick Query file">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND"/>
+                                                    </cursor>
+                                                </Button>
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
+                                            <children>
+                                                <TextField fx:id="text_result_path" editable="false"
+                                                           HBox.hgrow="ALWAYS"/>
+                                                <Button mnemonicParsing="false" onAction="#set_result_path"
+                                                        text="Pick Result path">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND"/>
+                                                    </cursor>
+                                                </Button>
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
+                                            <children>
+                                                <Label text="Number of retrieval document"/>
+                                                <TextField fx:id="text_number_of_retrieval_document"
+                                                           onAction="#set_number_of_retrieval_document"
+                                                           HBox.hgrow="ALWAYS"/>
+                                                <Button mnemonicParsing="false"
+                                                        onAction="#reset_number_of_retrieval_document" text="reset">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND"/>
+                                                    </cursor>
+                                                </Button>
+                                            </children>
+                                        </HBox>
+                                    </children>
+                                </VBox>
                             </children>
                         </AnchorPane>
                     </content>
                 </TitledPane>
-                <TitledPane animated="false" text="Query">
+                <TitledPane animated="false" text="Retrieval">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
+                                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                            AnchorPane.topAnchor="0.0">
+                                    <center>
+                                        <TableView fx:id="table_model" editable="true" prefHeight="200.0"
+                                                   prefWidth="200.0" BorderPane.alignment="CENTER">
+                                            <columns>
+                                                <TableColumn fx:id="tablecolumn_model_param_name"
+                                                             prefWidth="89.99999845027924" text="Parameter"/>
+                                                <TableColumn fx:id="tablecolumn_model_param_min"
+                                                             prefWidth="61.00000762939453" text="min"/>
+                                                <TableColumn fx:id="tablecolumn_model_param_max" prefWidth="75.0"
+                                                             text="max"/>
+                                                <TableColumn fx:id="tablecolumn_model_param_suggested" prefWidth="94.0"
+                                                             text="suggested"/>
+                                                <TableColumn fx:id="tablecolumn_model_param_value" prefWidth="56.0"
+                                                             text="value"/>
+                                            </columns>
+                                        </TableView>
+                                    </center>
+                                    <bottom>
+                                        <TextField fx:id="text_model_param_editing" onAction="#set_model_param_editing"
+                                                   BorderPane.alignment="CENTER"/>
+                                    </bottom>
+                                    <top>
+                                        <BorderPane BorderPane.alignment="CENTER">
+                                            <center>
+                                                <ComboBox fx:id="combo_model" onAction="#set_model" prefWidth="150.0"
+                                                          BorderPane.alignment="CENTER"/>
+                                            </center>
+                                            <right>
+                                                <Button mnemonicParsing="false" onAction="#start_search" text="Search"
+                                                        BorderPane.alignment="CENTER"/>
+                                            </right>
+                                            <padding>
+                                                <Insets bottom="7.0" left="7.0" right="7.0"/>
+                                            </padding>
+                                        </BorderPane>
+                                    </top>
+                                </BorderPane>
+                            </children>
+                        </AnchorPane>
                     </content>
                 </TitledPane>
                 <TitledPane animated="false" text="Analysis">
@@ -84,18 +169,14 @@
         </Accordion>
         <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
             <children>
-                <Label fx:id="label_left_status" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status"
+                <Label fx:id="label_left_status" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text=" "
                        HBox.hgrow="ALWAYS">
                     <font>
                         <Font size="11.0" fx:id="x3"/>
                     </font>
-                    <textFill>
-                        <Color blue="0.625" green="0.625" red="0.625" fx:id="x4"/>
-                    </textFill>
                 </Label>
                 <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS"/>
-                <Label fx:id="label_right_status" font="$x3" maxWidth="-1.0" text="Right status" textFill="$x4"
-                       HBox.hgrow="NEVER"/>
+                <Label fx:id="label_right_status" font="$x3" maxWidth="-1.0" text=" " HBox.hgrow="NEVER"/>
             </children>
             <padding>
                 <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>

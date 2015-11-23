@@ -1,6 +1,6 @@
 package hk.edu.polyu.ir.groupc.searchengine.model;
 
-import hk.edu.polyu.ir.groupc.searchengine.model.query.RetrievalModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.RetrievalModel;
 
 /**
  * Created by beenotung on 11/21/15.

@@ -14,7 +14,7 @@ object PostBuildTest extends App {
     val path_out = "res/term_index.txt"
     def block = {
       TermIndexFactory.build(new File(path))
-      TermIndexFactory.getTermIndex.reset
+//      TermIndexFactory.getTermIndex.reset
     }
     //    TermInfoFactory.getTermIndex.writeToFile(path_out)
     val rs = Test.time(block, 10, report = true, preGC = true, postGC = true)

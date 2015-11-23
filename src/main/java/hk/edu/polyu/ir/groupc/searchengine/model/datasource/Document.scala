@@ -55,6 +55,16 @@ class DocumentIndex(initMap: DocTermPositionMap = new DocTermPositionMap) {
     }
   }
 
+  protected def findDocumentLength(termPositionMap: TermPositionMap): Double = {
+    var sum = 0d
+    termPositionMap.foreach(termPosition => {
+      val idf = Index.getIDF(termPosition._1)
+      val tf = termPosition._2.length
+      sum += Math.pow(tf * idf, 2)
+    })
+    Math.sqrt(sum)
+  }
+
   def updateStatis() = {
     /*update all document length*/
     underlying.foreach(p => {
@@ -71,16 +81,6 @@ class DocumentIndex(initMap: DocTermPositionMap = new DocTermPositionMap) {
       else
         sorted(sorted.length / 2)
     }
-  }
-
-  protected def findDocumentLength(termPositionMap: TermPositionMap): Double = {
-    var sum = 0d
-    termPositionMap.foreach(termPosition => {
-      val idf = Index.getIDF(termPosition._1)
-      val tf = termPosition._2.length
-      sum += Math.pow(tf * idf, 2)
-    })
-    Math.sqrt(sum)
   }
 
   @throws(classOf[IllegalStateException])
@@ -167,6 +167,7 @@ object DocumentIndexFactory {
   }
 
   def createFromTermIndex(termFileMap: TermFileMap) = {
+    cachedInstance = null
     val docInfoMap = new DocTermPositionMap
     val N = termFileMap.size
     var i = 0

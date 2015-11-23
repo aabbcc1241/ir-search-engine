@@ -58,6 +58,8 @@ object QueryFactory {
     new Query(id.trim, content.trim)
   }
 
+  def ready = queries != null
+
   def getQueries: SeqView[Query, List[Query]] = {
     if (queries == null) throw new IllegalStateException("query has not been loaded")
     queries.view

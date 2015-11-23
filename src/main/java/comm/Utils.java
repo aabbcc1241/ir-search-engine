@@ -1,5 +1,6 @@
 package comm;
 
+import hk.edu.polyu.ir.groupc.searchengine.Debug;
 import scala.collection.Iterator;
 
 import java.io.*;
@@ -59,4 +60,16 @@ public class Utils {
         }
     }
 
+    public static void terminate(ThreadGroup threadGroup, boolean logd) {
+        Thread[] threads = new Thread[threadGroup.activeCount()];
+        threadGroup.enumerate(threads);
+        for (Thread thread : threads) {
+            thread.interrupt();
+            while (thread.isAlive()) {
+                if (logd) Debug.logd("terminating " + thread.toString());
+                thread.stop();
+            }
+        }
+        threadGroup.destroy();
+    }
 }
