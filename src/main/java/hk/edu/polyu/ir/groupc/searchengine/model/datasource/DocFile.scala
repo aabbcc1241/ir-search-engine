@@ -34,6 +34,7 @@ object DocFileFactory {
   @throws(classOf[RichFileNotFoundException])
   def load(file: File) = {
     try {
+      docFiles = null
       val arrayBuffer = ArrayBuffer.empty[DocFile]
       Utils.processLines(file, new Consumer[String] {
         override def accept(t: String): Unit = arrayBuffer += createFromString(t)

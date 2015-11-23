@@ -14,7 +14,7 @@ object PostLoadTest extends App {
     val path_out = "res/term_index.txt"
     def block = {
       TermIndexFactory.load(new File(path_out))
-      TermIndexFactory.getTermIndex.reset
+//      TermIndexFactory.getTermIndex.reset
     }
     val rs = Test.time(block, 10, report = true, preGC = true, postGC = true)
     rs.foreach(r => log("loading used " + r._2 + " ns"))
