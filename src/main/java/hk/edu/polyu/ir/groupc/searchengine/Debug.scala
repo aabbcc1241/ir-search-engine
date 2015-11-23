@@ -10,7 +10,7 @@ import hk.edu.polyu.ir.groupc.searchengine.frontend.MainController
 /**
   * Created by beenotung on 10/23/15.
   */
-object Debug extends App {
+object Debug {
   lazy val skipDebug = false
   lazy val skipError = false
   lazy val FILE_LOG = "log.txt"
@@ -96,17 +96,4 @@ object Debug extends App {
   }
 
   def logd(x: Any) = if (!skipDebug) log(x)
-
-  /*@deprecated
-  override def main(args: Array[String]) {
-    log("Launcher start")
-
-    log("Start pre-loading")
-
-    log("Start GUI")
-    val mainWindow=new MainApplication
-    mainWindow.run()
-
-    log("Launcher end")
-  }*/
 }
