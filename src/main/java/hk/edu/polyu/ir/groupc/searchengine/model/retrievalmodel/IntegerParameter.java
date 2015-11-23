@@ -24,7 +24,7 @@ public class IntegerParameter extends Parameter<Integer> {
                 value((int) Math.round(Double.parseDouble(newValue)));
                 Debug.logBothStatus("rounded to " + value(), "set " + name.getValueSafe());
             } catch (NumberFormatException e2) {
-                Debug.loge("Invalid Format");
+                Debug.loge_("Invalid Format");
             }
         }
     }

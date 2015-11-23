@@ -20,7 +20,7 @@ public class DoubleParameter extends Parameter<Double> {
             value(Double.parseDouble(newValue));
             Debug.logDone("set " + name.getValueSafe());
         } catch (NumberFormatException e) {
-            Debug.loge("Invalid Format");
+            Debug.loge_("Invalid Format");
         }
     }
 }

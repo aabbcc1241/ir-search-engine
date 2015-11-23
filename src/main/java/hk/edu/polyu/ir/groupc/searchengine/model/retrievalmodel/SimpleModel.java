@@ -17,11 +17,6 @@ import java.util.function.Consumer;
  * Created by beenotung on 11/12/15.
  */
 public class SimpleModel extends RetrievalModel {
-    @Override
-    public String name() {
-        return "Simple Model (Demo)";
-    }
-
     private static final String MODE_DEFAULT = "Default";
     private final List<Parameter<? extends Number>> PARAMETERS;
     private final List<String> MODES;
@@ -33,6 +28,11 @@ public class SimpleModel extends RetrievalModel {
         PARAMETERS = new LinkedList<>();
         PARAMETERS.add(new DoubleParameter("P1", 0d, 1d, 0.5d));
         PARAMETERS.add(new IntegerParameter("P2", 5, 10, 8));
+    }
+
+    @Override
+    public String name() {
+        return "Simple Model (Demo)";
     }
 
     @Override

@@ -8,11 +8,11 @@ import hk.edu.polyu.ir.groupc.searchengine.model.datasource.StopWordFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
-import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.RetrievalModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.JudgeRobustFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.RetrievalDocument;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.RetrievalModel;
 
 import java.io.File;
 import java.io.IOException;
@@ -92,28 +92,33 @@ public abstract class Launcher {
             init();
             logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
             List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument);
-            deinit();
+            deInit();
             return searchResults;
         } catch (EssentialFileNotFoundException e) {
 //            exception(e);
-            loge("Please make sure you have '" + e.path + "'");
+            loge_("Please make sure you have '" + e.path + "'");
         }
         return null;
     }
 
-    public void start(RetrievalModel retrievalModel, String resultFilename, int numOfRetrievalDocument) throws EssentialFileNotFoundException {
-            init();
-            logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
-            List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument);
-            logMainStatus("saving search result to file <" + resultFilename + ">");
-            try {
-                SearchResultFactory.writeToFile(searchResults, resultFilename);
-            } catch (IOException e) {
-//                exception(e);
-                loge("Failed to save search result!\nPlease make sure you have write permission on '" + resultFilename + "'");
-            }
-            deinit();
-//            exception(e);
+    /**
+     * @return boolean success : true if not error occure, false otherwise
+     */
+    public boolean start(RetrievalModel retrievalModel, String resultFilename, int numOfRetrievalDocument) throws EssentialFileNotFoundException {
+        boolean noError = false;
+        init();
+        logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
+        List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument);
+        logMainStatus("saving search result to file <" + resultFilename + ">");
+        try {
+            SearchResultFactory.writeToFile(searchResults, resultFilename);
+            logMainStatus("saved result to " + resultFilename);
+            noError = true;
+        } catch (IOException e) {
+            loge_("Failed to save search result!\nPlease make sure you have write permission on '" + resultFilename + "'");
+        }
+//            deInit();
+        return noError;
     }
 
     public void init() throws EssentialFileNotFoundException {
@@ -174,7 +179,8 @@ public abstract class Launcher {
         return searchResults;
     }
 
-    private void deinit() {
+    @Deprecated
+    private void deInit() {
 
     }
 }

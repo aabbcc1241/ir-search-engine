@@ -28,11 +28,11 @@ public abstract class RetrievalModel {
 
     public abstract String getMode();
 
+    public abstract void setMode(String newMode);
+
     public final void setMode(int index) {
         setMode(getModes().get(index));
     }
-
-    public abstract void setMode(String newMode);
 
     public abstract List<Parameter<? extends Number>> getParameters();
 

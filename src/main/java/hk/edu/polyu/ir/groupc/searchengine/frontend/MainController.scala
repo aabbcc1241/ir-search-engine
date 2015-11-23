@@ -26,8 +26,9 @@ import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.{Parameter, Retr
 import comm.lang.Convert.funcToRunnable
 
 object MainController {
-  var MODELS = new util.ArrayList[RetrievalModel]
-  MODELS.add(new SimpleModel)
+  val defaultNumOfRetrievalDocument: Int = 100
+  assert(defaultNumOfRetrievalDocument > 0, "default number of retrieval document must be positive integer")
+  var MODELS: util.ArrayList[RetrievalModel] = null
   var resultId = 0
   var launcher: Launcher = null
   private var instance: MainController = null
@@ -65,6 +66,13 @@ object MainController {
       instance.label_left_status setText "done"
     })
   }
+
+  private def init() = {
+    MODELS = new util.ArrayList[RetrievalModel]
+    MODELS.add(new SimpleModel)
+  }
+
+  init()
 }
 
 class MainController extends MainControllerSkeleton {
@@ -91,6 +99,8 @@ class MainController extends MainControllerSkeleton {
       //@FXML // fx:id="tablecolumn_model_param_value"
       protected var     tablecolumn_model_param_value  : TableColumn[RetrievalModel.Parameter[_<:Number], Number] ; // Value injected by FXMLLoader*/
 
+
+  private var numOfRetrievalDocument = MainController.defaultNumOfRetrievalDocument
 
   def getMajorStatus = label_left_status getText
 
@@ -205,12 +215,23 @@ class MainController extends MainControllerSkeleton {
       }
     })
 
-
-    //    table_model.getItems.addAll("A","B")
+    setNumOfRetrievalDocument(MainController.defaultNumOfRetrievalDocument)
   }
 
-  override def func_test(event: ActionEvent) = {
-    log(event)
+  def updateNumOfRetrievalDocument() = {
+    val value =
+      try {
+        Integer.parseInt(text_number_of_retrieval_document.getText())
+      } catch {
+        case e: NumberFormatException =>
+          try {
+            Math.round(text_number_of_retrieval_document.getText().toDouble).toInt
+          } catch {
+            case e: NumberFormatException =>
+              numOfRetrievalDocument
+          }
+      }
+    setNumOfRetrievalDocument(value)
   }
 
   override def set_model(event: ActionEvent) = {
@@ -231,16 +252,66 @@ class MainController extends MainControllerSkeleton {
     }
   }
 
+  override def start_search(event: ActionEvent) = {
+    if (preSearchCheck) {
+      selectedModel match {
+        case None => AlertUtils.warn(contentText = "Please choose a retrieval model")
+        case Some(model) =>
+          //TODO
+          val resultFilename = newResultFile(model)
+          val numOfRetrievalDocument = getNumOfRetrievalDocument
+          try {
+            val success = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument)
+            if (success) AlertUtils.info(headerText = "Finished retrieval", contentText = "Saved result to " + resultFilename)
+            else loge("Failed to retrieval")
+          } catch {
+            case e: Exception => loge("Unknown Error!", e)
+          }
+      }
+    }
+  }
+
+  def preSearchCheck: Boolean = {
+    if (MainController.launcher == null) {
+      loge("Index not given", "Please pick Data path in setting page")
+      return false
+    }
+    if (!QueryFactory.ready) {
+      loge("Query files not given", "Please pick Query file in setting page")
+      return false
+    }
+    if (text_result_path.getText().equals("")) {
+      loge("Path for result files not given", "Please pick Result path in setting page")
+      return false
+    }
+    true
+  }
+
+  def newResultFile(model: RetrievalModel) = {
+    MainController.resultId += 1
+    val currentResultId = MainController.resultId
+    s"${text_result_path.getText()}/result-${model.name()}-$currentResultId.txt"
+  }
+
+  def getNumOfRetrievalDocument = numOfRetrievalDocument
+
+  def setNumOfRetrievalDocument(value: Int): Unit = {
+    if (value <= 0) {
+      setNumOfRetrievalDocument(MainController.defaultNumOfRetrievalDocument)
+    } else {
+      numOfRetrievalDocument = value
+      text_number_of_retrieval_document.setText(value.toString)
+      logDone("set number of retrieval document : " + getNumOfRetrievalDocument)
+    }
+  }
+
   def selectedModel: Option[RetrievalModel] = Option(combo_model.getSelectionModel.getSelectedItem)
 
-  override def start_search(event: ActionEvent) = {
-    selectedModel match {
-      case None => AlertUtils.warn(contentText = "Please choose a retrieval model")
-      case Some(model) =>
-        //TODO
-        val resultFilename= ???
-        val numOfRetrievalDocument = ???
-        MainController.launcher.start(model,resultFilename,numOfRetrievalDocument)
-    }
+  override def reset_number_of_retrieval_document(event: ActionEvent) = {
+    setNumOfRetrievalDocument(MainController.defaultNumOfRetrievalDocument)
+  }
+
+  override def set_number_of_retrieval_document(event: ActionEvent) = {
+    updateNumOfRetrievalDocument()
   }
 }

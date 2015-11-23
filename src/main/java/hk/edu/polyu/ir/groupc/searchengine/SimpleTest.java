@@ -1,9 +1,9 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
 import comm.exception.EssentialFileNotFoundException;
+import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.RetrievalModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.SimpleModel;
-import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
 
 /**
  * Created by beenotung on 11/12/15.
@@ -61,7 +61,7 @@ public class SimpleTest {
         try {
             launcher.start(retrievalModel, RESULT_FILE, 10);
         } catch (EssentialFileNotFoundException e) {
-            Debug.loge("res files does not exist");
+            Debug.loge_("res files does not exist");
         }
     }
 }

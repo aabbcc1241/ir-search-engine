@@ -20,24 +20,26 @@ public abstract class Parameter<T extends Number> {
     public final SimpleStringProperty name;
     //        public T value;
     public final SimpleObjectProperty<T> value;
-    public void addListener(){
-        value.addListener(new ChangeListener<T>() {
-            @Override
-            public void changed(ObservableValue<? extends T> observableValue, T oldValue, T newValue) {
-
-            }
-        });
-    }
 
     public Parameter(String name, T min, T max, T suggested) {
-        this(name,min,max,suggested,suggested);
+        this(name, min, max, suggested, suggested);
     }
+
     public Parameter(String name, T min, T max, T suggested, T value) {
         this.name = new SimpleStringProperty(name);
         this.min = new SimpleObjectProperty<T>(this, "min", min);
         this.max = new SimpleObjectProperty<T>(this, "max", min);
         this.suggested = new SimpleObjectProperty<T>(this, "suggested", min);
         this.value = new SimpleObjectProperty<T>(this, "value", min);
+    }
+
+    public void addListener() {
+        value.addListener(new ChangeListener<T>() {
+            @Override
+            public void changed(ObservableValue<? extends T> observableValue, T oldValue, T newValue) {
+
+            }
+        });
     }
 
     public T value() {

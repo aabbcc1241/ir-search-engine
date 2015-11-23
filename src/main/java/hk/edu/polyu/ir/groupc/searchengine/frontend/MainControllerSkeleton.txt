@@ -31,6 +31,9 @@ public class MainController {
     @FXML // fx:id="text_result_path"
     private TextField text_result_path; // Value injected by FXMLLoader
 
+    @FXML // fx:id="text_number_of_retrieval_document"
+    private TextField text_number_of_retrieval_document; // Value injected by FXMLLoader
+
     @FXML // fx:id="table_model"
     private TableView<?> table_model; // Value injected by FXMLLoader
 
@@ -65,6 +68,11 @@ public class MainController {
     private Label label_right_status; // Value injected by FXMLLoader
 
     @FXML
+    void reset_number_of_retrieval_document(ActionEvent event) {
+
+    }
+
+    @FXML
     void set_data_path(ActionEvent event) {
 
     }
@@ -76,6 +84,11 @@ public class MainController {
 
     @FXML
     void set_model_param_editing(ActionEvent event) {
+
+    }
+
+    @FXML
+    void set_number_of_retrieval_document(ActionEvent event) {
 
     }
 
@@ -99,6 +112,7 @@ public class MainController {
         assert text_data_path != null : "fx:id=\"text_data_path\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert text_query_file != null : "fx:id=\"text_query_file\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert text_result_path != null : "fx:id=\"text_result_path\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert text_number_of_retrieval_document != null : "fx:id=\"text_number_of_retrieval_document\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert table_model != null : "fx:id=\"table_model\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert tablecolumn_model_param_name != null : "fx:id=\"tablecolumn_model_param_name\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert tablecolumn_model_param_min != null : "fx:id=\"tablecolumn_model_param_min\" was not injected: check your FXML file 'MainWindow.fxml'.";

@@ -1,52 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
-<VBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hk.edu.polyu.ir.groupc.searchengine.frontend.MainController">
+<VBox xmlns:fx="http://javafx.com/fxml/1" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65"
+      fx:controller="hk.edu.polyu.ir.groupc.searchengine.frontend.MainController">
     <children>
         <MenuBar disable="true" VBox.vgrow="NEVER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="New" />
-                        <MenuItem mnemonicParsing="false" text="Open…" />
-                        <Menu mnemonicParsing="false" text="Open Recent" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Close" />
-                        <MenuItem mnemonicParsing="false" text="Save" />
-                        <MenuItem mnemonicParsing="false" text="Save As…" />
-                        <MenuItem mnemonicParsing="false" text="Revert" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Preferences…" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Quit" />
+                        <MenuItem mnemonicParsing="false" text="New"/>
+                        <MenuItem mnemonicParsing="false" text="Open…"/>
+                        <Menu mnemonicParsing="false" text="Open Recent"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="Close"/>
+                        <MenuItem mnemonicParsing="false" text="Save"/>
+                        <MenuItem mnemonicParsing="false" text="Save As…"/>
+                        <MenuItem mnemonicParsing="false" text="Revert"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="Preferences…"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="Quit"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Undo" />
-                        <MenuItem mnemonicParsing="false" text="Redo" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Cut" />
-                        <MenuItem mnemonicParsing="false" text="Copy" />
-                        <MenuItem mnemonicParsing="false" text="Paste" />
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                        <SeparatorMenuItem mnemonicParsing="false" />
-                        <MenuItem mnemonicParsing="false" text="Select All" />
-                        <MenuItem mnemonicParsing="false" text="Unselect All" />
+                        <MenuItem mnemonicParsing="false" text="Undo"/>
+                        <MenuItem mnemonicParsing="false" text="Redo"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="Cut"/>
+                        <MenuItem mnemonicParsing="false" text="Copy"/>
+                        <MenuItem mnemonicParsing="false" text="Paste"/>
+                        <MenuItem mnemonicParsing="false" text="Delete"/>
+                        <SeparatorMenuItem mnemonicParsing="false"/>
+                        <MenuItem mnemonicParsing="false" text="Select All"/>
+                        <MenuItem mnemonicParsing="false" text="Unselect All"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+                        <MenuItem mnemonicParsing="false" text="About MyHelloApp"/>
                     </items>
                 </Menu>
             </menus>
@@ -57,34 +53,55 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <VBox prefHeight="200.0" prefWidth="100.0" spacing="7.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <VBox prefHeight="200.0" prefWidth="100.0" spacing="7.0" AnchorPane.bottomAnchor="0.0"
+                                      AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                      AnchorPane.topAnchor="0.0">
                                     <children>
                                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
                                             <children>
-                                                <TextField fx:id="text_data_path" editable="false" HBox.hgrow="ALWAYS" />
-                                                <Button mnemonicParsing="false" onAction="#set_data_path" text="Pick Data path" textAlignment="CENTER">
+                                                <TextField fx:id="text_data_path" editable="false" HBox.hgrow="ALWAYS"/>
+                                                <Button mnemonicParsing="false" onAction="#set_data_path"
+                                                        text="Pick Data path" textAlignment="CENTER">
                                                     <cursor>
-                                                        <Cursor fx:constant="HAND" />
+                                                        <Cursor fx:constant="HAND"/>
                                                     </cursor>
                                                 </Button>
                                             </children>
                                         </HBox>
                                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
                                             <children>
-                                                <TextField fx:id="text_query_file" editable="false" HBox.hgrow="ALWAYS" />
-                                                <Button mnemonicParsing="false" onAction="#set_query_file" text="Pick Query file">
+                                                <TextField fx:id="text_query_file" editable="false"
+                                                           HBox.hgrow="ALWAYS"/>
+                                                <Button mnemonicParsing="false" onAction="#set_query_file"
+                                                        text="Pick Query file">
                                                     <cursor>
-                                                        <Cursor fx:constant="HAND" />
+                                                        <Cursor fx:constant="HAND"/>
                                                     </cursor>
                                                 </Button>
                                             </children>
                                         </HBox>
                                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
                                             <children>
-                                                <TextField fx:id="text_result_path" editable="false" HBox.hgrow="ALWAYS" />
-                                                <Button mnemonicParsing="false" onAction="#set_result_path" text="Pick Result path">
+                                                <TextField fx:id="text_result_path" editable="false"
+                                                           HBox.hgrow="ALWAYS"/>
+                                                <Button mnemonicParsing="false" onAction="#set_result_path"
+                                                        text="Pick Result path">
                                                     <cursor>
-                                                        <Cursor fx:constant="HAND" />
+                                                        <Cursor fx:constant="HAND"/>
+                                                    </cursor>
+                                                </Button>
+                                            </children>
+                                        </HBox>
+                                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
+                                            <children>
+                                                <Label text="Number of retrieval document"/>
+                                                <TextField fx:id="text_number_of_retrieval_document"
+                                                           onAction="#set_number_of_retrieval_document"
+                                                           HBox.hgrow="ALWAYS"/>
+                                                <Button mnemonicParsing="false"
+                                                        onAction="#reset_number_of_retrieval_document" text="reset">
+                                                    <cursor>
+                                                        <Cursor fx:constant="HAND"/>
                                                     </cursor>
                                                 </Button>
                                             </children>
@@ -99,58 +116,70 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                        <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                           <center>
-                              <TableView fx:id="table_model" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-                                <columns>
-                                  <TableColumn fx:id="tablecolumn_model_param_name" prefWidth="89.99999845027924" text="Parameter" />
-                                  <TableColumn fx:id="tablecolumn_model_param_min" prefWidth="61.00000762939453" text="min" />
-                                    <TableColumn fx:id="tablecolumn_model_param_max" prefWidth="75.0" text="max" />
-                                    <TableColumn fx:id="tablecolumn_model_param_suggested" prefWidth="94.0" text="suggested" />
-                                    <TableColumn fx:id="tablecolumn_model_param_value" prefWidth="56.0" text="value" />
-                                </columns>
-                              </TableView>
-                           </center>
-                           <bottom>
-                              <TextField fx:id="text_model_param_editing" onAction="#set_model_param_editing" BorderPane.alignment="CENTER" />
-                           </bottom>
-                           <top>
-                              <BorderPane BorderPane.alignment="CENTER">
-                                 <center>
-                                                <ComboBox fx:id="combo_model" onAction="#set_model" prefWidth="150.0" BorderPane.alignment="CENTER" />
-                                 </center>
-                                 <right>
-                                    <Button mnemonicParsing="false" onAction="#start_search" text="Search" BorderPane.alignment="CENTER" />
-                                 </right>
-                                 <padding>
-                                    <Insets bottom="7.0" left="7.0" right="7.0" />
-                                 </padding>
-                              </BorderPane>
-                           </top>
-                        </BorderPane>
+                                <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0"
+                                            AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+                                            AnchorPane.topAnchor="0.0">
+                                    <center>
+                                        <TableView fx:id="table_model" editable="true" prefHeight="200.0"
+                                                   prefWidth="200.0" BorderPane.alignment="CENTER">
+                                            <columns>
+                                                <TableColumn fx:id="tablecolumn_model_param_name"
+                                                             prefWidth="89.99999845027924" text="Parameter"/>
+                                                <TableColumn fx:id="tablecolumn_model_param_min"
+                                                             prefWidth="61.00000762939453" text="min"/>
+                                                <TableColumn fx:id="tablecolumn_model_param_max" prefWidth="75.0"
+                                                             text="max"/>
+                                                <TableColumn fx:id="tablecolumn_model_param_suggested" prefWidth="94.0"
+                                                             text="suggested"/>
+                                                <TableColumn fx:id="tablecolumn_model_param_value" prefWidth="56.0"
+                                                             text="value"/>
+                                            </columns>
+                                        </TableView>
+                                    </center>
+                                    <bottom>
+                                        <TextField fx:id="text_model_param_editing" onAction="#set_model_param_editing"
+                                                   BorderPane.alignment="CENTER"/>
+                                    </bottom>
+                                    <top>
+                                        <BorderPane BorderPane.alignment="CENTER">
+                                            <center>
+                                                <ComboBox fx:id="combo_model" onAction="#set_model" prefWidth="150.0"
+                                                          BorderPane.alignment="CENTER"/>
+                                            </center>
+                                            <right>
+                                                <Button mnemonicParsing="false" onAction="#start_search" text="Search"
+                                                        BorderPane.alignment="CENTER"/>
+                                            </right>
+                                            <padding>
+                                                <Insets bottom="7.0" left="7.0" right="7.0"/>
+                                            </padding>
+                                        </BorderPane>
+                                    </top>
+                                </BorderPane>
                             </children>
                         </AnchorPane>
                     </content>
                 </TitledPane>
                 <TitledPane animated="false" text="Analysis">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0"/>
                     </content>
                 </TitledPane>
             </panes>
         </Accordion>
         <HBox id="HBox" alignment="CENTER_LEFT" spacing="5.0" VBox.vgrow="NEVER">
             <children>
-                <Label fx:id="label_left_status" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text=" " HBox.hgrow="ALWAYS">
+                <Label fx:id="label_left_status" maxHeight="1.7976931348623157E308" maxWidth="-1.0" text=" "
+                       HBox.hgrow="ALWAYS">
                     <font>
-                        <Font size="11.0" fx:id="x3" />
+                        <Font size="11.0" fx:id="x3"/>
                     </font>
                 </Label>
-                <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS" />
-                <Label fx:id="label_right_status" font="$x3" maxWidth="-1.0" text=" " HBox.hgrow="NEVER" />
+                <Pane prefHeight="-1.0" prefWidth="-1.0" HBox.hgrow="ALWAYS"/>
+                <Label fx:id="label_right_status" font="$x3" maxWidth="-1.0" text=" " HBox.hgrow="NEVER"/>
             </children>
             <padding>
-                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0" />
+                <Insets bottom="3.0" left="3.0" right="3.0" top="3.0"/>
             </padding>
         </HBox>
     </children>

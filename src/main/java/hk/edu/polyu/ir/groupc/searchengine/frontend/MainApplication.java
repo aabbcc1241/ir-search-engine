@@ -5,7 +5,6 @@ package hk.edu.polyu.ir.groupc.searchengine.frontend;
  */
 
 import comm.Utils;
-import hk.edu.polyu.ir.groupc.searchengine.Debug;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -17,9 +16,10 @@ import java.io.IOException;
 import static hk.edu.polyu.ir.groupc.searchengine.Debug.log_;
 
 public class MainApplication extends Application {
+    public static ThreadGroup threadGroup = new ThreadGroup("MainApplication thread group");
     static String title = "IR 2015 GroupC";
     private static MainApplication instance;
-    public static ThreadGroup threadGroup = new ThreadGroup("MainApplication thread group");
+    private Stage mStage;
 
     public static MainApplication getInstance() {
         if (instance == null) throw new IllegalStateException("MainApplication has not been created");
@@ -37,9 +37,15 @@ public class MainApplication extends Application {
         launch(args);
 
         log_("MainApplication closing");
-        Utils.terminate(instance.threadGroup,false);
+        Utils.terminate(instance.threadGroup, false);
 
         log_("MainApplication end");
+    }
+
+    public static Scene getScene() {
+        if (instance == null)
+            throw new IllegalStateException("Main Application has not been created");
+        return instance.getStage().getScene();
     }
 
     /*
@@ -50,17 +56,9 @@ public class MainApplication extends Application {
         launch();
     }
 
-    private Stage mStage;
-
     public Stage getStage() {
         if (mStage == null) throw new IllegalStateException("stage has not been created in MainApplication");
         return mStage;
-    }
-
-    public static Scene getScene() {
-        if (instance == null)
-            throw new IllegalStateException("Main Application has not been created");
-        return instance.getStage().getScene();
     }
 
     @Override

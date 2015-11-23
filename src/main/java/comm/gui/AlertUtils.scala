@@ -46,13 +46,6 @@ object AlertUtils {
     show(title, headerText, contentText, AlertType.ERROR, node)
   }
 
-  def warn(title: String = "Warning", headerText: String = null, contentText: String) = {
-    show(title, headerText, contentText, AlertType.WARNING)
-  }
-  def info(title: String = "Info", headerText: String = null, contentText: String) = {
-    show(title, headerText, contentText, AlertType.INFORMATION)
-  }
-
   def show(title: String, headerText: String = null, contentText: String, alertType: AlertType, expandableContent: Node = null) = {
     Platform runLater (() => {
       val alert = new Alert(alertType)
@@ -66,5 +59,13 @@ object AlertUtils {
         alert.getDialogPane.setExpandableContent(expandableContent)
       val result = alert.showAndWait()
     })
+  }
+
+  def warn(title: String = "Warning", headerText: String = null, contentText: String) = {
+    show(title, headerText, contentText, AlertType.WARNING)
+  }
+
+  def info(title: String = "Info", headerText: String = null, contentText: String) = {
+    show(title, headerText, contentText, AlertType.INFORMATION)
   }
 }

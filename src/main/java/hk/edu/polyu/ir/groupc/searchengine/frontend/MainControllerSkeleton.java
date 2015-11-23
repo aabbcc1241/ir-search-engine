@@ -31,6 +31,9 @@ public class MainControllerSkeleton {
     @FXML // fx:id="text_result_path"
     protected TextField text_result_path; // Value injected by FXMLLoader
 
+    @FXML // fx:id="text_number_of_retrieval_document"
+    protected TextField text_number_of_retrieval_document; // Value injected by FXMLLoader
+
     @FXML // fx:id="table_model"
     protected TableView<Parameter> table_model; // Value injected by FXMLLoader
 
@@ -65,7 +68,7 @@ public class MainControllerSkeleton {
     protected Label label_right_status; // Value injected by FXMLLoader
 
     @FXML
-    void func_test(ActionEvent event) {
+    void reset_number_of_retrieval_document(ActionEvent event) {
 
     }
 
@@ -85,6 +88,11 @@ public class MainControllerSkeleton {
     }
 
     @FXML
+    void set_number_of_retrieval_document(ActionEvent event) {
+
+    }
+
+    @FXML
     void set_query_file(ActionEvent event) {
 
     }
@@ -99,11 +107,13 @@ public class MainControllerSkeleton {
 
     }
 
-    @FXML // This method is called by the FXMLLoader when initialization is complete
+    @FXML
+        // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert text_data_path != null : "fx:id=\"text_data_path\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert text_query_file != null : "fx:id=\"text_query_file\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert text_result_path != null : "fx:id=\"text_result_path\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert text_number_of_retrieval_document != null : "fx:id=\"text_number_of_retrieval_document\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert table_model != null : "fx:id=\"table_model\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert tablecolumn_model_param_name != null : "fx:id=\"tablecolumn_model_param_name\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert tablecolumn_model_param_min != null : "fx:id=\"tablecolumn_model_param_min\" was not injected: check your FXML file 'MainWindow.fxml'.";
