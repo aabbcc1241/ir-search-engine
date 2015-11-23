@@ -1,37 +1,35 @@
 ## Progress
 ### Logic
- - [ ] data
+ - [X] data
     - [X] import post.txt
     - [X] import file.txt
-    - [ ] index
-       - [ ] load pre-built index file
-       - [ ] build index
-       - [ ] save index to file
- - [ ] query
-    - [ ] import query
-    - [ ] start search
- - [ ] result
-    - [ ] display result
-    - [ ] save result to file
+    - [X] index
+       - [X] load pre-built index file
+       - [X] build index
+       - [X] save index to file
+ - [X] query
+    - [X] import query
+    - [X] start search
+ - [X] result
+    - [X] save result to file
  - [ ] analysis (report)
     - [ ] load result
     - [ ] start analysis
     - [ ] display analysis report
     - [ ] save to file
  ### UI
- - [ ] data
-    - [ ] import post.txt
-    - [ ] import file.txt
-    - [ ] index
-       - [ ] load pre-built index file
-       - [ ] fire index building
-       - [ ] save index to file
- - [ ] query
-    - [ ] import query
-    - [ ] start search
- - [ ] result
-    - [ ] display result
-    - [ ] save result to file
+ - [X] data
+    - [X] import post.txt
+    - [X] import file.txt
+    - [X] index
+       - [X] load pre-built index file
+       - [X] fire index building
+       - [X] save index to file
+ - [X] query
+    - [X] import query
+    - [X] start search
+ - [X] result
+    - [X] save result to file
  - [ ] analysis (report)
     - [ ] load result
     - [ ] start analysis

@@ -17,7 +17,7 @@ import comm.gui.{AlertUtils, GuiUtils}
 import hk.edu.polyu.ir.groupc.searchengine.Debug.{log, logDone, logMainStatus, loge}
 import hk.edu.polyu.ir.groupc.searchengine.Launcher
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory
-import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.{Parameter, RetrievalModel, SimpleModel}
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel._
 
 /**
   * Created by beenotung on 11/22/15.
@@ -70,6 +70,10 @@ object MainController {
   private def init() = {
     MODELS = new util.ArrayList[RetrievalModel]
     MODELS.add(new SimpleModel)
+    MODELS.add(new BooleanModel)
+    MODELS.add(new VectorSpaceModel)
+    MODELS.add(new ExtendedBooleanModel)
+    MODELS.add(new SetBasedVectorSpaceModel)
   }
 
   init()
