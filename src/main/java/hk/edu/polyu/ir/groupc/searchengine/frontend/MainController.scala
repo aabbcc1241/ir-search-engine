@@ -3,7 +3,7 @@ package hk.edu.polyu.ir.groupc.searchengine.frontend
 import java.io.File
 import java.util
 import javafx.application.Platform.runLater
-import javafx.beans.property.ReadOnlyObjectWrapper
+import javafx.beans.property.{SimpleIntegerProperty, ReadOnlyObjectWrapper}
 import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.collections.FXCollections
 import javafx.event.ActionEvent
@@ -15,9 +15,9 @@ import javafx.util.Callback
 import comm.exception.RichFileNotFoundException
 import comm.gui.{AlertUtils, GuiUtils}
 import hk.edu.polyu.ir.groupc.searchengine.Debug.{log, logDone, logMainStatus, loge}
-import hk.edu.polyu.ir.groupc.searchengine.Launcher
+import hk.edu.polyu.ir.groupc.searchengine.{Config, Launcher}
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory
-import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.{Parameter, RetrievalModel, SimpleModel}
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.{Parameter, RetrievalModel}
 
 /**
   * Created by beenotung on 11/22/15.
@@ -26,12 +26,22 @@ import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.{Parameter, Retr
 import comm.lang.Convert.funcToRunnable
 
 object MainController {
-  val defaultNumOfRetrievalDocument: Int = 100
+  var defaultNumOfRetrievalDocument: Int = 1000
   assert(defaultNumOfRetrievalDocument > 0, "default number of retrieval document must be positive integer")
-  var MODELS: util.ArrayList[RetrievalModel] = null
+  private val MODELS: util.ArrayList[RetrievalModel] = new util.ArrayList[RetrievalModel]()
   var resultId = 0
   var launcher: Launcher = null
   private var instance: MainController = null
+
+  def addModel(retrievalModel: RetrievalModel) = {
+    if (!MODELS.contains(retrievalModel))
+      MODELS.add(retrievalModel)
+  }
+
+  def removeModel(retrievalModel: RetrievalModel) = {
+    while (MODELS.contains(retrievalModel))
+      MODELS.remove(retrievalModel)
+  }
 
   def getInstance() = {
     if (instance == null)
@@ -67,18 +77,14 @@ object MainController {
     })
   }
 
-  private def init() = {
-    MODELS = new util.ArrayList[RetrievalModel]
-    MODELS.add(new SimpleModel)
-  }
 
-  init()
 }
 
 class MainController extends MainControllerSkeleton {
   MainController.instance = this
 
-  private var numOfRetrievalDocument = MainController.defaultNumOfRetrievalDocument
+//  private var numOfRetrievalDocument = MainController.defaultNumOfRetrievalDocument
+  val numOfRetrievalDocument = new SimpleIntegerProperty(MainController.defaultNumOfRetrievalDocument)
 
   def getMajorStatus = label_left_status getText
 
@@ -149,6 +155,10 @@ class MainController extends MainControllerSkeleton {
   override def initialize() = {
     super.initialize()
 
+    Config.CheckSystemInfo()
+
+    text_number_of_retrieval_document.setText(numOfRetrievalDocument.intValue().toString)
+
     /* init combo box items */
     combo_model.getItems.clear()
     combo_model.getItems.addAll(MainController.MODELS)
@@ -196,7 +206,7 @@ class MainController extends MainControllerSkeleton {
       }
     })
 
-    setNumOfRetrievalDocument(MainController.defaultNumOfRetrievalDocument)
+//    setNumOfRetrievalDocument(MainController.defaultNumOfRetrievalDocument)
   }
 
   def updateNumOfRetrievalDocument() = {
@@ -209,7 +219,7 @@ class MainController extends MainControllerSkeleton {
             Math.round(text_number_of_retrieval_document.getText().toDouble).toInt
           } catch {
             case e: NumberFormatException =>
-              numOfRetrievalDocument
+              numOfRetrievalDocument.intValue()
           }
       }
     setNumOfRetrievalDocument(value)
@@ -256,7 +266,7 @@ class MainController extends MainControllerSkeleton {
           val resultFilename = newResultFile(model)
           val numOfRetrievalDocument = getNumOfRetrievalDocument
           try {
-            val success = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument)
+            val success = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument.intValue())
             if (success) AlertUtils.info(headerText = "Finished retrieval", contentText = "Saved result to " + resultFilename)
             else loge("Failed to retrieval")
           } catch {
@@ -294,8 +304,9 @@ class MainController extends MainControllerSkeleton {
     if (value <= 0) {
       setNumOfRetrievalDocument(MainController.defaultNumOfRetrievalDocument)
     } else {
-      numOfRetrievalDocument = value
-      text_number_of_retrieval_document.setText(value.toString)
+//      numOfRetrievalDocument = value
+      numOfRetrievalDocument.set(value)
+//      text_number_of_retrieval_document.setText(value.toString)
       logDone("set number of retrieval document : " + getNumOfRetrievalDocument)
     }
   }
