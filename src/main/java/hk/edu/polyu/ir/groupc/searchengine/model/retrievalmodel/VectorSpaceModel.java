@@ -31,8 +31,8 @@ import java.util.List;
  */
 public class VectorSpaceModel extends RetrievalModelWithRanking {
 
-    protected final Parameter<Double> mPivotBParameter;
-    protected final Parameter<Double> mBM25KParameter;
+    protected final DoubleParameter mPivotBParameter;
+    protected final DoubleParameter mBM25KParameter;
     protected final List<String> cModes;
     protected final List<Parameter<?extends Number>> cParameters;
     protected NormalizationType mNormalizationType;

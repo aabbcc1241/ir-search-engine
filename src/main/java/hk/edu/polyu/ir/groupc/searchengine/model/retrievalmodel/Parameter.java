@@ -28,9 +28,9 @@ public abstract class Parameter<T extends Number> {
     public Parameter(String name, T min, T max, T suggested, T value) {
         this.name = new SimpleStringProperty(name);
         this.min = new SimpleObjectProperty<T>(this, "min", min);
-        this.max = new SimpleObjectProperty<T>(this, "max", min);
-        this.suggested = new SimpleObjectProperty<T>(this, "suggested", min);
-        this.value = new SimpleObjectProperty<T>(this, "value", min);
+        this.max = new SimpleObjectProperty<T>(this, "max", max);
+        this.suggested = new SimpleObjectProperty<T>(this, "suggested", suggested);
+        this.value = new SimpleObjectProperty<T>(this, "value", value);
     }
 
     public void addListener() {
