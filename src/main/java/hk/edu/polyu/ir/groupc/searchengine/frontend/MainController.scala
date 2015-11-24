@@ -3,7 +3,7 @@ package hk.edu.polyu.ir.groupc.searchengine.frontend
 import java.io.File
 import java.util
 import javafx.application.Platform.runLater
-import javafx.beans.property.{SimpleIntegerProperty, ReadOnlyObjectWrapper}
+import javafx.beans.property.{ReadOnlyObjectWrapper, SimpleIntegerProperty}
 import javafx.beans.value.{ChangeListener, ObservableValue}
 import javafx.collections.FXCollections
 import javafx.event.ActionEvent
@@ -15,9 +15,9 @@ import javafx.util.Callback
 import comm.exception.RichFileNotFoundException
 import comm.gui.{AlertUtils, GuiUtils}
 import hk.edu.polyu.ir.groupc.searchengine.Debug.{log, logDone, logMainStatus, loge}
-import hk.edu.polyu.ir.groupc.searchengine.{Config, Launcher}
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.{Parameter, RetrievalModel}
+import hk.edu.polyu.ir.groupc.searchengine.{Config, Launcher}
 
 /**
   * Created by beenotung on 11/22/15.
