@@ -22,6 +22,18 @@ class ExpandedTerm(val term: TermEntity, val weight: Double)
 
 class QueryDescription(val relevant: Boolean, val primarily: Boolean, val primarilyMentioned: Boolean)
 
+object QueryEnum extends Enumeration {
+  type QueryType = Value
+  val T, TDN = Value
+
+  def getFileName(queryType: QueryType): String = {
+    queryType match {
+      case T => "T.ret"
+      case TDN => "TDN.ret"
+    }
+  }
+}
+
 object QueryFactory {
 
   private var queries_T: List[Query] = null
@@ -44,18 +56,13 @@ object QueryFactory {
   }
 
   @throws(classOf[RichFileNotFoundException])
-  def loadFromFile_T(file: File) = {
+  def loadFromFile(file: File, queryType: Int) = {
     try {
-      queries_T = Source.fromFile(file).getLines().map[Query](createFromString).toList
-    } catch {
-      case e: FileNotFoundException => throw new RichFileNotFoundException(file)
-    }
-  }
-
-  @throws(classOf[RichFileNotFoundException])
-  def loadFromFile_TDN(file: File) = {
-    try {
-      queries_TDN = Source.fromFile(file).getLines().map[Query](createFromString).toList
+      val queries = Source.fromFile(file).getLines().map[Query](createFromString).toList
+      if (QueryEnum.TDN.id.equals(queryType))
+        queries_TDN = queries
+      else
+        queries_T = queries
     } catch {
       case e: FileNotFoundException => throw new RichFileNotFoundException(file)
     }

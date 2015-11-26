@@ -49,19 +49,21 @@ public class SetBasedVectorSpaceModel extends VectorSpaceModel {
     // The proximity distance means how far can a term be apart from another term to be considered as a term set.
     // Setting 10 means term A and term B must only have 9 other terms in order to be a term set.
     // Adjusting this value to a high distance may result in higher computation time.
-    private final IntegerParameter mProximityDistance=new IntegerParameter("Proximity Distance",1,100,76);
+    private final IntegerParameter mProximityDistance = new IntegerParameter("Proximity Distance", 1, 100, 76);
 
     // To prevent heavy computation, you can limit the program when to stop deriving next term-set level here.
     // You can set to Integer.MAX_VALUE for generating all possible association levels.
-    private final IntegerParameter mMaximumAssociationLevel=new IntegerParameter("Maximum Association Level",1,Integer.MAX_VALUE-8,10);
+    private final IntegerParameter mMaximumAssociationLevel = new IntegerParameter("Maximum Association Level", 1, Integer.MAX_VALUE - 8, 10);
 
     @Override
     public List<Parameter<? extends Number>> getParameters() {
-        List<Parameter<? extends Number>> parameters = super.getParameters();
-        parameters.add(mTermSetRelativeMaxSupport);
-        parameters.add(mProximityDistance);
-        parameters.add(mMaximumAssociationLevel);
-        return parameters;
+        return cParameters;
+    }
+
+    {
+        cParameters.add(mTermSetRelativeMaxSupport);
+        cParameters.add(mProximityDistance);
+        cParameters.add(mMaximumAssociationLevel);
     }
 
     public SetBasedVectorSpaceModel() {
@@ -370,7 +372,7 @@ public class SetBasedVectorSpaceModel extends VectorSpaceModel {
      *
      */
     public void setTermSetRelativeMaxSupport(double pValue) {
-        this.mTermSetRelativeMaxSupport .value(pValue);
+        this.mTermSetRelativeMaxSupport.value(pValue);
     }
 
     public int getProximityDistance() {
@@ -378,7 +380,7 @@ public class SetBasedVectorSpaceModel extends VectorSpaceModel {
     }
 
     public void setProximityDistance(int pValue) {
-        this.mProximityDistance.value( pValue);
+        this.mProximityDistance.value(pValue);
     }
 
     public int getMaximumAssociationLevel() {
@@ -386,7 +388,7 @@ public class SetBasedVectorSpaceModel extends VectorSpaceModel {
     }
 
     public void setMaximumAssociationLevel(int pValue) {
-        this.mMaximumAssociationLevel .value(pValue);
+        this.mMaximumAssociationLevel.value(pValue);
     }
 
 

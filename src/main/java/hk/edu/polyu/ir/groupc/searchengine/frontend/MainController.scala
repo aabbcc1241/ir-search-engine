@@ -15,7 +15,8 @@ import javafx.util.Callback
 import comm.exception.RichFileNotFoundException
 import comm.gui.{AlertUtils, GuiUtils}
 import hk.edu.polyu.ir.groupc.searchengine.Debug.{log, logDone, logMainStatus, loge}
-import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory
+import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryEnum.QueryType
+import hk.edu.polyu.ir.groupc.searchengine.model.query.{QueryEnum, QueryFactory}
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.{Parameter, RetrievalModel}
 import hk.edu.polyu.ir.groupc.searchengine.{Config, Launcher}
 
@@ -93,20 +94,32 @@ class MainController extends MainControllerSkeleton {
 
   def getMajorStatus = label_left_status getText
 
-  override def set_query_file(event: ActionEvent) = {
+  override def set_query_T_file(event: ActionEvent) = {
+    set_query_file(event, QueryEnum.T.id)
+  }
+
+  override def set_query_TDN_file(event: ActionEvent) = {
+    set_query_file(event, QueryEnum.TDN.id)
+  }
+
+  def set_query_file(event: ActionEvent, queryType: Int) = {
     val action = "load query file"
     logMainStatus(action)
-    text_query_file setText (GuiUtils.pickFile(MainApplication.getInstance().getStage) match {
+    val path = GuiUtils.pickFile(MainApplication.getInstance().getStage) match {
       case None => ""
       case Some(path) =>
         try {
-          QueryFactory.loadFromFile(new File(path))
+          QueryFactory.loadFromFile(new File(path), queryType)
           logDone(action)
         } catch {
           case e: RichFileNotFoundException => loge("Failed to load query", e)
         }
         path
-    })
+    }
+    if (QueryEnum.TDN.id.equals(queryType))
+      text_query_TDN_file.setText(path)
+    else
+      text_query_T_file.setText(path)
   }
 
   override def set_result_path(event: ActionEvent) = {
@@ -270,16 +283,16 @@ class MainController extends MainControllerSkeleton {
     }
   }
 
-  override def start_search(event: ActionEvent) = {
+  def start_search(event: ActionEvent, queryType: QueryType) = {
     if (preSearchCheck) {
       selectedModel match {
         case None => AlertUtils.warn(contentText = "Please choose a retrieval model")
         case Some(model) =>
-          val resultFilename = newResultFile(model)
+          val resultFilename = getResultFilename(model, queryType)
           val numOfRetrievalDocument = getNumOfRetrievalDocument
           new Thread(MainApplication.threadGroup, () => {
             try {
-              val success = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument.intValue())
+              val success = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument.intValue(), queryType.id)
               if (success) AlertUtils.info(headerText = "Finished retrieval", contentText = "Saved result to " + resultFilename)
               else loge("Failed to retrieval")
             } catch {
@@ -307,11 +320,12 @@ class MainController extends MainControllerSkeleton {
     true
   }
 
-  @deprecated
-  def newResultFile(model: RetrievalModel) = {
+  def getResultFilename(model: RetrievalModel, queryType: QueryType): String = {
     MainController.resultId += 1
     val currentResultId = MainController.resultId
-    s"${text_result_path.getText()}/result-${model.name()}-$currentResultId.txt"
+    //    s"${text_result_path.getText()}/result-${model.name()}-$currentResultId.txt"
+    val filename: String = QueryEnum.getFileName(queryType)
+    s"${text_result_path.getText()}/$filename"
   }
 
   def getNumOfRetrievalDocument = numOfRetrievalDocument

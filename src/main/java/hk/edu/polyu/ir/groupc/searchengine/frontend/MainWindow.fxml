@@ -71,14 +71,24 @@
                                         </HBox>
                                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
                                             <children>
-                                                <TextField fx:id="text_query_file" editable="false" HBox.hgrow="ALWAYS" />
-                                                <Button mnemonicParsing="false" onAction="#set_query_file" text="Pick Query file">
+                                                <TextField fx:id="text_query_T_file" editable="false" HBox.hgrow="ALWAYS" />
+                                                <Button mnemonicParsing="false" onAction="#set_query_T_file" text="Pick Query_T file">
                                                     <cursor>
                                                         <Cursor fx:constant="HAND" />
                                                     </cursor>
                                                 </Button>
                                             </children>
                                         </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
+                                 <children>
+                                    <TextField fx:id="text_query_TDN_file" editable="false" HBox.hgrow="ALWAYS" />
+                                    <Button mnemonicParsing="false" onAction="#set_query_TDN_file" text="Pick Query_TDN file">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Button>
+                                 </children>
+                              </HBox>
                                         <HBox prefHeight="100.0" prefWidth="200.0" spacing="7.0">
                                             <children>
                                                 <TextField fx:id="text_result_path" editable="false" HBox.hgrow="ALWAYS" />
@@ -114,8 +124,8 @@
                                     <center>
                                         <TableView fx:id="table_model" editable="true" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                                             <columns>
-                                                <TableColumn fx:id="tablecolumn_model_param_name" prefWidth="120.0" text="Parameter" />
-                                                <TableColumn fx:id="tablecolumn_model_param_min" prefWidth="60.0" text="min" />
+                                                <TableColumn fx:id="tablecolumn_model_param_name" prefWidth="260.0" text="Parameter" />
+                                                <TableColumn fx:id="tablecolumn_model_param_min" minWidth="0.0" prefWidth="60.0" text="min" />
                                                 <TableColumn fx:id="tablecolumn_model_param_max" prefWidth="60.0" text="max" />
                                                 <TableColumn fx:id="tablecolumn_model_param_suggested" prefWidth="100.0" text="suggested" />
                                                 <TableColumn fx:id="tablecolumn_model_param_value" prefWidth="60.0" text="value" />

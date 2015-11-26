@@ -1,6 +1,7 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
 import comm.exception.RichFileNotFoundException;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryEnum;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.ExtendedBooleanModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.RetrievalModel;
@@ -36,7 +37,7 @@ public class Test {
                 postPath(POST_PATH);
                 stopPath(STOP_PATH);
                 judgeRobustPath(JUDGEROBUST);
-                queryPath(QUERY_TDN);
+                queryPath_T(QUERY_T);
             }
         };
 
@@ -46,7 +47,7 @@ public class Test {
         ArrayList<ModelSetting> allModelSettings = getAllModels();
         for (ModelSetting modelSetting : allModelSettings) {
             System.out.println("=========================================================");
-            launcher.start(modelSetting.model, modelSetting.getResultFilePath(), modelSetting.numberOfRetrieval);
+            launcher.start(modelSetting.model, modelSetting.getResultFilePath(), modelSetting.numberOfRetrieval, QueryEnum.T().id());
             System.out.println("=========================================================");
         }
 

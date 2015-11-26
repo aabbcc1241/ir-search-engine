@@ -4,17 +4,18 @@ import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
 import comm.lang.ScalaSupport;
 import hk.edu.polyu.ir.groupc.searchengine.frontend.MainController;
-import hk.edu.polyu.ir.groupc.searchengine.frontend.MainController$;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.StopWordFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.Query;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryEnum;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.JudgeRobustFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.RetrievalDocument;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.RetrievalModel;
+import scala.collection.SeqView;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,25 +75,31 @@ public abstract class Launcher {
     }
 
     @Deprecated
-    public void queryPath(String newPath) throws RichFileNotFoundException {
+    public void queryPath_T(String newPath) throws RichFileNotFoundException {
         _queryPath = newPath;
-        if (inited) QueryFactory.loadFromFile(new File(newPath));
+        if (inited) QueryFactory.loadFromFile(new File(newPath), QueryEnum.T().id());
     }
 
     @Deprecated
-    public String queryPath() {
-        return _queryPath;
+    public void queryPath_TDN(String newPath) throws RichFileNotFoundException {
+        _queryPath = newPath;
+        if (inited) QueryFactory.loadFromFile(new File(newPath), QueryEnum.TDN().id());
     }
+
+//    @Deprecated
+//    public String queryPath() {
+//        return _queryPath;
+//    }
 
     public boolean needDocumentIndex() {
         return true;
     }
 
-    public List<SearchResult> test(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
+    public List<SearchResult> test(RetrievalModel retrievalModel, int numOfRetrievalDocument, int queryType) {
         try {
             init();
             logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
-            List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument);
+            List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument, queryType);
             deInit();
             return searchResults;
         } catch (EssentialFileNotFoundException e) {
@@ -105,11 +112,11 @@ public abstract class Launcher {
     /**
      * @return boolean success : true if not error occure, false otherwise
      */
-    public boolean start(RetrievalModel retrievalModel, String resultFilename, int numOfRetrievalDocument) throws EssentialFileNotFoundException {
+    public boolean start(RetrievalModel retrievalModel, String resultFilename, int numOfRetrievalDocument, int queryType) throws EssentialFileNotFoundException {
         boolean noError = false;
         init();
         logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
-        List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument);
+        List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument, queryType);
         logMainStatus("saving search result to file <" + resultFilename + ">");
         try {
             SearchResultFactory.writeToFile(searchResults, resultFilename);
@@ -157,21 +164,32 @@ public abstract class Launcher {
         }
     }
 
-    public void loadQuery(File file) throws RichFileNotFoundException {
-        logMainStatus("loading query");
-        QueryFactory.loadFromFile(file);
-        logDone("loaded query");
+    public void loadQuery_T(File file) throws RichFileNotFoundException {
+        logMainStatus("loading query_T");
+        QueryFactory.loadFromFile(file, QueryEnum.T().id());
+        logDone("loaded query_T");
     }
 
-    private List<SearchResult> run(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
+    public void loadQuery_TDN(File file) throws RichFileNotFoundException {
+        logMainStatus("loading query_TDN");
+        QueryFactory.loadFromFile(file, QueryEnum.TDN().id());
+        logDone("loaded query_TDN");
+    }
+
+    private List<SearchResult> run(RetrievalModel retrievalModel, int numOfRetrievalDocument, int queryType) {
         List<SearchResult> searchResults = new LinkedList<>();
-        final String runId = MainController.newRunId(Config.groupName,retrievalModel);
-        QueryFactory.getQueries().foreach(ScalaSupport.function1(new Function<Query, Object>() {
+        final String runId = MainController.newRunId(Config.groupName, retrievalModel);
+        SeqView<Query, scala.collection.immutable.List<Query>> queries;
+        if (queryType == QueryEnum.TDN().id())
+            queries = QueryFactory.getQueries_TDN();
+        else
+            queries = QueryFactory.getQueries_T();
+        queries.foreach(ScalaSupport.function1(new Function<Query, Object>() {
             @Override
             public Object apply(Query query) {
                 logMainStatus("searching on queryId: " + query.queryId());
                 List<RetrievalDocument> retrievalDocuments = retrievalModel.search(query);
-                SearchResult searchResult = SearchResultFactory.create(runId, query, retrievalDocuments);
+                SearchResult searchResult = SearchResultFactory.create(runId, query.queryId(), retrievalDocuments);
                 searchResult.shrink(numOfRetrievalDocument);
                 searchResults.add(searchResult);
                 logDone("finished search on queryId: " + query.queryId());

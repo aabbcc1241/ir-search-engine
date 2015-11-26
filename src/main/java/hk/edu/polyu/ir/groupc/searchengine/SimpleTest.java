@@ -1,6 +1,7 @@
 package hk.edu.polyu.ir.groupc.searchengine;
 
 import comm.exception.EssentialFileNotFoundException;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryEnum;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResultFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.RetrievalModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.SimpleModel;
@@ -46,10 +47,10 @@ public class SimpleTest {
                 return JUDGEROBUST;
             }
 
-            @Override
-            public String queryPath() {
-                return QUERY_T;
-            }
+//            @Override
+//            public String queryPath() {
+//                return QUERY_T;
+//            }
 
 //            @Override
 //            protected boolean needDocumentIndex() {
@@ -59,7 +60,7 @@ public class SimpleTest {
         RetrievalModel retrievalModel = new SimpleModel();
         SearchResultFactory.setRunId("GroupC-DemoModel");
         try {
-            launcher.start(retrievalModel, RESULT_FILE, 10);
+            launcher.start(retrievalModel, RESULT_FILE, 10, QueryEnum.T().id());
         } catch (EssentialFileNotFoundException e) {
             Debug.loge_("res files does not exist");
         }

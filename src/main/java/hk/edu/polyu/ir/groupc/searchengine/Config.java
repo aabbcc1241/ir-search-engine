@@ -41,7 +41,7 @@ public class Config {
     public static void CheckSystemInfo() {
         String action = "System checking";
 //        Debug.logMainStatus(action);
-        if (Runtime.getRuntime().totalMemory() < (1024L * 1024 * 1024 * MIN_RAM_IN_G))
+        if (Runtime.getRuntime().maxMemory() < (1024L * 1024 * 1024 * MIN_RAM_IN_G))
             AlertUtils.warn("Not Enough Ram", "The program might run very slow", "Please give at least " + (1024 * MIN_RAM_IN_G) + "M RAM for the JVM.\nCurrent available RAM: " + (Runtime.getRuntime().maxMemory() / 1024 / 1024) + "M");
 //        else
 //            AlertUtils.info("OK", "OK", (Runtime.getRuntime().totalMemory() / 1024 / 1024 + "M"));

@@ -19,8 +19,8 @@ object SearchResultFactory {
     runId = newRunId
   }
 
-  def create(runId: String = runId, query: Query, retrievalDocuments: java.util.List[RetrievalDocument]): SearchResult =
-    create(runId, query.queryId, retrievalDocuments)
+//  def create(runId: String = runId, query: Query, retrievalDocuments: java.util.List[RetrievalDocument]): SearchResult =
+//    create(runId, query.queryId, retrievalDocuments)
 
   def create(runId: String = runId, queryId: String, retrievalDocuments: java.util.List[RetrievalDocument]) =
     new SearchResult(runId, queryId, retrievalDocuments)

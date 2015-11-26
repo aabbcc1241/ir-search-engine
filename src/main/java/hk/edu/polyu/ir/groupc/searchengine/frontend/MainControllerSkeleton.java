@@ -25,8 +25,11 @@ public class MainControllerSkeleton {
     @FXML // fx:id="text_data_path"
     protected TextField text_data_path; // Value injected by FXMLLoader
 
-    @FXML // fx:id="text_query_file"
-    protected TextField text_query_file; // Value injected by FXMLLoader
+    @FXML // fx:id="text_query_T_file"
+    protected TextField text_query_T_file; // Value injected by FXMLLoader
+
+    @FXML // fx:id="text_query_TDN_file"
+    protected TextField text_query_TDN_file; // Value injected by FXMLLoader
 
     @FXML // fx:id="text_result_path"
     protected TextField text_result_path; // Value injected by FXMLLoader
@@ -101,7 +104,12 @@ public class MainControllerSkeleton {
     }
 
     @FXML
-    void set_query_file(ActionEvent event) {
+    void set_query_TDN_file(ActionEvent event) {
+
+    }
+
+    @FXML
+    void set_query_T_file(ActionEvent event) {
 
     }
 
@@ -115,11 +123,11 @@ public class MainControllerSkeleton {
 
     }
 
-    @FXML
-        // This method is called by the FXMLLoader when initialization is complete
+    @FXML // This method is called by the FXMLLoader when initialization is complete
     void initialize() {
         assert text_data_path != null : "fx:id=\"text_data_path\" was not injected: check your FXML file 'MainWindow.fxml'.";
-        assert text_query_file != null : "fx:id=\"text_query_file\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert text_query_T_file != null : "fx:id=\"text_query_T_file\" was not injected: check your FXML file 'MainWindow.fxml'.";
+        assert text_query_TDN_file != null : "fx:id=\"text_query_TDN_file\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert text_result_path != null : "fx:id=\"text_result_path\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert text_number_of_retrieval_document != null : "fx:id=\"text_number_of_retrieval_document\" was not injected: check your FXML file 'MainWindow.fxml'.";
         assert table_model != null : "fx:id=\"table_model\" was not injected: check your FXML file 'MainWindow.fxml'.";

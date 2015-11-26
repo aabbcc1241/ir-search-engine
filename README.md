@@ -3,6 +3,7 @@
 ##### Group C
 
 ## Todo-List
+ - [X] fix duplicated paramenter in setbasevectorspacemodel
  - [ ] set runner id
  - [ ] Query pick (seperate T and TDN)
  - [ ] fix result filename

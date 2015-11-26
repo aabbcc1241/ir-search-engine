@@ -2,6 +2,7 @@
 import comm.Test;
 import hk.edu.polyu.ir.groupc.searchengine.Debug;
 import hk.edu.polyu.ir.groupc.searchengine.Launcher;
+import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryEnum;
 import hk.edu.polyu.ir.groupc.searchengine.model.result.SearchResult;
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.RetrievalModel;
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.SimpleModel;
@@ -66,7 +67,7 @@ public class SimpleModelTest {
         Tuple2<Object, Object>[] results = Test.time_J(new Supplier<Object>() {
             @Override
             public Object get() {
-                List<SearchResult> searchResults = launcher.test(retrievalModel, 10);
+                List<SearchResult> searchResults = launcher.test(retrievalModel, 10, QueryEnum.T().id());
                 System.out.println(searchResults.size());
                 return searchResults;
             }
