@@ -5,11 +5,14 @@ package hk.edu.polyu.ir.groupc.searchengine.frontend;
  */
 
 import comm.Utils;
+import hk.edu.polyu.ir.groupc.searchengine.Config;
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sun.applet.Main;
 
 import java.io.IOException;
 
@@ -29,8 +32,8 @@ public class MainApplication extends Application {
     public static void main(String[] args) {
         log_("MainApplication start");
 
-        log_("Pre-loading");
-        // any?
+        log_("Loading configuration");
+        Config.init();
 
         log_("Launching GUI");
         /* this method call is blocking, will enter event driven mode */

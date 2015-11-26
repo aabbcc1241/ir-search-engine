@@ -3,8 +3,9 @@
 ##### Group C
 
 ## Todo-List
- - [ ] fix Parameter bug
- - [ ] fix boolean AND mode
+ - [X] fix Parameter bug
+ - [X] fix set mode bug (null)
+ - [X] fix boolean AND mode
  - [ ] set runner id
  - [ ] fix result filename
 

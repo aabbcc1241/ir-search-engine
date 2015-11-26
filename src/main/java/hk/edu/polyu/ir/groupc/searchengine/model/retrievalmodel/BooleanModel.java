@@ -7,9 +7,8 @@ import hk.edu.polyu.ir.groupc.searchengine.model.result.RetrievalDocument;
 import scala.Tuple2;
 import scala.collection.mutable.ArrayBuffer;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 /**
@@ -60,9 +59,16 @@ public class BooleanModel extends RetrievalModel {
         return Parameters;
     }
 
+    public static <T> Set<T> and(Set<T> listA, Set<T> listB) {
+        Set<T> set = new LinkedHashSet<T>();
+        set.addAll(listA);
+        set.addAll(listB);
+        return set;
+    }
+
     public List<RetrievalDocument> search(Query query) {
         List<RetrievalDocument> list = new ArrayList<>();
-        ArrayList<Integer> int_list = new ArrayList<Integer>();
+        AtomicReference<Set<Integer>> int_list = new AtomicReference<>(new LinkedHashSet<>());
         for (ExpandedTerm termEntity : query.expandedTerms()) {
             int weight = termEntity.weight() > 0 ? AND : ((termEntity.weight() < 0) ? NOT : OR);
             /* distinct mode from AND or OR */
@@ -77,8 +83,8 @@ public class BooleanModel extends RetrievalModel {
                     ScalaSupport.foreachMap(termEntity.term().filePositionMap(), new Consumer<Tuple2<Object, ArrayBuffer<Object>>>() {
                         @Override
                         public void accept(Tuple2<Object, ArrayBuffer<Object>> pair) {
-                            if (int_list.contains((Integer) pair._1()))
-                                int_list.remove((Integer) pair._1());
+                            if (int_list.get().contains((Integer) pair._1()))
+                                int_list.get().remove((Integer) pair._1());
                         }
                     });
                     break;
@@ -86,27 +92,25 @@ public class BooleanModel extends RetrievalModel {
                     ScalaSupport.foreachMap(termEntity.term().filePositionMap(), new Consumer<Tuple2<Object, ArrayBuffer<Object>>>() {
                         @Override
                         public void accept(Tuple2<Object, ArrayBuffer<Object>> pair) {
-                            if (!int_list.contains((Integer) pair._1()))
-                                int_list.add((Integer) pair._1());
+                            if (!int_list.get().contains((Integer) pair._1()))
+                                int_list.get().add((Integer) pair._1());
                         }
                     });
                     break;
                 case AND:
+                    LinkedHashSet<Integer> current_list = new LinkedHashSet<Integer>();
                     ScalaSupport.foreachMap(termEntity.term().filePositionMap(), new Consumer<Tuple2<Object, ArrayBuffer<Object>>>() {
                         @Override
                         public void accept(Tuple2<Object, ArrayBuffer<Object>> pair) {
-                            if (!int_list.contains((Integer) pair._1()))
-                                int_list.remove((Integer) pair._1());
-                            // list.add(new RetrievalDocument((Integer) pair._1(), 1));
+                            current_list.add((Integer) pair._1());
                         }
                     });
+                    int_list.set(and(int_list.get(), current_list));
                     break;
             }
 
         }
-        for (int docID : int_list) {
-            list.add(new RetrievalDocument(docID, 1));
-        }
+        int_list.get().forEach(docId -> list.add(new RetrievalDocument(docId, 1)));
         return list;
     }
 }
