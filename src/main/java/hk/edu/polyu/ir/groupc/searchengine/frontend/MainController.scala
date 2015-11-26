@@ -283,7 +283,15 @@ class MainController extends MainControllerSkeleton {
     }
   }
 
-  def start_search(event: ActionEvent, queryType: QueryType) = {
+  override def start_search_T(event: ActionEvent) = {
+    start_search(event, QueryEnum.T.id)
+  }
+
+  override def start_search_TDN(event: ActionEvent) = {
+    start_search(event, QueryEnum.TDN.id)
+  }
+
+  def start_search(event: ActionEvent, queryType: Int) = {
     if (preSearchCheck) {
       selectedModel match {
         case None => AlertUtils.warn(contentText = "Please choose a retrieval model")
@@ -292,7 +300,7 @@ class MainController extends MainControllerSkeleton {
           val numOfRetrievalDocument = getNumOfRetrievalDocument
           new Thread(MainApplication.threadGroup, () => {
             try {
-              val success = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument.intValue(), queryType.id)
+              val success = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument.intValue(), queryType)
               if (success) AlertUtils.info(headerText = "Finished retrieval", contentText = "Saved result to " + resultFilename)
               else loge("Failed to retrieval")
             } catch {
@@ -320,9 +328,9 @@ class MainController extends MainControllerSkeleton {
     true
   }
 
-  def getResultFilename(model: RetrievalModel, queryType: QueryType): String = {
-    MainController.resultId += 1
-    val currentResultId = MainController.resultId
+  def getResultFilename(model: RetrievalModel, queryType: Int): String = {
+//    MainController.resultId += 1
+//    val currentResultId = MainController.resultId
     //    s"${text_result_path.getText()}/result-${model.name()}-$currentResultId.txt"
     val filename: String = QueryEnum.getFileName(queryType)
     s"${text_result_path.getText()}/$filename"

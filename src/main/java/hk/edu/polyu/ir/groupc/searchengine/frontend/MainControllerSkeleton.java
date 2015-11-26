@@ -119,7 +119,12 @@ public class MainControllerSkeleton {
     }
 
     @FXML
-    void start_search(ActionEvent event) {
+    void start_search_T(ActionEvent event) {
+
+    }
+
+    @FXML
+    void start_search_TDN(ActionEvent event) {
 
     }
 

@@ -137,9 +137,6 @@
                                     </bottom>
                                     <top>
                                         <BorderPane BorderPane.alignment="CENTER">
-                                            <right>
-                                                <Button mnemonicParsing="false" onAction="#start_search" text="Search" BorderPane.alignment="CENTER" />
-                                            </right>
                                             <padding>
                                                 <Insets bottom="7.0" left="7.0" right="7.0" />
                                             </padding>
@@ -151,6 +148,14 @@
                                        </children>
                                     </HBox>
                                  </center>
+                                 <right>
+                                    <HBox spacing="7.0" BorderPane.alignment="CENTER">
+                                       <children>
+                                                      <Button mnemonicParsing="false" onAction="#start_search_T" text="Search T" />
+                                          <Button mnemonicParsing="false" onAction="#start_search_TDN" text="Search TDN" />
+                                       </children>
+                                    </HBox>
+                                 </right>
                                         </BorderPane>
                                     </top>
                                 </BorderPane>

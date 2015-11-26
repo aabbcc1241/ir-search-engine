@@ -7,6 +7,7 @@ import hk.edu.polyu.ir.groupc.searchengine.model.datasource.{StopWordFactory, Te
 
 import scala.collection.SeqView
 import scala.io.Source
+import scala.language.postfixOps
 
 /**
   * Created by beenotung on 11/6/15.
@@ -26,11 +27,11 @@ object QueryEnum extends Enumeration {
   type QueryType = Value
   val T, TDN = Value
 
-  def getFileName(queryType: QueryType): String = {
-    queryType match {
-      case T => "T.ret"
-      case TDN => "TDN.ret"
-    }
+  def getFileName(queryType: Int): String = {
+    if (TDN.id.equals(queryType))
+      "TDN.ret"
+    else
+      "T.ret"
   }
 }
 
