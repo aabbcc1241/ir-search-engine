@@ -48,13 +48,13 @@ public class SetBasedVectorSpaceModel extends VectorSpaceModel {
         // The proximity distance means how far can a term be apart from another term to be considered as a term set.
         // Setting 10 means term A and term B must only have 9 other terms in order to be a term set.
         // Adjusting this value to a high distance may result in higher computation time.
-        this.mProximityDistance = 46;
+        this.mProximityDistance = 76;
 
         // For all term-sets, the frequency of the term-set must exceed or equal to the threshold in
         // order to be considered as frequent. Adjusting this value will greatly impact the retrieval result.
         // The unit is measured in number of documents of the term (i.e document frequency) divided by total num. of documents.
         // Set it between 0 to 1.
-        this.mTermSetRelativeMaxSupport = 0.014;
+        this.mTermSetRelativeMaxSupport = 0.012;
 
         // To prevent heavy computation, you can limit the program when to stop deriving next term-set level here.
         // You can set to Integer.MAX_VALUE for generating all possible association levels.
