@@ -1,13 +1,16 @@
 package comm.gui
 
 import java.io.{PrintWriter, StringWriter}
+import java.util.Optional
+import java.util.function.Consumer
 import javafx.application.Platform
 import javafx.scene.Node
 import javafx.scene.control.Alert.AlertType
-import javafx.scene.control.{Alert, Label, TextArea}
+import javafx.scene.control.{Alert, ButtonType, Label, TextArea}
 import javafx.scene.layout.{GridPane, Priority}
 
-import comm.lang.Convert.funcToRunnable
+import comm.lang.Convert
+import comm.lang.Convert.{Empty, funcToRunnable}
 
 
 /**
@@ -15,9 +18,10 @@ import comm.lang.Convert.funcToRunnable
   * show alert in javafx dialog
   */
 object AlertUtils {
-  def error_(text: String) = error(contentText = text)
+  def error_(text: String, onResult: Consumer[Optional[ButtonType]]=Empty.consumer) = error(contentText = text, onResult = onResult)
 
-  def error(title: String = "Error", headerText: String = null, contentText: String, exception: Exception = null) = {
+  def error(title: String = "Error", headerText: String = null, contentText: String, exception: Exception = null,
+            onResult: Consumer[Optional[ButtonType]]=Empty.consumer) = {
     var node =
       if (exception == null)
         null
@@ -46,7 +50,9 @@ object AlertUtils {
     show(title, headerText, contentText, AlertType.ERROR, node)
   }
 
-  def show(title: String, headerText: String = null, contentText: String, alertType: AlertType, expandableContent: Node = null) = {
+  def show(title: String, headerText: String = null, contentText: String, alertType: AlertType,
+           expandableContent: Node = null,
+           onResult: Consumer[Optional[ButtonType]] = Convert.Consumer[Optional[ButtonType]](p => {})) = {
     Platform runLater (() => {
       val alert = new Alert(alertType)
       alert.setTitle(title)
@@ -58,11 +64,13 @@ object AlertUtils {
       if (expandableContent != null)
         alert.getDialogPane.setExpandableContent(expandableContent)
       val result = alert.showAndWait()
+      onResult accept result
     })
   }
 
-  def warn(title: String = "Warning", headerText: String = null, contentText: String) = {
-    show(title, headerText, contentText, AlertType.WARNING)
+  def warn(title: String = "Warning", headerText: String = null, contentText: String,
+           onResult: Consumer[Optional[ButtonType]] = Empty.consumer[Optional[ButtonType]]) = {
+    show(title, headerText, contentText, AlertType.WARNING, onResult = onResult)
   }
 
   def info(title: String = "Info", headerText: String = null, contentText: String) = {
