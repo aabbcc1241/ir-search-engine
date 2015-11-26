@@ -5,7 +5,7 @@
 ## Todo-List
  - [X] fix Parameter bug
  - [X] fix set mode bug (null)
- - [ ] fix boolean AND mode
+ - [X] fix boolean AND mode
  - [ ] set runner id
  - [ ] fix result filename
 
