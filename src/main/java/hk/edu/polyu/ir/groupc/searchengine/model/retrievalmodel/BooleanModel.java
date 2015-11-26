@@ -66,7 +66,50 @@ public class BooleanModel extends RetrievalModel {
         return set;
     }
 
+    @Override
     public List<RetrievalDocument> search(Query query) {
+        System.out.println("_-------------_");
+        List<RetrievalDocument> list = new ArrayList<>();
+
+        HashMap<String, HashSet<Integer>> allDocumentsIDs = new HashMap<>();
+
+        for (ExpandedTerm queryTerm : query.expandedTerms()) {
+            HashSet<Integer> allDocumentIDsOfTerm = new HashSet<>();
+
+            ScalaSupport.foreachMap(queryTerm.term().filePositionMap(), new Consumer<Tuple2<Object, ArrayBuffer<Object>>>() {
+                @Override
+                public void accept(Tuple2<Object, ArrayBuffer<Object>> pair) {
+                    allDocumentIDsOfTerm.add((Integer) pair._1());
+                }
+            });
+
+            allDocumentsIDs.put(queryTerm.term().termStem(), allDocumentIDsOfTerm);
+        }
+
+        HashSet<Integer> matchedDocumentIDs = new HashSet<>();
+        for (Map.Entry<String, HashSet<Integer>> termToDoc : allDocumentsIDs.entrySet()) {
+            switch(mode) {
+                case MODE_AND:
+                    if(matchedDocumentIDs.size() <= 0) {
+                        matchedDocumentIDs.addAll(termToDoc.getValue());
+                    } else {
+                        matchedDocumentIDs.retainAll(termToDoc.getValue());
+                    }
+                    break;
+                case MODE_OR:
+                    matchedDocumentIDs.addAll(termToDoc.getValue());
+                    break;
+            }
+        }
+
+        for (Integer id : matchedDocumentIDs) {
+            list.add(new RetrievalDocument(id, 1.0));
+        }
+
+        return list;
+    }
+
+    public List<RetrievalDocument> search_old(Query query) {
         List<RetrievalDocument> list = new ArrayList<>();
         AtomicReference<Set<Integer>> int_list = new AtomicReference<>(new LinkedHashSet<>());
         for (ExpandedTerm termEntity : query.expandedTerms()) {
