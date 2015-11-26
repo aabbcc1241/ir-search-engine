@@ -15,7 +15,6 @@ import javafx.util.Callback
 import comm.exception.RichFileNotFoundException
 import comm.gui.{AlertUtils, GuiUtils}
 import hk.edu.polyu.ir.groupc.searchengine.Debug.{log, logDone, logMainStatus, loge}
-import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryEnum.QueryType
 import hk.edu.polyu.ir.groupc.searchengine.model.query.{QueryEnum, QueryFactory}
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.{Parameter, RetrievalModel}
 import hk.edu.polyu.ir.groupc.searchengine.{Config, Launcher}
@@ -292,7 +291,7 @@ class MainController extends MainControllerSkeleton {
   }
 
   def start_search(event: ActionEvent, queryType: Int) = {
-    if (preSearchCheck) {
+    if (preSearchCheck(queryType)) {
       selectedModel match {
         case None => AlertUtils.warn(contentText = "Please choose a retrieval model")
         case Some(model) =>
@@ -301,8 +300,10 @@ class MainController extends MainControllerSkeleton {
           new Thread(MainApplication.threadGroup, () => {
             try {
               val success = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument.intValue(), queryType)
-              if (success) AlertUtils.info(headerText = "Finished retrieval", contentText = "Saved result to " + resultFilename)
-              else loge("Failed to retrieval")
+              if (success)
+                AlertUtils.info(contentText = "Finished retrieval")
+              else
+                loge("Failed to retrieval")
             } catch {
               case e: Exception => loge("Unknown Error!", e)
             }
@@ -312,12 +313,12 @@ class MainController extends MainControllerSkeleton {
     }
   }
 
-  def preSearchCheck: Boolean = {
+  def preSearchCheck(queryType: Int): Boolean = {
     if (MainController.launcher == null) {
       loge("Index not given", "Please pick Data path in setting page")
       return false
     }
-    if (!QueryFactory.ready) {
+    if (!QueryFactory.ready(queryType)) {
       loge("Query files not given", "Please pick Query file in setting page")
       return false
     }
@@ -329,8 +330,8 @@ class MainController extends MainControllerSkeleton {
   }
 
   def getResultFilename(model: RetrievalModel, queryType: Int): String = {
-//    MainController.resultId += 1
-//    val currentResultId = MainController.resultId
+    //    MainController.resultId += 1
+    //    val currentResultId = MainController.resultId
     //    s"${text_result_path.getText()}/result-${model.name()}-$currentResultId.txt"
     val filename: String = QueryEnum.getFileName(queryType)
     s"${text_result_path.getText()}/$filename"

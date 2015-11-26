@@ -1,11 +1,12 @@
 package hk.edu.polyu.ir.groupc.searchengine.model.result
 
-import java.io.{FileWriter, IOException}
+import java.io.{BufferedWriter, FileWriter, IOException}
+import java.nio.file.{Files, Paths}
 import java.util
 import java.util.Collections
 
-import comm.FileUtils
-import hk.edu.polyu.ir.groupc.searchengine.model.query.Query
+import comm.gui.AlertUtils
+import comm.lang.Convert.funcToConsumer
 
 import scala.collection.JavaConverters._
 
@@ -19,8 +20,8 @@ object SearchResultFactory {
     runId = newRunId
   }
 
-//  def create(runId: String = runId, query: Query, retrievalDocuments: java.util.List[RetrievalDocument]): SearchResult =
-//    create(runId, query.queryId, retrievalDocuments)
+  //  def create(runId: String = runId, query: Query, retrievalDocuments: java.util.List[RetrievalDocument]): SearchResult =
+  //    create(runId, query.queryId, retrievalDocuments)
 
   def create(runId: String = runId, queryId: String, retrievalDocuments: java.util.List[RetrievalDocument]) =
     new SearchResult(runId, queryId, retrievalDocuments)
@@ -31,8 +32,24 @@ object SearchResultFactory {
 
   @throws(classOf[IOException])
   def writeToFile(searchResults: Seq[SearchResult], filename: String): Unit = {
-    val lines = searchResults.flatMap(sr => sr.toStrings)
-    FileUtils.appendToFile(lines, filename)
+    def writeFunc = () => {
+      val lines = searchResults.flatMap(sr => sr.toStrings)
+      val out = new BufferedWriter(new FileWriter(filename))
+      lines.foreach(l => out.write(l + "\n"))
+      out.close()
+    }
+    //    FileUtils.appendToFile(lines, filename)
+    if (Files.exists(Paths.get(filename))) {
+      AlertUtils.warn(contentText = filename + " exist, do you want to replace it?", onResult = funcToConsumer(result => {
+        result.ifPresent(funcToConsumer(p => {
+          writeFunc
+        }
+        ))
+      }))
+    }
+    else {
+      writeFunc
+    }
   }
 }
 

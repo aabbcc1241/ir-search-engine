@@ -77,6 +77,13 @@ object QueryFactory {
 
   def ready = (queries_T != null) && (queries_TDN != null)
 
+  def ready(queryType: Int): Boolean = {
+    if (QueryEnum.TDN.id.equals(queryType))
+      return queries_TDN!=null
+    else
+      return queries_T!=null
+  }
+
   def getQueries_T: SeqView[Query, List[Query]] = {
     if (queries_T == null) throw new IllegalStateException("query_T has not been loaded")
     queries_T.view

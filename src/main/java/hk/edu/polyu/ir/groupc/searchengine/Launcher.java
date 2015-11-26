@@ -120,7 +120,7 @@ public abstract class Launcher {
         logMainStatus("saving search result to file <" + resultFilename + ">");
         try {
             SearchResultFactory.writeToFile(searchResults, resultFilename);
-            logMainStatus("saved result to " + resultFilename);
+//            logMainStatus("saved result to " + resultFilename);
             noError = true;
         } catch (IOException e) {
             loge_("Failed to save search result!\nPlease make sure you have write permission on '" + resultFilename + "'");
