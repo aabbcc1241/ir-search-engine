@@ -3,12 +3,17 @@ package hk.edu.polyu.ir.groupc.searchengine;
 import comm.Utils;
 import comm.gui.AlertUtils;
 import hk.edu.polyu.ir.groupc.searchengine.frontend.MainController;
-import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.*;
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.BooleanModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.ExtendedBooleanModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.SetBasedVectorSpaceModel;
+import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.VectorSpaceModel;
 
 /**
  * Created by beenotung on 11/24/15.
  */
 public class Config {
+    public static final String groupName = "PolyU_IR_2015_GroupC";
+
     public static void init() {
         /* setting default values */
         MainController.defaultNumOfRetrievalDocument_$eq(1000);

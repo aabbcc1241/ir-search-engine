@@ -19,6 +19,8 @@ import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryFactory
 import hk.edu.polyu.ir.groupc.searchengine.model.retrievalmodel.{Parameter, RetrievalModel}
 import hk.edu.polyu.ir.groupc.searchengine.{Config, Launcher}
 
+import scala.language.postfixOps
+
 /**
   * Created by beenotung on 11/22/15.
   */
@@ -77,7 +79,10 @@ object MainController {
     })
   }
 
-
+  def newRunId(groupName: String, model: RetrievalModel): String = {
+    resultId += 1
+    s"${groupName}_${model.name()}_${model.getMode}_result_$resultId"
+  }
 }
 
 class MainController extends MainControllerSkeleton {
@@ -302,6 +307,7 @@ class MainController extends MainControllerSkeleton {
     true
   }
 
+  @deprecated
   def newResultFile(model: RetrievalModel) = {
     MainController.resultId += 1
     val currentResultId = MainController.resultId

@@ -24,8 +24,8 @@ class QueryDescription(val relevant: Boolean, val primarily: Boolean, val primar
 
 object QueryFactory {
 
-  @throws(classOf[IllegalStateException])
-  private var queries: List[Query] = null
+  private var queries_T: List[Query] = null
+  private var queries_TDN: List[Query] = null
 
   def extract(rawStringLine: String): Array[Option[TermEntity]] = {
     //    rawStringLine split " " map stem map TermIndexFactory.getTermIndex.getTermEntity
@@ -44,9 +44,18 @@ object QueryFactory {
   }
 
   @throws(classOf[RichFileNotFoundException])
-  def loadFromFile(file: File) = {
+  def loadFromFile_T(file: File) = {
     try {
-      queries = Source.fromFile(file).getLines().map[Query](createFromString).toList
+      queries_T = Source.fromFile(file).getLines().map[Query](createFromString).toList
+    } catch {
+      case e: FileNotFoundException => throw new RichFileNotFoundException(file)
+    }
+  }
+
+  @throws(classOf[RichFileNotFoundException])
+  def loadFromFile_TDN(file: File) = {
+    try {
+      queries_TDN = Source.fromFile(file).getLines().map[Query](createFromString).toList
     } catch {
       case e: FileNotFoundException => throw new RichFileNotFoundException(file)
     }
@@ -58,11 +67,16 @@ object QueryFactory {
     new Query(id.trim, content.trim)
   }
 
-  def ready = queries != null
+  def ready = (queries_T != null) && (queries_TDN != null)
 
-  def getQueries: SeqView[Query, List[Query]] = {
-    if (queries == null) throw new IllegalStateException("query has not been loaded")
-    queries.view
+  def getQueries_T: SeqView[Query, List[Query]] = {
+    if (queries_T == null) throw new IllegalStateException("query_T has not been loaded")
+    queries_T.view
+  }
+
+  def getQueries_TDN: SeqView[Query, List[Query]] = {
+    if (queries_TDN == null) throw new IllegalStateException("query_TDN has not been loaded")
+    queries_TDN.view
   }
 }
 

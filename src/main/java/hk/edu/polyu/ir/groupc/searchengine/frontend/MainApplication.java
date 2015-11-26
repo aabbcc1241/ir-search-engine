@@ -20,7 +20,7 @@ import static hk.edu.polyu.ir.groupc.searchengine.Debug.log_;
 
 public class MainApplication extends Application {
     public static ThreadGroup threadGroup = new ThreadGroup("MainApplication thread group");
-    static String title = "IR 2015 GroupC";
+    static String title = Config.groupName;
     private static MainApplication instance;
     private Stage mStage;
 

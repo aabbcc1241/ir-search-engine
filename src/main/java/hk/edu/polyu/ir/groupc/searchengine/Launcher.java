@@ -3,6 +3,8 @@ package hk.edu.polyu.ir.groupc.searchengine;
 import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
 import comm.lang.ScalaSupport;
+import hk.edu.polyu.ir.groupc.searchengine.frontend.MainController;
+import hk.edu.polyu.ir.groupc.searchengine.frontend.MainController$;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.StopWordFactory;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.TermIndexFactory;
@@ -23,7 +25,6 @@ import java.util.function.Function;
 import static hk.edu.polyu.ir.groupc.searchengine.Debug.*;
 
 public abstract class Launcher {
-
     private boolean inited = false;
     private String _filePath, _termIndexPath, _postPath, _stopPath, _judgeRobust, _queryPath;
 
@@ -164,12 +165,13 @@ public abstract class Launcher {
 
     private List<SearchResult> run(RetrievalModel retrievalModel, int numOfRetrievalDocument) {
         List<SearchResult> searchResults = new LinkedList<>();
+        final String runId = MainController.newRunId(Config.groupName,retrievalModel);
         QueryFactory.getQueries().foreach(ScalaSupport.function1(new Function<Query, Object>() {
             @Override
             public Object apply(Query query) {
                 logMainStatus("searching on queryId: " + query.queryId());
                 List<RetrievalDocument> retrievalDocuments = retrievalModel.search(query);
-                SearchResult searchResult = SearchResultFactory.create(query, retrievalDocuments);
+                SearchResult searchResult = SearchResultFactory.create(runId, query, retrievalDocuments);
                 searchResult.shrink(numOfRetrievalDocument);
                 searchResults.add(searchResult);
                 logDone("finished search on queryId: " + query.queryId());

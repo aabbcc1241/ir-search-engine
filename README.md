@@ -3,10 +3,8 @@
 ##### Group C
 
 ## Todo-List
- - [X] fix Parameter bug
- - [X] fix set mode bug (null)
- - [X] fix boolean AND mode
  - [ ] set runner id
+ - [ ] Query pick (seperate T and TDN)
  - [ ] fix result filename
 
 ## project timeline 
