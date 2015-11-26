@@ -95,18 +95,19 @@ public abstract class Launcher {
         return true;
     }
 
-    public List<SearchResult> test(RetrievalModel retrievalModel, int numOfRetrievalDocument, int queryType) {
-        try {
-            init();
-            logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
-            List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument, queryType);
-            deInit();
-            return searchResults;
-        } catch (EssentialFileNotFoundException e) {
-//            exception(e);
-            loge_("Please make sure you have '" + e.path + "'");
+    public boolean test(RetrievalModel retrievalModel, int[] numOfRetrievalDocuments, int queryType) throws EssentialFileNotFoundException {
+        boolean noError = false;
+        init();
+        logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
+        for (int numOfRetrievalDocument : numOfRetrievalDocuments) {
+            String resultFilename = numOfRetrievalDocument + ".ret";
+            start(retrievalModel, resultFilename, numOfRetrievalDocument, queryType);
         }
-        return null;
+//        int[] numDocs = new int[]{5, 10, 15, 20, 30,
+//                100, 200, 500,
+//                1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900,
+//                2000, 2500, 3000, 4000, 5000, 10000};
+        return true;
     }
 
     /**
@@ -116,19 +117,6 @@ public abstract class Launcher {
         boolean noError = false;
         init();
         logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
-//        int[] numDocs = new int[]{5, 10, 15, 20, 30,
-//                100, 200, 500,
-//                1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900,
-//                2000, 2500, 3000, 4000, 5000, 10000};
-//        for (int numDoc : numDocs) {
-//            List<SearchResult> searchResults = run(retrievalModel, numDoc, queryType);
-//            try {
-//                SearchResultFactory.writeToFile(searchResults, numDoc + ".ret");
-//                System.out.println("----------------"+numDoc);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
         List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument, queryType);
         try {
             SearchResultFactory.writeToFile(searchResults, resultFilename);
@@ -136,7 +124,6 @@ public abstract class Launcher {
         } catch (IOException e) {
             loge_("Failed to save search result!\nPlease make sure you have write permission on '" + resultFilename + "'");
         }
-//            deInit();
         return noError;
     }
 

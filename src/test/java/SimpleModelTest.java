@@ -1,5 +1,6 @@
 
 import comm.Test;
+import comm.exception.EssentialFileNotFoundException;
 import hk.edu.polyu.ir.groupc.searchengine.Debug;
 import hk.edu.polyu.ir.groupc.searchengine.Launcher;
 import hk.edu.polyu.ir.groupc.searchengine.model.query.QueryEnum;
@@ -67,8 +68,13 @@ public class SimpleModelTest {
         Tuple2<Object, Object>[] results = Test.time_J(new Supplier<Object>() {
             @Override
             public Object get() {
-                List<SearchResult> searchResults = launcher.test(retrievalModel, 10, QueryEnum.T().id());
-                System.out.println(searchResults.size());
+                boolean searchResults = false;
+                try {
+                    searchResults = launcher.test(retrievalModel, new int[]{10}, QueryEnum.T().id());
+                } catch (EssentialFileNotFoundException e) {
+                    e.printStackTrace();
+                }
+//                System.out.println(searchResults.size());
                 return searchResults;
             }
         }, 10, true, true, true);

@@ -299,6 +299,12 @@ class MainController extends MainControllerSkeleton {
           val numOfRetrievalDocument = getNumOfRetrievalDocument
           new Thread(MainApplication.threadGroup, () => {
             try {
+              //              val num_list = Range(1, 10001, 5)
+              //              val num_list = List(1, 5, 10, 15, 20, 30,
+              //                100, 200, 500,
+              //                1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900,
+              //                2000, 2500, 3000, 4000, 5000, 10000)
+              //              val success = MainController.launcher.test(model, num_list.toArray, queryType)
               val success = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument.intValue(), queryType)
               if (success)
                 AlertUtils.info(contentText = "Finished retrieval")
