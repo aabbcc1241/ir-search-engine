@@ -29,7 +29,7 @@ import java.util.List;
  */
 public class ExtendedBooleanModel extends RetrievalModelWithRanking {
 
-    protected final DoubleParameter mModelPNormParameter;
+    protected final DoubleParameter mModelPNormParameter=new DoubleParameter("Model P Norm", 0.01d, 10.0, 2.0);;
     protected final List<String> cModes;
     protected final List<Parameter<? extends Number>> cParameters;
     protected OperationType mOperationType;
@@ -45,7 +45,6 @@ public class ExtendedBooleanModel extends RetrievalModelWithRanking {
         }
 
         cParameters = new LinkedList<>();
-        mModelPNormParameter = new DoubleParameter("Model P Norm", 0.01d, 10.0, 2.0);
         cParameters.add(mModelPNormParameter);
     }
 

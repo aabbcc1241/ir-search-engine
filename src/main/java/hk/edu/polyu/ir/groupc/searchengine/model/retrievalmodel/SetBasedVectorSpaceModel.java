@@ -40,25 +40,31 @@ import java.util.function.Consumer;
  */
 public class SetBasedVectorSpaceModel extends VectorSpaceModel {
 
-    private double mTermSetRelativeMaxSupport;
-    private int mProximityDistance;
-    private int mMaximumAssociationLevel;
+    // For all term-sets, the frequency of the term-set must exceed or equal to the threshold in
+    // order to be considered as frequent. Adjusting this value will greatly impact the retrieval result.
+    // The unit is measured in number of documents of the term (i.e document frequency) divided by total num. of documents.
+    // Set it between 0 to 1.
+    private final DoubleParameter mTermSetRelativeMaxSupport = new DoubleParameter("Term Set Relative Max Support", 0.01, 10.0, 0.012);
+
+    // The proximity distance means how far can a term be apart from another term to be considered as a term set.
+    // Setting 10 means term A and term B must only have 9 other terms in order to be a term set.
+    // Adjusting this value to a high distance may result in higher computation time.
+    private final IntegerParameter mProximityDistance=new IntegerParameter("Proximity Distance",1,100,76);
+
+    // To prevent heavy computation, you can limit the program when to stop deriving next term-set level here.
+    // You can set to Integer.MAX_VALUE for generating all possible association levels.
+    private final IntegerParameter mMaximumAssociationLevel=new IntegerParameter("Maximum Association Level",1,Integer.MAX_VALUE-8,10);
+
+    @Override
+    public List<Parameter<? extends Number>> getParameters() {
+        List<Parameter<? extends Number>> parameters = super.getParameters();
+        parameters.add(mTermSetRelativeMaxSupport);
+        parameters.add(mProximityDistance);
+        parameters.add(mMaximumAssociationLevel);
+        return parameters;
+    }
 
     public SetBasedVectorSpaceModel() {
-        // The proximity distance means how far can a term be apart from another term to be considered as a term set.
-        // Setting 10 means term A and term B must only have 9 other terms in order to be a term set.
-        // Adjusting this value to a high distance may result in higher computation time.
-        this.mProximityDistance = 76;
-
-        // For all term-sets, the frequency of the term-set must exceed or equal to the threshold in
-        // order to be considered as frequent. Adjusting this value will greatly impact the retrieval result.
-        // The unit is measured in number of documents of the term (i.e document frequency) divided by total num. of documents.
-        // Set it between 0 to 1.
-        this.mTermSetRelativeMaxSupport = 0.012;
-
-        // To prevent heavy computation, you can limit the program when to stop deriving next term-set level here.
-        // You can set to Integer.MAX_VALUE for generating all possible association levels.
-        this.mMaximumAssociationLevel = Integer.MAX_VALUE;
     }
 
     @Override
@@ -73,9 +79,9 @@ public class SetBasedVectorSpaceModel extends VectorSpaceModel {
         // The structure is <Term-set level, A set of query term-sets in that level>
         ArrayList<AssociationLevel> allFrequentAssociationLevels = this.generateAllAssocLevelWithFrequentTermSets(
                 pQuery,
-                this.mProximityDistance,
-                this.mTermSetRelativeMaxSupport,
-                this.mMaximumAssociationLevel
+                this.mProximityDistance.value(),
+                this.mTermSetRelativeMaxSupport.value(),
+                this.mMaximumAssociationLevel.value()
         );
 
         // For each term-sets association level
@@ -355,7 +361,7 @@ public class SetBasedVectorSpaceModel extends VectorSpaceModel {
      *
      */
     public double getTermSetRelativeMaxSupport() {
-        return this.mTermSetRelativeMaxSupport;
+        return this.mTermSetRelativeMaxSupport.value();
     }
 
     /*
@@ -364,23 +370,23 @@ public class SetBasedVectorSpaceModel extends VectorSpaceModel {
      *
      */
     public void setTermSetRelativeMaxSupport(double pValue) {
-        this.mTermSetRelativeMaxSupport = pValue;
+        this.mTermSetRelativeMaxSupport .value(pValue);
     }
 
     public int getProximityDistance() {
-        return this.mProximityDistance;
+        return this.mProximityDistance.value();
     }
 
     public void setProximityDistance(int pValue) {
-        this.mProximityDistance = pValue;
+        this.mProximityDistance.value( pValue);
     }
 
     public int getMaximumAssociationLevel() {
-        return this.mMaximumAssociationLevel;
+        return this.mMaximumAssociationLevel.value();
     }
 
     public void setMaximumAssociationLevel(int pValue) {
-        this.mMaximumAssociationLevel = pValue;
+        this.mMaximumAssociationLevel .value(pValue);
     }
 
 

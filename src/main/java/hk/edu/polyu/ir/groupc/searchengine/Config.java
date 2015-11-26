@@ -13,7 +13,7 @@ public class Config {
         /* setting default values */
         MainController.defaultNumOfRetrievalDocument_$eq(1000);
         /* add models */
-        MainController.addModel(new SimpleModel());
+//        MainController.addModel(new SimpleModel());
         MainController.addModel(new BooleanModel());
         MainController.addModel(new VectorSpaceModel());
         MainController.addModel(new SetBasedVectorSpaceModel());

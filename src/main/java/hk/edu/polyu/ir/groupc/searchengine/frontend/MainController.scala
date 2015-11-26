@@ -207,6 +207,8 @@ class MainController extends MainControllerSkeleton {
     })
 
     //    setNumOfRetrievalDocument(MainController.defaultNumOfRetrievalDocument)
+    combo_model.getSelectionModel.selectFirst()
+    set_model(null)
   }
 
   def updateNumOfRetrievalDocument() = {
@@ -233,6 +235,7 @@ class MainController extends MainControllerSkeleton {
       combo_model_mode.getItems.clear()
       combo_model_mode.getItems.addAll(model.getModes)
       logDone("selected model " + model.name())
+      set_model_mode(event)
     }
   }
 
@@ -241,8 +244,13 @@ class MainController extends MainControllerSkeleton {
       case None => AlertUtils.warn(contentText = "Please select retrieval mode; first")
       case Some(model) =>
         val mode: String = combo_model_mode.getSelectionModel.getSelectedItem
-        model.setMode(mode)
-        logDone("set mode to " + mode)
+        if (mode == null) {
+          model.setMode(model.getDefaultMode)
+          combo_model_mode.getSelectionModel.selectFirst()
+        } else {
+          model.setMode(mode)
+          logDone("set mode to " + mode)
+        }
     }
   }
 
