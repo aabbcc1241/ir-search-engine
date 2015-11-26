@@ -334,7 +334,7 @@ class MainController extends MainControllerSkeleton {
     //    val currentResultId = MainController.resultId
     //    s"${text_result_path.getText()}/result-${model.name()}-$currentResultId.txt"
     val filename: String = QueryEnum.getFileName(queryType)
-    s"${text_result_path.getText()}/$filename"
+    s"${text_result_path.getText()}${File.separatorChar}$filename"
   }
 
   def getNumOfRetrievalDocument = numOfRetrievalDocument

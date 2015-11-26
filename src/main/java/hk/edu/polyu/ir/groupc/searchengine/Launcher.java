@@ -117,7 +117,7 @@ public abstract class Launcher {
         init();
         logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
         List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument, queryType);
-        logMainStatus("saving search result to file <" + resultFilename + ">");
+//        logMainStatus("saving search result to file <" + resultFilename + ">");
         try {
             SearchResultFactory.writeToFile(searchResults, resultFilename);
 //            logMainStatus("saved result to " + resultFilename);

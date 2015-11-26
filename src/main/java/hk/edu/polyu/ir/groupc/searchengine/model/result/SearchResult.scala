@@ -7,6 +7,7 @@ import java.util.Collections
 
 import comm.gui.AlertUtils
 import comm.lang.Convert.funcToConsumer
+import hk.edu.polyu.ir.groupc.searchengine.Debug
 
 import scala.collection.JavaConverters._
 
@@ -33,22 +34,25 @@ object SearchResultFactory {
   @throws(classOf[IOException])
   def writeToFile(searchResults: Seq[SearchResult], filename: String): Unit = {
     def writeFunc = () => {
+      val action: String = "save search result to file <" + filename + ">"
+      Debug.logMainStatus(action)
       val lines = searchResults.flatMap(sr => sr.toStrings)
       val out = new BufferedWriter(new FileWriter(filename))
       lines.foreach(l => out.write(l + "\n"))
       out.close()
+      Debug.logDone(action)
     }
     //    FileUtils.appendToFile(lines, filename)
     if (Files.exists(Paths.get(filename))) {
       AlertUtils.warn(contentText = filename + " exist, do you want to replace it?", onResult = funcToConsumer(result => {
         result.ifPresent(funcToConsumer(p => {
-          writeFunc
+          writeFunc()
         }
         ))
       }))
     }
     else {
-      writeFunc
+      writeFunc()
     }
   }
 }
