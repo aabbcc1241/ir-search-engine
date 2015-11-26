@@ -83,7 +83,7 @@ object MainController {
 class MainController extends MainControllerSkeleton {
   MainController.instance = this
 
-//  private var numOfRetrievalDocument = MainController.defaultNumOfRetrievalDocument
+  //  private var numOfRetrievalDocument = MainController.defaultNumOfRetrievalDocument
   val numOfRetrievalDocument = new SimpleIntegerProperty(MainController.defaultNumOfRetrievalDocument)
 
   def getMajorStatus = label_left_status getText
@@ -206,7 +206,7 @@ class MainController extends MainControllerSkeleton {
       }
     })
 
-//    setNumOfRetrievalDocument(MainController.defaultNumOfRetrievalDocument)
+    //    setNumOfRetrievalDocument(MainController.defaultNumOfRetrievalDocument)
   }
 
   def updateNumOfRetrievalDocument() = {
@@ -262,16 +262,18 @@ class MainController extends MainControllerSkeleton {
       selectedModel match {
         case None => AlertUtils.warn(contentText = "Please choose a retrieval model")
         case Some(model) =>
-          //TODO
           val resultFilename = newResultFile(model)
           val numOfRetrievalDocument = getNumOfRetrievalDocument
-          try {
-            val success = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument.intValue())
-            if (success) AlertUtils.info(headerText = "Finished retrieval", contentText = "Saved result to " + resultFilename)
-            else loge("Failed to retrieval")
-          } catch {
-            case e: Exception => loge("Unknown Error!", e)
-          }
+          new Thread(MainApplication.threadGroup, () => {
+            try {
+              val success = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument.intValue())
+              if (success) AlertUtils.info(headerText = "Finished retrieval", contentText = "Saved result to " + resultFilename)
+              else loge("Failed to retrieval")
+            } catch {
+              case e: Exception => loge("Unknown Error!", e)
+            }
+          }, "SearchThread")
+            .start()
       }
     }
   }
@@ -304,9 +306,9 @@ class MainController extends MainControllerSkeleton {
     if (value <= 0) {
       setNumOfRetrievalDocument(MainController.defaultNumOfRetrievalDocument)
     } else {
-//      numOfRetrievalDocument = value
+      //      numOfRetrievalDocument = value
       numOfRetrievalDocument.set(value)
-//      text_number_of_retrieval_document.setText(value.toString)
+      //      text_number_of_retrieval_document.setText(value.toString)
       logDone("set number of retrieval document : " + getNumOfRetrievalDocument)
     }
   }
