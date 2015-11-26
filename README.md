@@ -3,10 +3,7 @@
 ##### Group C
 
 ## Todo-List
- - [X] fix duplicated paramenter in SetBaseVectorSpaceModel
- - [X] set runner id
- - [X] Query pick (seperate T and TDN)
- - [X] fix result filename
+ - [ ]
 
 ## project timeline 
 https://app.smartsheet.com/b/home?lx=HUWsKQO29OGkBjAgkVrWKA
