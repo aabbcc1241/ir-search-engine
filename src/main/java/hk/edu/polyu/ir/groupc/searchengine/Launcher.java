@@ -2,6 +2,7 @@ package hk.edu.polyu.ir.groupc.searchengine;
 
 import comm.exception.EssentialFileNotFoundException;
 import comm.exception.RichFileNotFoundException;
+import comm.gui.AlertUtils;
 import comm.lang.ScalaSupport;
 import hk.edu.polyu.ir.groupc.searchengine.frontend.MainController;
 import hk.edu.polyu.ir.groupc.searchengine.model.datasource.DocFileFactory;
@@ -111,20 +112,20 @@ public abstract class Launcher {
     }
 
     /**
-     * @return boolean success : true if not error occure, false otherwise
+     * @return time used in nanosecond
      */
-    public boolean start(RetrievalModel retrievalModel, String resultFilename, int numOfRetrievalDocument, int queryType) throws EssentialFileNotFoundException {
-        boolean noError = false;
+    public long start(RetrievalModel retrievalModel, String resultFilename, int numOfRetrievalDocument, int queryType) throws EssentialFileNotFoundException {
         init();
         logMainStatus("running retrieval model: " + retrievalModel.getClass().getName());
+        final long startTime = System.nanoTime();
         List<SearchResult> searchResults = run(retrievalModel, numOfRetrievalDocument, queryType);
+        final long endTime = System.nanoTime();
         try {
             SearchResultFactory.writeToFile(searchResults, resultFilename);
-            noError = true;
         } catch (IOException e) {
             loge_("Failed to save search result!\nPlease make sure you have write permission on '" + resultFilename + "'");
         }
-        return noError;
+        return endTime-startTime;
     }
 
     public void init() throws EssentialFileNotFoundException {
