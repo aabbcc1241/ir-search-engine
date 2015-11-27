@@ -308,6 +308,7 @@ class MainController extends MainControllerSkeleton {
               val timeUsed = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument.intValue(), queryType)
               val timeMsg = "Finished Search in " + (timeUsed / Math.pow(10, 9)) + " seconds"
               log(timeMsg)
+              AlertUtils.info(contentText = timeMsg)
               //              if (success)
               //                AlertUtils.info(contentText = "Finished retrieval")
               //              else
