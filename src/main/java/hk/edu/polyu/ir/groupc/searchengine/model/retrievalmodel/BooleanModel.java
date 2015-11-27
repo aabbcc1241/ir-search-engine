@@ -68,7 +68,6 @@ public class BooleanModel extends RetrievalModel {
 
     @Override
     public List<RetrievalDocument> search(Query query) {
-        System.out.println("_-------------_");
         List<RetrievalDocument> list = new ArrayList<>();
 
         HashMap<String, HashSet<Integer>> allDocumentsIDs = new HashMap<>();
