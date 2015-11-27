@@ -307,11 +307,11 @@ class MainController extends MainControllerSkeleton {
               //              val success = MainController.launcher.test(model, num_list.toArray, queryType)
               val timeUsed = MainController.launcher.start(model, resultFilename, numOfRetrievalDocument.intValue(), queryType)
               val timeMsg = "Finished Search in " + (timeUsed / Math.pow(10, 9)) + " seconds"
-              AlertUtils.info(contentText = timeMsg + "\nSaved to " + resultFilename);
-//              if (success)
-//                AlertUtils.info(contentText = "Finished retrieval")
-//              else
-//                loge("Failed to retrieval")
+              log(timeMsg)
+              //              if (success)
+              //                AlertUtils.info(contentText = "Finished retrieval")
+              //              else
+              //                loge("Failed to retrieval")
             } catch {
               case e: Exception => loge("Unknown Error!", e)
             }
